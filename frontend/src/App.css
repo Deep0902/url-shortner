@@ -101,6 +101,6 @@ body {
 .shorten-btn:hover {
   background: #2563eb;
 }
-.result{
+.result, .status{
   color: #343434;
 }

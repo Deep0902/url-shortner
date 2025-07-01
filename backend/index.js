@@ -29,26 +29,35 @@ const Url = mongoose.model("Url", urlSchema);
 
 // Create a short URL
 app.post("/api/shorten", async (req, res) => {
-    try {
-        const { originalUrl } = req.body;
-        if (!originalUrl) {
-            return res.status(400).json({ error: "Original URL is required" });
-        }
-
-        // Check if the originalUrl already exists
-        let existingUrl = await Url.findOne({ originalUrl });
-        if (existingUrl) {
-            return res.status(200).json({ message: "URL already exists", url: existingUrl });
-        }
-
-        const shortUrl = nanoid(8);
-        const newUrl = new Url({ originalUrl, shortUrl });
-        await newUrl.save();
-        res.status(201).json({ message: "URL Generated", url: newUrl });
-    } catch (error) {
-        console.error("Error creating short URL:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+  try {
+    // Check if the URL count has reached the limit
+    const urlCount = await Url.countDocuments();
+    if (urlCount >= 10) {
+      return res
+        .status(429)
+        .json({ error: "Memory is full, please try again later" });
     }
+    const { originalUrl } = req.body;
+    if (!originalUrl) {
+      return res.status(400).json({ error: "Original URL is required" });
+    }
+
+    // Check if the originalUrl already exists
+    let existingUrl = await Url.findOne({ originalUrl });
+    if (existingUrl) {
+      return res
+        .status(200)
+        .json({ message: "URL already exists", url: existingUrl });
+    }
+
+    const shortUrl = nanoid(8);
+    const newUrl = new Url({ originalUrl, shortUrl });
+    await newUrl.save();
+    res.status(201).json({ message: "URL Generated", url: newUrl });
+  } catch (error) {
+    console.error("Error creating short URL:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 // Redirect to original URL
