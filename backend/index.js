@@ -73,6 +73,19 @@ app.get("/:shortUrl", async (req, res) => {
   }
 });
 
+// API to get total number of URLs and total clicks
+app.get("/api/stats", async (req, res) => {
+  try {
+    const urls = await Url.find({});
+    const totalUrls = urls.length;
+    const totalClicks = urls.reduce((sum, url) => sum + (url.clicks || 0), 0);
+    res.json({ totalUrls, totalClicks });
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
