@@ -12,6 +12,9 @@ interface AlertState {
   type: "success" | "error" | "warning";
 }
 
+// Import API key from environment variables
+const API_KEY = import.meta.env.VITE_API_SECRET_KEY;
+
 function App() {
   const [originalUrl, setOriginalUrl] = useState("https://www.google.com/");
   const [shortenedUrl, setShortenedUrl] = useState("");
@@ -61,7 +64,11 @@ function App() {
     showAlert("Processing...", "warning", "Shortening your URL");
 
     axios
-      .post("http://localhost:3000/api/shorten", { originalUrl })
+      .post(
+        "http://localhost:3000/api/shorten",
+        { originalUrl },
+        { headers: { "x-api-key": API_KEY } }
+      )
       .then((response) => {
         console.log("Shortened URL:", response.data);
         if (response.data.url.shortUrl) {
@@ -98,7 +105,10 @@ function App() {
   const handleGetStatus = async () => {
     try {
       showAlert("Loading...", "warning", "Fetching statistics");
-      const response = await axios.get("http://localhost:3000/api/stats");
+      const response = await axios.get(
+        "http://localhost:3000/api/stats",
+        { headers: { "x-api-key": API_KEY } }
+      );
       setStats(response.data);
       showAlert(
         "Stats Updated",
@@ -114,6 +124,7 @@ function App() {
       console.error("Error fetching stats:", error);
     }
   };
+  
   return (
     <>
       <div className="particles-container">

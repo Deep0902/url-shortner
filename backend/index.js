@@ -27,6 +27,18 @@ const urlSchema = new mongoose.Schema({
 
 const Url = mongoose.model("Url", urlSchema);
 
+// Authentication middleware
+function authenticateApiKey(req, res, next) {
+  const apiKey = req.headers["x-api-key"];
+  if (!apiKey || apiKey !== process.env.API_SECRET_KEY) {
+    return res.status(401).json({ error: "Unauthorized: Invalid or missing API key" });
+  }
+  next();
+}
+
+// Use authentication for all API routes
+app.use("/api", authenticateApiKey);
+
 // Create a short URL
 app.post("/api/shorten", async (req, res) => {
   try {
