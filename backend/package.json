@@ -18,5 +18,9 @@
     "mongoose": "^8.16.1",
     "nanoid": "^5.1.5",
     "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "jest": "^30.0.3",
+    "supertest": "^7.1.1"
   }
 }
