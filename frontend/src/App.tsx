@@ -14,6 +14,7 @@ interface AlertState {
 
 // Import API key from environment variables
 const API_KEY = import.meta.env.VITE_API_SECRET_KEY;
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [originalUrl, setOriginalUrl] = useState("https://www.google.com/");
@@ -63,7 +64,7 @@ function App() {
 
     axios
       .post(
-        "http://localhost:3000/api/shorten",
+        `${API_URL}/api/shorten`,
         { originalUrl },
         { headers: { "x-api-key": API_KEY } }
       )
@@ -98,7 +99,7 @@ function App() {
 
   const handleGetStatus = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/stats", {
+      const response = await axios.get(`${API_URL}/api/stats`, {
         headers: { "x-api-key": API_KEY },
       });
       setStats(response.data);
