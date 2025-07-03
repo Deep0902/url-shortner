@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 import "./Alert.css";
 
 interface AlertProps {
   message: string;
   subMessage?: string;
-  type?: 'success' | 'error' | 'warning';
+  type?: "success" | "error" | "warning";
   timeout?: number;
   onClose?: () => void;
 }
@@ -12,20 +12,20 @@ interface AlertProps {
 // Icon constants - using the actual icon paths from your public folder
 const STATIC_UI_IMAGES = {
   ALERT: {
-    CLOSE: '/close.svg',
-    CLOSE_RED: '/close-red.svg',
-    TICK: '/tick.svg',
-    ERROR: '/error-toast.svg',
-    WARNING: '/warning-toast.svg'
-  }
+    CLOSE: "/close.svg",
+    CLOSE_RED: "/close-red.svg",
+    TICK: "/tick.svg",
+    ERROR: "/error-toast.svg",
+    WARNING: "/warning-toast.svg",
+  },
 };
 
-function Alert({ 
-  message, 
-  subMessage = '', 
-  type = 'success', 
+function Alert({
+  message,
+  subMessage = "",
+  type = "success",
   timeout,
-  onClose 
+  onClose,
 }: AlertProps) {
   const [show, setShow] = useState<boolean>(true);
 
@@ -36,8 +36,8 @@ function Alert({
   const iconWarning = STATIC_UI_IMAGES.ALERT.WARNING;
 
   useEffect(() => {
-    let timeoutId: number;
-    
+    let timeoutId: ReturnType<typeof setTimeout>;
+
     if (timeout && timeout > 0) {
       timeoutId = setTimeout(() => setShow(false), timeout);
     }
@@ -62,18 +62,18 @@ function Alert({
 
   // Helper function to truncate text (equivalent to ellipsis pipe)
   const ellipsis = (text: string, limit: number): string => {
-    return text.length > limit ? text.substring(0, limit) + '...' : text;
+    return text.length > limit ? text.substring(0, limit) + "..." : text;
   };
 
   const getAlertIcon = () => {
-    if (type === 'success') return iconTick;
-    if (type === 'error') return iconError;
-    if (type === 'warning') return iconWarning;
-    return '';
+    if (type === "success") return iconTick;
+    if (type === "error") return iconError;
+    if (type === "warning") return iconWarning;
+    return "";
   };
 
   const getCloseIcon = () => {
-    return type === 'success' ? iconCloseWhite : iconCloseRed;
+    return type === "success" ? iconCloseWhite : iconCloseRed;
   };
 
   if (!show) {
@@ -83,10 +83,7 @@ function Alert({
   return (
     <div className="parent-toast">
       <div className={`toast ${type}`}>
-        <img
-          src={getAlertIcon()}
-          alt=""
-        />
+        <img src={getAlertIcon()} alt="" />
         <div>
           <span>{message}</span>
           {subMessage && subMessage.length > 0 && (
@@ -98,17 +95,14 @@ function Alert({
           className="close-img"
           onClick={handleClose}
           onKeyUp={handleKeyUp}
-          style={{ 
-            background: 'none', 
-            border: 'none', 
+          style={{
+            background: "none",
+            border: "none",
             padding: 0,
-            cursor: 'pointer' 
+            cursor: "pointer",
           }}
         >
-          <img
-            src={getCloseIcon()}
-            alt="Close"
-          />
+          <img src={getCloseIcon()} alt="Close" />
         </button>
       </div>
     </div>

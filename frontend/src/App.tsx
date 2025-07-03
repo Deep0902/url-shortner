@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
-import "./App.css";
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
+import { useRef, useState } from "react";
+import "./App.css";
 import Alert from "./components/Alert";
 import Particles from "./Reactbits/Particles";
 
@@ -19,9 +19,9 @@ function App() {
   const [originalUrl, setOriginalUrl] = useState("https://www.google.com/");
   const [shortenedUrl, setShortenedUrl] = useState("");
   const [stats, setStats] = useState<{
-    totalUrls: number;
-    totalClicks: number;
-  } | null>(null);
+    totalUrls: number | null;
+    totalClicks: number | null;
+  }>();
   const [alert, setAlert] = useState<AlertState>({
     show: false,
     message: "",
@@ -105,11 +105,11 @@ function App() {
   const handleGetStatus = async () => {
     try {
       showAlert("Loading...", "warning", "Fetching statistics");
-      const response = await axios.get(
-        "http://localhost:3000/api/stats",
-        { headers: { "x-api-key": API_KEY } }
-      );
+      const response = await axios.get("http://localhost:3000/api/stats", {
+        headers: { "x-api-key": API_KEY },
+      });
       setStats(response.data);
+      console.log("Stats fetched:", stats?.totalClicks, stats?.totalUrls);
       showAlert(
         "Stats Updated",
         "success",
@@ -124,7 +124,7 @@ function App() {
       console.error("Error fetching stats:", error);
     }
   };
-  
+
   return (
     <>
       <div className="particles-container">
@@ -188,13 +188,18 @@ function App() {
             )}
           </form>
         </div>
-        <button type="button" className="btn status-btn" onClick={handleGetStatus}>
+        <button
+          type="button"
+          className="btn status-btn"
+          onClick={handleGetStatus}
+        >
           Get Status
         </button>
+
         {stats && (
           <div className="status">
-            <div>Total URLs: {stats.totalUrls}</div>
-            <div>Total Clicks: {stats.totalClicks}</div>
+            <span>Total URLs: {stats?.totalUrls}</span>
+            <span>Total Clicks: {stats?.totalClicks}</span>
           </div>
         )}
       </div>
