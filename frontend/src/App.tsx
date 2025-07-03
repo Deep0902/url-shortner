@@ -17,7 +17,7 @@ const API_KEY = import.meta.env.VITE_API_SECRET_KEY;
 const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
-  const [originalUrl, setOriginalUrl] = useState("https://www.google.com/");
+  const [originalUrl, setOriginalUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState("");
   const [stats, setStats] = useState<{
     totalUrls: number | null;
@@ -77,11 +77,11 @@ function App() {
       })
       .catch((error) => {
         if (error.response && error.response.status === 429) {
-            showAlert(
-              "Service Unavailable",
-              "error",
-              "Storage limit reached. Contact admin."
-            );
+          showAlert(
+            "Service Unavailable",
+            "error",
+            "Storage limit reached. Contact admin."
+          );
         } else {
           showAlert(
             "Error",
@@ -92,7 +92,7 @@ function App() {
         }
       });
     // Reset the input field after submission
-    setOriginalUrl("");
+    // setOriginalUrl("");
 
     console.log("URL submitted:", originalUrl);
   };
@@ -139,7 +139,13 @@ function App() {
       <div className="main-container">
         <div className="container">
           <h1 className="title">URL Shortener</h1>
-          <form className="shorten-form">
+          <form
+            className="shorten-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+          >
             <input
               value={originalUrl}
               onChange={(e) => setOriginalUrl(e.target.value)}
@@ -148,30 +154,20 @@ function App() {
               placeholder="Enter your URL"
               required
             />
-            <button
-              type="submit"
-              className="btn shorten-btn"
-              onClick={handleSubmit}
-            >
+            <button type="submit" className="btn shorten-btn">
               Shorten
             </button>
             {shortenedUrl && (
               <div className="result">
                 Shortened URL:{" "}
-                <a
-                  href={`${API_URL}/${shortenedUrl}`}
-                  target="_blank"
-                >
+                <a href={`${API_URL}/${shortenedUrl}`} target="_blank">
                   {`${API_URL}/${shortenedUrl}`}
                 </a>
               </div>
             )}
             {shortenedUrl && (
               <div ref={qrcodeRef} className="qrcode-container">
-                <QRCodeCanvas
-                  value={`${API_URL}/${shortenedUrl}`}
-                  size={128}
-                />
+                <QRCodeCanvas value={`${API_URL}/${shortenedUrl}`} size={128} />
               </div>
             )}
           </form>
