@@ -159,17 +159,17 @@ function App() {
               <div className="result">
                 Shortened URL:{" "}
                 <a
-                  href={`http://localhost:3000/${shortenedUrl}`}
+                  href={`${API_URL}/${shortenedUrl}`}
                   target="_blank"
                 >
-                  {`http://localhost:3000/${shortenedUrl}`}
+                  {`${API_URL}/${shortenedUrl}`}
                 </a>
               </div>
             )}
             {shortenedUrl && (
               <div ref={qrcodeRef} className="qrcode-container">
                 <QRCodeCanvas
-                  value={`http://localhost:3000/${shortenedUrl}`}
+                  value={`${API_URL}/${shortenedUrl}`}
                   size={128}
                 />
               </div>
