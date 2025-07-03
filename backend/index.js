@@ -11,7 +11,7 @@ app.use(express.json());
 
 // MongoDB connection
 mongoose
-  .connect(process.env.DATABASE_URL + "url-short")
+  .connect(process.env.DATABASE_URL)
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -106,6 +106,11 @@ app.get("/api/stats", async (req, res) => {
     console.error("Error fetching stats:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+});
+
+// Health check route for root
+app.get("/", (req, res) => {
+  res.send("URL Shorten Backend is running");
 });
 
 if (process.env.NODE_ENV !== "test") {
