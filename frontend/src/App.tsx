@@ -61,8 +61,6 @@ function App() {
       return;
     }
 
-    showAlert("Processing...", "warning", "Shortening your URL");
-
     axios
       .post(
         "http://localhost:3000/api/shorten",
@@ -73,20 +71,16 @@ function App() {
         console.log("Shortened URL:", response.data);
         if (response.data.url.shortUrl) {
           setShortenedUrl(response.data.url.shortUrl);
-          showAlert(
-            "Success!",
-            "success",
-            `URL shortened successfully: ${response.data.url.shortUrl}`
-          );
+          showAlert("Success!", "success", `URL shortened successfully`);
         }
       })
       .catch((error) => {
         if (error.response && error.response.status === 429) {
-          showAlert(
-            "Memory Full",
-            "error",
-            "URL limit reached. Please delete existing URLs or try again later."
-          );
+            showAlert(
+              "Service Unavailable",
+              "error",
+              "Storage limit reached. Contact admin."
+            );
         } else {
           showAlert(
             "Error",
@@ -104,17 +98,10 @@ function App() {
 
   const handleGetStatus = async () => {
     try {
-      showAlert("Loading...", "warning", "Fetching statistics");
       const response = await axios.get("http://localhost:3000/api/stats", {
         headers: { "x-api-key": API_KEY },
       });
       setStats(response.data);
-      console.log("Stats fetched:", stats?.totalClicks, stats?.totalUrls);
-      showAlert(
-        "Stats Updated",
-        "success",
-        `Found ${response.data.totalUrls} URLs with ${response.data.totalClicks} total clicks`
-      );
     } catch (error) {
       showAlert(
         "Error",
@@ -188,6 +175,8 @@ function App() {
             )}
           </form>
         </div>
+      </div>
+      <div className="status-container">
         <button
           type="button"
           className="btn status-btn"
@@ -195,13 +184,12 @@ function App() {
         >
           Get Status
         </button>
-
         {stats && (
           <div className="status">
             <span>Total URLs: {stats?.totalUrls}</span>
             <span>Total Clicks: {stats?.totalClicks}</span>
           </div>
-        )}
+        )}{" "}
       </div>
     </>
   );

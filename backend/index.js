@@ -11,7 +11,7 @@ app.use(express.json());
 
 // MongoDB connection
 mongoose
-  .connect(process.env.DATABASE_URL)
+  .connect(process.env.DATABASE_URL + "url-short")
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -23,6 +23,7 @@ const urlSchema = new mongoose.Schema({
   originalUrl: String,
   shortUrl: String,
   clicks: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Url = mongoose.model("Url", urlSchema);
@@ -63,7 +64,7 @@ app.post("/api/shorten", async (req, res) => {
     }
 
     const shortUrl = nanoid(8);
-    const newUrl = new Url({ originalUrl, shortUrl });
+    const newUrl = new Url({ originalUrl, shortUrl, createdAt: new Date() });
     await newUrl.save();
     res.status(201).json({ message: "URL Generated", url: newUrl });
   } catch (error) {
