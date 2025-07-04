@@ -1,6 +1,6 @@
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import "./App.css";
 import Alert from "./components/Alert/Alert";
 import Particles from "./Reactbits/Particles";
@@ -70,10 +70,9 @@ function App() {
         { headers: { "x-api-key": API_KEY } }
       )
       .then((response) => {
-        console.log("Shortened URL:", response.data);
         setLoading(false);
-        if (response.data.url.shortUrl) {
-          setShortenedUrl(response.data.url.shortUrl);
+        if (response.data.shortUrl) {
+          setShortenedUrl(response.data.shortUrl);
           showAlert("Success!", "success", `URL shortened successfully`);
         }
       })
@@ -118,6 +117,12 @@ function App() {
       console.error("Error fetching stats:", error);
     }
   };
+
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
+      .catch(() => {});
+  }, []);
 
   return (
     <>
