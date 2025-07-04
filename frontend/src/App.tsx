@@ -2,8 +2,9 @@ import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
 import { useRef, useState } from "react";
 import "./App.css";
-import Alert from "./components/Alert";
+import Alert from "./components/Alert/Alert";
 import Particles from "./Reactbits/Particles";
+import Loader from "./components/Loader/Loader";
 
 interface AlertState {
   show: boolean;
@@ -28,7 +29,7 @@ function App() {
     message: "",
     type: "success",
   });
-
+  const [loading, setLoading] = useState(false);
   const qrcodeRef = useRef<HTMLDivElement>(null);
 
   // Helper function to show alerts
@@ -61,7 +62,7 @@ function App() {
       showAlert("Invalid URL", "error", "Please enter a valid website URL");
       return;
     }
-
+    setLoading(true);
     axios
       .post(
         `${API_URL}/api/shorten`,
@@ -70,12 +71,14 @@ function App() {
       )
       .then((response) => {
         console.log("Shortened URL:", response.data);
+        setLoading(false);
         if (response.data.url.shortUrl) {
           setShortenedUrl(response.data.url.shortUrl);
           showAlert("Success!", "success", `URL shortened successfully`);
         }
       })
       .catch((error) => {
+        setLoading(false);
         if (error.response && error.response.status === 429) {
           showAlert(
             "Service Unavailable",
@@ -98,12 +101,15 @@ function App() {
   };
 
   const handleGetStatus = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${API_URL}/api/stats`, {
         headers: { "x-api-key": API_KEY },
       });
       setStats(response.data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       showAlert(
         "Error",
         "error",
@@ -136,6 +142,10 @@ function App() {
           onClose={hideAlert}
         />
       )}
+
+      <div className={`loader-fade-wrapper${loading ? " show" : ""}`}>
+        <Loader />
+      </div>
       <div className="main-container">
         <div className="container">
           <h1 className="title">URL Shortener</h1>
