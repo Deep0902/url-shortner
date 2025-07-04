@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import "./Loader.css";
 
 // Add a key to the root element to force remount on show/hide:
