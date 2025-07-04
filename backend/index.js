@@ -9,7 +9,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://url-shortner-amber-pi.vercel.app"
+    "https://shorty-nine-snowy.vercel.app"
   ],
   credentials: true
 }));
