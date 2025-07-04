@@ -6,7 +6,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://url-shortner-amber-pi.vercel.app"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB connection
