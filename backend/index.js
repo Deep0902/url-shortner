@@ -10,10 +10,11 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
+const dbName = "url-short"; // Set your desired database name here
 mongoose
-  .connect(process.env.DATABASE_URL)
+  .connect(process.env.DATABASE_URL, { dbName })
   .then(() => {
-    console.log("Connected to MongoDB");
+    console.log(`Connected to MongoDB database: ${dbName}`);
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
