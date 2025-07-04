@@ -1,9 +1,9 @@
+import compression from "compression";
+import cors from "cors";
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
-import cors from "cors";
 import { nanoid } from "nanoid";
-import dotenv from "dotenv";
-import compression from "compression";
 dotenv.config();
 
 const app = express();
@@ -23,10 +23,11 @@ mongoose
   });
 
 const urlSchema = new mongoose.Schema({
-  originalUrl: { type: String, index: true },
-  shortUrl: { type: String, unique: true, index: true },
+  originalUrl: String,
+  shortUrl: { type: String, index: true, unique: true },
   clicks: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
+  expiresAt: { type: Date, expires: 0 },
 });
 
 const Url = mongoose.model("Url", urlSchema);
@@ -35,7 +36,9 @@ const Url = mongoose.model("Url", urlSchema);
 function authenticateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"];
   if (!apiKey || apiKey !== process.env.API_SECRET_KEY) {
-    return res.status(401).json({ error: "Unauthorized: Invalid or missing API key" });
+    return res
+      .status(401)
+      .json({ error: "Unauthorized: Invalid or missing API key" });
   }
   next();
 }
@@ -61,15 +64,22 @@ app.post("/api/shorten", async (req, res) => {
     // Check if the originalUrl already exists
     let existingUrl = await Url.findOne({ originalUrl });
     if (existingUrl) {
-      return res
-        .status(200)
-        .json({ message: "URL already exists", url: existingUrl });
+      return res.status(200).json({ shortUrl: existingUrl.shortUrl });
     }
 
-    const shortUrl = nanoid(8);
-    const newUrl = new Url({ originalUrl, shortUrl, createdAt: new Date() });
+    // Generate a unique shortUrl
+    let shortUrl;
+    let isUnique = false;
+    while (!isUnique) {
+      shortUrl = nanoid(8);
+      const existingShort = await Url.findOne({ shortUrl });
+      if (!existingShort) isUnique = true;
+    }
+    const createdAt = new Date();
+    const expiresAt = new Date(createdAt.getTime() + 90 * 24 * 60 * 60 * 1000); // 3 months from now
+    const newUrl = new Url({ originalUrl, shortUrl, createdAt, expiresAt });
     await newUrl.save();
-    res.status(201).json({ message: "URL Generated", url: newUrl });
+    res.status(201).json({ shortUrl: newUrl.shortUrl });
   } catch (error) {
     console.error("Error creating short URL:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -114,6 +124,11 @@ app.get("/api/stats", async (req, res) => {
 // Health check route for root
 app.get("/", (req, res) => {
   res.send("URL Shorten Backend is running");
+});
+
+// Add a ping endpoint for warming up the backend
+app.get("/api/ping", (req, res) => {
+  res.sendStatus(204); // No Content
 });
 
 if (process.env.NODE_ENV !== "test") {
