@@ -80,7 +80,7 @@ app.post("/api/shorten", async (req, res) => {
 app.get("/:shortUrl", async (req, res) => {
   try {
     const { shortUrl } = req.params;
-    const url = await Url.findOne({ shortUrl }).lean();
+    const url = await Url.findOne({ shortUrl });
     if (!url) {
       return res.status(404).json({ error: "URL not found" });
     }
