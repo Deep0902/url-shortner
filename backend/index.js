@@ -3,11 +3,13 @@ import mongoose from "mongoose";
 import cors from "cors";
 import { nanoid } from "nanoid";
 import dotenv from "dotenv";
+import compression from "compression";
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(compression());
 
 // MongoDB connection
 const dbName = "url-short"; // Set your desired database name here
@@ -21,8 +23,8 @@ mongoose
   });
 
 const urlSchema = new mongoose.Schema({
-  originalUrl: String,
-  shortUrl: String,
+  originalUrl: { type: String, index: true },
+  shortUrl: { type: String, unique: true, index: true },
   clicks: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
 });
@@ -78,7 +80,7 @@ app.post("/api/shorten", async (req, res) => {
 app.get("/:shortUrl", async (req, res) => {
   try {
     const { shortUrl } = req.params;
-    const url = await Url.findOne({ shortUrl });
+    const url = await Url.findOne({ shortUrl }).lean();
     if (!url) {
       return res.status(404).json({ error: "URL not found" });
     }
@@ -99,7 +101,7 @@ app.get("/:shortUrl", async (req, res) => {
 // API to get total number of URLs and total clicks
 app.get("/api/stats", async (req, res) => {
   try {
-    const urls = await Url.find({});
+    const urls = await Url.find({}).lean();
     const totalUrls = urls.length;
     const totalClicks = urls.reduce((sum, url) => sum + (url.clicks || 0), 0);
     res.json({ totalUrls, totalClicks });
