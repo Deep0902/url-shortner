@@ -9,7 +9,7 @@
 .loader {
   position: fixed;
   overflow: hidden;
-  z-index: 5;
+  z-index: 15;
   height: 100dvh;
   width: 100dvw;
   top: 0;
@@ -22,7 +22,6 @@
 .letter {
   font-size: 100px;
   color: var(--loader-text);
-  font-family: tahoma;
 }
 
 .box {
