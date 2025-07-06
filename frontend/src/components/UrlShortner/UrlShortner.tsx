@@ -1,10 +1,15 @@
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
-import { useRef, useState, useEffect } from "react";
-import Alert from "../Alert/Alert";
+import { useContext, useEffect, useRef, useState } from "react";
 import Particles from "../../Reactbits/Particles";
+import { ThemeContext } from "../../ThemeContext";
+import Alert from "../Alert/Alert";
+import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
+import Navbar from "../Navbar/Navbar";
 import "./UrlShortner.css";
+import CountUp from "../../Reactbits/CountUp";
+import { LinkPreview } from "../../Reactbits/LinkPreview";
 
 interface AlertState {
   show: boolean;
@@ -30,7 +35,10 @@ function UrlShortner() {
     type: "success",
   });
   const [loading, setLoading] = useState(false);
+  const { theme } = useContext(ThemeContext);
+  const [swipe] = useState(false);
   const qrcodeRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   // Helper function to show alerts
   const showAlert = (
@@ -93,10 +101,6 @@ function UrlShortner() {
           console.error("Error shortening URL:", error);
         }
       });
-    // Reset the input field after submission
-    // setOriginalUrl("");
-
-    console.log("URL submitted:", originalUrl);
   };
 
   const handleGetStatus = async () => {
@@ -118,14 +122,32 @@ function UrlShortner() {
     }
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(`${API_URL}/${shortenedUrl}`);
+    showAlert("Copied!", "success", "URL copied to clipboard");
+  };
+
   useEffect(() => {
     axios
       .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const root = rootRef.current || document.body;
+    if (theme === "light") {
+      root.classList.add("light-theme");
+      root.classList.remove("dark-theme");
+    } else {
+      root.classList.remove("light-theme");
+      root.classList.add("dark-theme");
+    }
+  }, [theme]);
+
   return (
-    <>
-      <div className="particles-container">
+    <div ref={rootRef} className="urlshortner-root">
+      {swipe && <div className="theme-swipe" />}
+      <div className="particles-bg">
         <Particles
           particleColors={["#ffffff", "#ffffff"]}
           particleCount={200}
@@ -137,6 +159,10 @@ function UrlShortner() {
           disableRotation={false}
         />
       </div>
+
+      {/* Navbar */}
+      <Navbar />
+
       {alert.show && (
         <Alert
           message={alert.message}
@@ -150,59 +176,126 @@ function UrlShortner() {
       <div className={`loader-fade-wrapper${loading ? " show" : ""}`}>
         <Loader />
       </div>
-      <div className="main-container">
+
+      {/* Main Content */}
+      <main className="main-content">
         <div className="container">
-          <h1 className="title">URL Shortener</h1>
-          <form
-            className="shorten-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}
-          >
-            <input
-              value={originalUrl}
-              onChange={(e) => setOriginalUrl(e.target.value)}
-              type="url"
-              className="url-input"
-              placeholder="Enter your URL"
-              required
-            />
-            <button type="submit" className="btn shorten-btn">
-              Shorten
+          <section className="hero-section-url">
+            <h1 className="hero-title">
+              <span className="title-highlight">Shorten</span>{" "}
+              <span className="title-normal">Your URLs</span>
+            </h1>
+            <p className="hero-subtitle">
+              Transform long URLs into clean, shareable links in seconds
+            </p>
+          </section>
+
+          <section className="shortener-card">
+            <form
+              className="shortener-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+              }}
+            >
+              <div className="input-group">
+                <input
+                  value={originalUrl}
+                  onChange={(e) => setOriginalUrl(e.target.value)}
+                  type="url"
+                  className="url-input"
+                  placeholder="Enter your long URL here..."
+                  required
+                />
+                <button type="submit" className="btn-primary">
+                  Shorten
+                </button>
+              </div>
+            </form>
+
+            {shortenedUrl && (
+              <div className="result-section">
+                <div className="result-card">
+                  <div className="result-content">
+                    <span className="result-label">
+                      Your shortened URL
+                      <button
+                        onClick={copyToClipboard}
+                        className="copy-btn"
+                        title="Copy to clipboard"
+                      >
+                        📋
+                      </button>
+                    </span>
+                    <div className="result-url">
+                      <LinkPreview
+                        url={`${API_URL}/${shortenedUrl}`}
+                        className="font-bold remove-decorations"
+                      >
+                        {`${API_URL}/${shortenedUrl}`}
+                      </LinkPreview>
+                      
+                    </div>
+                  </div>
+                  <div ref={qrcodeRef} className="qr-section">
+                    <div className="qr-label">Grab the link!</div>
+                    <QRCodeCanvas
+                      value={`${API_URL}/${shortenedUrl}`}
+                      size={100}
+                      bgColor="#23283a"
+                      fgColor="#ffffff"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+
+          <section className="stats-section">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={handleGetStatus}
+            >
+              View Statistics
             </button>
-            {shortenedUrl && (
-              <div className="result">
-                Shortened URL:{" "}
-                <a href={`${API_URL}/${shortenedUrl}`} target="_blank">
-                  {`${API_URL}/${shortenedUrl}`}
-                </a>
+            {stats && (
+              <div className="stats-grid">
+                <div className="stat-item">
+                  <div className="stat-number">
+                    <CountUp
+                      from={0}
+                      to={stats.totalUrls ?? 0}
+                      separator=","
+                      direction="up"
+                      duration={1}
+                      className="count-up-text"
+                    />
+                  </div>
+                  <div className="stat-label">Total URLs</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-number">
+                    <CountUp
+                      from={0}
+                      to={stats.totalClicks ?? 0}
+                      separator=","
+                      direction="up"
+                      duration={1}
+                      className="count-up-text"
+                    />
+                  </div>
+                  <div className="stat-label">Total Clicks</div>
+                </div>
               </div>
             )}
-            {shortenedUrl && (
-              <div ref={qrcodeRef} className="qrcode-container">
-                <QRCodeCanvas value={`${API_URL}/${shortenedUrl}`} size={128} />
-              </div>
-            )}
-          </form>
+          </section>
         </div>
-      </div>
-      <div className="status-container">
-        <button
-          type="button"
-          className="btn status-btn"
-          onClick={handleGetStatus}
-        >
-          Get Status
-        </button>
-        {stats && (
-          <div className="status">
-            <span>Total URLs: {stats?.totalUrls}</span>
-            <span>Total Clicks: {stats?.totalClicks}</span>
-          </div>
-        )}{" "}
-      </div>
-    </>
+      </main>
+
+      {/* Footer */}
+      <Footer />
+    </div>
   );
 }
 
