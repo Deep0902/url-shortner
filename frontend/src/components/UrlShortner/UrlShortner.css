@@ -80,6 +80,10 @@
         background-color: var(--color-gray-dark-alpha);
         scale: 1.03;
       }
+      .url-input:focus::placeholder {
+        color: var(--color-black);
+        opacity: 1;
+      }
     }
     .result {
       color: var(--color-gray-dark);
