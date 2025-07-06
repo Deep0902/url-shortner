@@ -128,7 +128,7 @@ app.get("/", (req, res) => {
 
 // Add a ping endpoint for warming up the backend
 app.get("/api/ping", (req, res) => {
-  res.sendStatus(204); // No Content
+  res.sendStatus(204);
 });
 
 if (process.env.NODE_ENV !== "test") {
