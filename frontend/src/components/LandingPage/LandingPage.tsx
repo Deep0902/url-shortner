@@ -3,6 +3,7 @@ import { ThemeContext } from "../../ThemeContext";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 import "./LandingPage.css";
+import CountUp from "../../Reactbits/CountUp";
 
 function LandingPage() {
   const [animatedText, setAnimatedText] = useState("");
@@ -130,15 +131,44 @@ function LandingPage() {
             {/* Stats */}
             <div className="stats-grid-landing">
               <div className="stat-item">
-                <div className="stat-number stat-blue">10</div>
+                <div className="stat-number stat-blue">
+                  <CountUp
+                    from={0}
+                    to={10}
+                    separator=","
+                    direction="up"
+                    duration={1}
+                    className="count-up-text"
+                  />
+                </div>
                 <div className="stat-label">Links Shortened</div>
               </div>
               <div className="stat-item">
-                <div className="stat-number stat-dark">90%+</div>
+                <div className="stat-number stat-dark">
+                  <CountUp
+                    from={0}
+                    to={90}
+                    separator=","
+                    direction="up"
+                    duration={1}
+                    className="count-up-text"
+                  />
+                  %+
+                </div>
                 <div className="stat-label">Uptime</div>
               </div>
               <div className="stat-item">
-                <div className="stat-number stat-gray">100+</div>
+                <div className="stat-number stat-gray">
+                  <CountUp
+                    from={0}
+                    to={100}
+                    separator=","
+                    direction="up"
+                    duration={1}
+                    className="count-up-text"
+                  />
+                  +
+                </div>
                 <div className="stat-label">Happy Users</div>
               </div>
             </div>

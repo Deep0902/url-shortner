@@ -238,7 +238,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 90dvh;
+  min-height: 91dvh;
 }
 
 .container {
@@ -371,7 +371,9 @@ body {
 }
 
 .result-label {
-  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  font-size: 1.875rem;
   color: var(--color-text-secondary);
   margin-bottom: 0.5rem;
 }

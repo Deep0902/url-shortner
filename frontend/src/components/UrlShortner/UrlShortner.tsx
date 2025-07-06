@@ -8,6 +8,8 @@ import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "./UrlShortner.css";
+import CountUp from "../../Reactbits/CountUp";
+import { LinkPreview } from "../../Reactbits/LinkPreview";
 
 interface AlertState {
   show: boolean;
@@ -215,16 +217,8 @@ function UrlShortner() {
               <div className="result-section">
                 <div className="result-card">
                   <div className="result-content">
-                    <div className="result-label">Your shortened URL:</div>
-                    <div className="result-url">
-                      <a
-                        href={`${API_URL}/${shortenedUrl}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="shortened-link"
-                      >
-                        {`${API_URL}/${shortenedUrl}`}
-                      </a>
+                    <span className="result-label">
+                      Your shortened URL
                       <button
                         onClick={copyToClipboard}
                         className="copy-btn"
@@ -232,10 +226,19 @@ function UrlShortner() {
                       >
                         📋
                       </button>
+                    </span>
+                    <div className="result-url">
+                      <LinkPreview
+                        url={`${API_URL}/${shortenedUrl}`}
+                        className="font-bold remove-decorations"
+                      >
+                        {`${API_URL}/${shortenedUrl}`}
+                      </LinkPreview>
+                      
                     </div>
                   </div>
                   <div ref={qrcodeRef} className="qr-section">
-                    <div className="qr-label">QR Code</div>
+                    <div className="qr-label">Grab the link!</div>
                     <QRCodeCanvas
                       value={`${API_URL}/${shortenedUrl}`}
                       size={100}
@@ -259,11 +262,29 @@ function UrlShortner() {
             {stats && (
               <div className="stats-grid">
                 <div className="stat-item">
-                  <div className="stat-number">{stats.totalUrls ?? 0}</div>
+                  <div className="stat-number">
+                    <CountUp
+                      from={0}
+                      to={stats.totalUrls ?? 0}
+                      separator=","
+                      direction="up"
+                      duration={1}
+                      className="count-up-text"
+                    />
+                  </div>
                   <div className="stat-label">Total URLs</div>
                 </div>
                 <div className="stat-item">
-                  <div className="stat-number">{stats.totalClicks ?? 0}</div>
+                  <div className="stat-number">
+                    <CountUp
+                      from={0}
+                      to={stats.totalClicks ?? 0}
+                      separator=","
+                      direction="up"
+                      duration={1}
+                      className="count-up-text"
+                    />
+                  </div>
                   <div className="stat-label">Total Clicks</div>
                 </div>
               </div>
