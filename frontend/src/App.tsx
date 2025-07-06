@@ -1,13 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import UrlShortner from "./components/UrlShortner/UrlShortner";
+import LandingPage from "./components/LandingPage/LandingPage";
 
 function App() {
+ 
   return (
     <>
       <Router>
         <Routes>
-          <Route index path="/url" element={<UrlShortner />} />
+          <Route path="/url" element={<UrlShortner />} />
+          <Route path="/" index element={<LandingPage />} />
         </Routes>
       </Router>
     </>
