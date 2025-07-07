@@ -68,9 +68,9 @@ app.post("/api/shorten", async (req, res) => {
       const expiresAt = new Date(
         createdAt.getTime() + 90 * 24 * 60 * 60 * 1000
       ); // 3 months from now
-      // Update the existing URL with new expiration date and created date
       existingUrl.createdAt = createdAt;
       existingUrl.expiresAt = expiresAt;
+      await existingUrl.save();
       return res.status(200).json({ shortUrl: existingUrl.shortUrl });
     }
 

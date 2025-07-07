@@ -25,11 +25,12 @@
   --loader-circle: #222;
   --loader-inner: #54afff;
   --loader-text: #222;
+   --font-family-main: "Outfit", sans-serif;
 }
 
 body {
   background: var(--color-black);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-family-main);
   margin: 0;
   padding: 0;
   min-height: 100vh;

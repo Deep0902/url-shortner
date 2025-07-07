@@ -44,14 +44,6 @@
   color: var(--color-white);
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
-  line-height: 1.6;
-  color: var(--color-text-main);
-  background: var(--color-bg);
-}
-
 .landing-container {
   background-color: var(--color-bg);
   min-height: 100vh;
@@ -147,21 +139,6 @@ body {
   margin-bottom: 4rem;
 }
 
-.btn-primary {
-  background: var(--color-blue);
-  color: var(--color-white);
-  border: none;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background: var(--color-blue-dark);
-}
 
 /* Stats */
 .stats-grid-landing {
