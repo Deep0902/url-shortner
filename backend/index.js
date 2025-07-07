@@ -64,6 +64,13 @@ app.post("/api/shorten", async (req, res) => {
     // Check if the originalUrl already exists
     let existingUrl = await Url.findOne({ originalUrl });
     if (existingUrl) {
+      const createdAt = new Date();
+      const expiresAt = new Date(
+        createdAt.getTime() + 90 * 24 * 60 * 60 * 1000
+      ); // 3 months from now
+      existingUrl.createdAt = createdAt;
+      existingUrl.expiresAt = expiresAt;
+      await existingUrl.save();
       return res.status(200).json({ shortUrl: existingUrl.shortUrl });
     }
 
