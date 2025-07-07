@@ -1,33 +1,3 @@
-:root {
-  --color-bg: #10131a;
-  --color-bg-secondary: #181c25;
-  --color-bg-accent: #23283a;
-  --color-white: #fff;
-  --color-gray: #a1a1aa;
-  --color-gray-dark: #22232b;
-  --color-blue: #2563eb;
-  --color-blue-dark: #1d4ed8;
-  --color-text-main: #e5e7eb;
-  --color-text-secondary: #a1a1aa;
-  --color-border: #23283a;
-  --color-shadow: rgba(0, 0, 0, 0.3);
-}
-
-.light-theme {
-  --color-bg: #fff;
-  --color-bg-secondary: #f9fafb;
-  --color-bg-accent: #f3f4f6;
-  --color-white: #111827;
-  --color-gray: #6b7280;
-  --color-gray-dark: #e5e7eb;
-  --color-blue: #2563eb;
-  --color-blue-dark: #1d4ed8;
-  --color-text-main: #111827;
-  --color-text-secondary: #6b7280;
-  --color-border: #e5e7eb;
-  --color-shadow: rgba(0, 0, 0, 0.07);
-}
-
 .theme-swipe {
   overflow: hidden;
   position: fixed;
@@ -72,14 +42,6 @@
 .theme-toggle-btn:hover {
   background: var(--color-blue);
   color: var(--color-white);
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
-  line-height: 1.6;
-  color: var(--color-text-main);
-  background: var(--color-bg);
 }
 
 .landing-container {
@@ -177,21 +139,6 @@ body {
   margin-bottom: 4rem;
 }
 
-.btn-primary {
-  background: var(--color-blue);
-  color: var(--color-white);
-  border: none;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background: var(--color-blue-dark);
-}
 
 /* Stats */
 .stats-grid-landing {

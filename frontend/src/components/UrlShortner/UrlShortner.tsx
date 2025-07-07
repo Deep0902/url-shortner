@@ -232,9 +232,15 @@ function UrlShortner() {
                         url={`${API_URL}/${shortenedUrl}`}
                         className="font-bold remove-decorations"
                       >
-                        {`${API_URL}/${shortenedUrl}`}
+                        <a
+                          href={`${API_URL}/${shortenedUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+
+                        {`sho-rty.vercel.app/${shortenedUrl}`}
+                        </a>
                       </LinkPreview>
-                      
                     </div>
                   </div>
                   <div ref={qrcodeRef} className="qr-section">
