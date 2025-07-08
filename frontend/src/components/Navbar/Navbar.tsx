@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../../ThemeContext";
 import "./Navbar.css";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -13,6 +14,18 @@ const Navbar = () => {
     }, 300);
     setTimeout(() => setSwipe(false), 600);
   };
+  const navigate = useNavigate(); 
+
+  useEffect(() => {
+    const root = document.body;
+    if (theme === "light") {
+      root.classList.add("light-theme");
+      root.classList.remove("dark-theme");
+    } else {
+      root.classList.remove("light-theme");
+      root.classList.add("dark-theme");
+    }
+  }, [theme]);
 
   return (
     <nav className="navbar">
@@ -21,7 +34,7 @@ const Navbar = () => {
         <button
           className="navbar-logo"
           style={{ cursor: "pointer" }}
-          onClick={() => (window.location.pathname = "/")}
+          onClick={() => navigate("/")}
         >
           <img src="/url-short.svg" alt="ChopURL logo" />
           <span className="navbar-logo-text">ChopURL</span>

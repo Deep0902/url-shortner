@@ -206,16 +206,14 @@ const Particles: React.FC<ParticlesProps> = ({
 
       if (moveParticlesOnHover) {
         // Lerp the displayed position towards the mouse position for smooth delay
-        const lerp = (start: number, end: number, amt: number) => start + (end - start) * 0.1; // 0.1 = smoothing factor
+        const lerp = (start: number, end: number) => start + (end - start) * 0.1; // 0.1 = smoothing factor
         displayedPositionRef.current.x = lerp(
           displayedPositionRef.current.x,
-          mouseRef.current.x,
-          0.1
+          mouseRef.current.x
         );
         displayedPositionRef.current.y = lerp(
           displayedPositionRef.current.y,
-          mouseRef.current.y,
-          0.1
+          mouseRef.current.y
         );
         particles.position.x = -displayedPositionRef.current.x * particleHoverFactor;
         particles.position.y = -displayedPositionRef.current.y * particleHoverFactor;
