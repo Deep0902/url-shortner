@@ -1,7 +1,7 @@
 import Url from "../models/url.model.js";
 import { nanoid } from "nanoid";
 
-// Create a short URL
+// region Create short URL
 export const createShortUrl = async (req, res) => {
   try {
     // Check if the URL count has reached the limit
@@ -48,7 +48,7 @@ export const createShortUrl = async (req, res) => {
   }
 };
 
-// Redirect to original URL
+// region Redirect
 export const redirectToOriginalUrl = async (req, res) => {
   try {
     const { shortUrl } = req.params;
@@ -70,7 +70,7 @@ export const redirectToOriginalUrl = async (req, res) => {
   }
 };
 
-// Get stats
+// region Get stats
 export const getStats = async (req, res) => {
   try {
     const urls = await Url.find({}).lean();
