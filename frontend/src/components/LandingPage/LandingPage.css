@@ -2,24 +2,25 @@
   overflow: hidden;
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
+  left: auto;
   width: 100vw;
   height: 100vh;
   pointer-events: none;
   z-index: 10;
   background: var(--color-bg);
-  animation: swipeTheme 0.6s ease-in-out;
+  animation: swipeThemeRTL 0.6s ease-in-out;
 }
 
-@keyframes swipeTheme {
+@keyframes swipeThemeRTL {
   0% {
-    transform: translateX(-100vw);
+    transform: translateX(100vw);
   }
   60% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(100vw);
+    transform: translateX(-100vw);
   }
 }
 
@@ -110,7 +111,7 @@
 }
 
 .title-normal {
-  color: var(--color-white);
+  color: var(--color-text-main);
 }
 
 .hero-subtitle {
@@ -139,7 +140,6 @@
   margin-bottom: 4rem;
 }
 
-
 /* Stats */
 .stats-grid-landing {
   display: grid;
@@ -150,6 +150,16 @@
 
 .stat-item {
   text-align: center;
+  opacity: 0;
+  transform: translateY(300px);
+  animation: statFadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.9s forwards;
+}
+
+@keyframes statFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .stat-number {
@@ -191,7 +201,7 @@
   font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
-  color: var(--color-white);
+  color: var(--color-text-main);
 }
 
 .features-grid {
@@ -205,13 +215,18 @@
   padding: 1.5rem;
   border-radius: 0.5rem;
   border: 1px solid var(--color-border);
+  transform: translateY(100px);
+  opacity: 0;
+  animation: statFadeIn 1s ease-in-out forwards;
+  animation-timeline: view();
+  animation-range: entry 0% cover 50%;
 }
 
 .feature-title {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
-  color: var(--color-white);
+  color: var(--color-text-main);
 }
 
 .feature-description {
@@ -230,7 +245,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: var(--color-white);
+  color: var(--color-text-main);
 }
 
 .cta-description {
@@ -262,11 +277,7 @@
   border-radius: 4px;
 }
 
-.footer-logo-text {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-white);
-}
+
 
 .footer-text {
   color: var(--color-text-secondary);

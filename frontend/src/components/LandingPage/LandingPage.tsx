@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CountUp from "../../Reactbits/CountUp";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 import "./LandingPage.css";
-import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
   const [animatedText, setAnimatedText] = useState("");
@@ -91,7 +91,6 @@ function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-
   return (
     <div>
       <div className="bg">
@@ -110,11 +109,11 @@ function LandingPage() {
         {/* Hero Section */}
         <main className="hero-section fade-on-scroll">
           <div className="hero-content">
-            <h1 className="hero-title">
+            <div className="hero-title">
               <span className="title-highlight">Shorten</span>
               <br />
               <span className="title-normal">Everything</span>
-            </h1>
+            </div>
 
             <p className="hero-subtitle">
               {animatedText}
@@ -129,7 +128,7 @@ function LandingPage() {
 
             {/* Stats */}
             <div className="stats-grid-landing">
-              <div className="stat-item">
+              <div className="stat-item" style={{ animationDelay: `${0.3 * 0}s` }}>
                 <div className="stat-number stat-blue">
                   <CountUp
                     from={0}
@@ -142,7 +141,7 @@ function LandingPage() {
                 </div>
                 <div className="stat-label">Links Shortened</div>
               </div>
-              <div className="stat-item">
+              <div className="stat-item" style={{ animationDelay: `${0.3 * 1}s` }}>
                 <div className="stat-number stat-dark">
                   <CountUp
                     from={0}
@@ -156,7 +155,7 @@ function LandingPage() {
                 </div>
                 <div className="stat-label">Uptime</div>
               </div>
-              <div className="stat-item">
+              <div className="stat-item" style={{ animationDelay: `${0.3 * 2}s` }}>
                 <div className="stat-number stat-gray">
                   <CountUp
                     from={0}
@@ -181,7 +180,11 @@ function LandingPage() {
 
             <div className="features-grid">
               {features.map((feature, index) => (
-                <div key={index} className="feature-card">
+                <div
+                  key={index}
+                  className="feature-card"
+                  style={{ animationDelay: `${0.2 * index}s` }}
+                >
                   <h3 className="feature-title">{feature.title}</h3>
                   <p className="feature-description">{feature.description}</p>
                 </div>

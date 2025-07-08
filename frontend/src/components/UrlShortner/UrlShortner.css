@@ -232,10 +232,6 @@
   color: var(--color-blue);
 }
 
-.title-normal {
-  color: var(--color-white);
-}
-
 .hero-subtitle {
   font-size: 1.25rem;
   color: var(--color-text-secondary);
@@ -463,12 +459,6 @@
 .footer-logo img {
   width: 24px;
   height: 24px;
-}
-
-.footer-logo-text {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-white);
 }
 
 .footer-links {

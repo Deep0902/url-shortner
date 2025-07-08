@@ -131,6 +131,29 @@ function UrlShortner() {
       .catch(() => {});
   }, []);
 
+  const fullText = "Transform long URLs into clean, shareable links in seconds";
+  const [animatedText, setAnimatedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (!isDeleting && currentIndex < fullText.length) {
+      timer = setTimeout(() => {
+        setAnimatedText(fullText.slice(0, currentIndex + 1));
+        setCurrentIndex(currentIndex + 1);
+      }, 45);
+    } else if (isDeleting && currentIndex > 0) {
+      timer = setTimeout(() => {
+        setAnimatedText(fullText.slice(0, currentIndex - 1));
+        setCurrentIndex(currentIndex - 1);
+      }, 25);
+    } else if (!isDeleting && currentIndex === fullText.length) {
+      timer = setTimeout(() => setIsDeleting(true), 1800);
+    } else if (isDeleting && currentIndex === 0) {
+      timer = setTimeout(() => setIsDeleting(false), 700);
+    }
+    return () => clearTimeout(timer);
+  }, [currentIndex, isDeleting, fullText]);
 
   return (
     <div className="urlshortner-root">
@@ -174,7 +197,7 @@ function UrlShortner() {
               <span className="title-normal">Your URLs</span>
             </h1>
             <p className="hero-subtitle">
-              Transform long URLs into clean, shareable links in seconds
+              {animatedText} <span className="cursor">|</span>
             </p>
           </section>
 
@@ -205,9 +228,7 @@ function UrlShortner() {
               <div className="result-section">
                 <div className="result-card">
                   <div className="result-content">
-                    <span className="result-label">
-                      Your shortened URL
-                    </span>
+                    <span className="result-label">Your shortened URL</span>
                     <button
                       onClick={copyToClipboard}
                       className="copy-btn"
@@ -220,14 +241,7 @@ function UrlShortner() {
                         url={`${API_URL}/${shortenedUrl}`}
                         className="font-bold remove-decorations"
                       >
-                        <a
-                          href={`${API_URL}/${shortenedUrl}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-
                         {`sho-rty.vercel.app/${shortenedUrl}`}
-                        </a>
                       </LinkPreview>
                     </div>
                   </div>

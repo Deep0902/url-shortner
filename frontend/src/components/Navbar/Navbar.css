@@ -1,7 +1,6 @@
 .navbar {
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--color-border);
-  background: var(--color-bg-secondary);
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
@@ -33,7 +32,7 @@
   font-family: var(--font-family-main);
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--color-white);
+  color: var(--color-text-main);
 }
 
 .navbar-links {
