@@ -34,7 +34,7 @@ const Url = mongoose.model("Url", urlSchema);
 
 // New User schema and model
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
+  username: { type: String, required: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   urls: [{ type: mongoose.Schema.Types.ObjectId, ref: "Url" }],
@@ -134,6 +134,36 @@ app.get("/api/stats", async (req, res) => {
     res.json({ totalUrls, totalClicks });
   } catch (error) {
     console.error("Error fetching stats:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// region USERS
+// API to create a new user
+app.post("/api/users", async (req, res) => {
+  try {
+    const { username, password, email } = req.body;
+    if (!username || !password || !email) {
+      return res
+        .status(400)
+        .json({ error: "Username, password, and email are required" });
+    }
+    // Check if user already exists
+    const existingUser = await User.findOne({
+      $or: [{ username }, { email }],
+    });
+    if (existingUser) {
+      return res
+        .status(409)
+        .json({ error: "Username or email already exists" });
+    }
+    const newUser = new User({ username, password, email, urls: [] });
+    await newUser.save();
+    res
+      .status(201)
+      .json({ message: "User created successfully", userId: newUser._id });
+  } catch (error) {
+    console.error("Error creating user:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

@@ -219,7 +219,7 @@
   opacity: 0;
   animation: statFadeIn 1s ease-in-out forwards;
   animation-timeline: view();
-  animation-range: entry 0% cover 50%;
+  animation-range: entry 0% cover 40%;
 }
 
 .feature-title {
@@ -307,6 +307,9 @@
 
   .stat-number {
     font-size: 2.5rem;
+  }
+  .feature-card{
+     animation-range: entry 10% cover 60%;
   }
 }
 

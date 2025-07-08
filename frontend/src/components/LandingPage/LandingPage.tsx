@@ -183,7 +183,7 @@ function LandingPage() {
                 <div
                   key={index}
                   className="feature-card"
-                  style={{ animationDelay: `${0.2 * index}s` }}
+                  style={{ animationDelay: `${0.6 * index}s` }}
                 >
                   <h3 className="feature-title">{feature.title}</h3>
                   <p className="feature-description">{feature.description}</p>
