@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
+import Url from "./models/url.model.js";
+import User from "./models/users.model.js";
 dotenv.config();
 
 const app = express();
@@ -15,32 +17,12 @@ app.use(compression());
 const dbName = "url-short"; // Set your desired database name here
 mongoose
   .connect(process.env.DATABASE_URL, { dbName })
-  .then(() => {f 
+  .then(() => {
     console.log(`Connected to MongoDB database: ${dbName}`);
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
   });
-
-const urlSchema = new mongoose.Schema({
-  originalUrl: String,
-  shortUrl: { type: String, index: true, unique: true },
-  clicks: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now },
-  expiresAt: { type: Date, expires: 0 },
-});
-
-const Url = mongoose.model("Url", urlSchema);
-
-// New User schema and model
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  password: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  urls: [{ type: mongoose.Schema.Types.ObjectId, ref: "Url" }],
-});
-
-const User = mongoose.model("User", userSchema);
 
 // Authentication middleware
 function authenticateApiKey(req, res, next) {
