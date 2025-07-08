@@ -32,6 +32,16 @@ const urlSchema = new mongoose.Schema({
 
 const Url = mongoose.model("Url", urlSchema);
 
+// New User schema and model
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  urls: [{ type: mongoose.Schema.Types.ObjectId, ref: "Url" }],
+});
+
+const User = mongoose.model("User", userSchema);
+
 // Authentication middleware
 function authenticateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"];
