@@ -232,10 +232,6 @@
   color: var(--color-blue);
 }
 
-.title-normal {
-  color: var(--color-white);
-}
-
 .hero-subtitle {
   font-size: 1.25rem;
   color: var(--color-text-secondary);
@@ -265,7 +261,7 @@
   background: var(--color-bg-accent);
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
-  color: var(--color-white);
+  color: var(--color-text-main);
   font-size: 1rem;
   outline: none;
   transition: all 0.2s ease;
@@ -339,6 +335,10 @@
 }
 
 .result-content {
+  &>div:first-child{
+    display: flex;
+    align-items: center;
+  }
   flex: 1;
 }
 
@@ -463,12 +463,6 @@
 .footer-logo img {
   width: 24px;
   height: 24px;
-}
-
-.footer-logo-text {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--color-white);
 }
 
 .footer-links {
