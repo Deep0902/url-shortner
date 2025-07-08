@@ -1,15 +1,14 @@
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import CountUp from "../../Reactbits/CountUp";
+import { LinkPreview } from "../../Reactbits/LinkPreview";
 import Particles from "../../Reactbits/Particles";
-import { ThemeContext } from "../../ThemeContext";
 import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "./UrlShortner.css";
-import CountUp from "../../Reactbits/CountUp";
-import { LinkPreview } from "../../Reactbits/LinkPreview";
 
 interface AlertState {
   show: boolean;
@@ -35,10 +34,8 @@ function UrlShortner() {
     type: "success",
   });
   const [loading, setLoading] = useState(false);
-  const { theme } = useContext(ThemeContext);
   const [swipe] = useState(false);
   const qrcodeRef = useRef<HTMLDivElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
 
   // Helper function to show alerts
   const showAlert = (
@@ -128,24 +125,15 @@ function UrlShortner() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     axios
       .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    const root = rootRef.current || document.body;
-    if (theme === "light") {
-      root.classList.add("light-theme");
-      root.classList.remove("dark-theme");
-    } else {
-      root.classList.remove("light-theme");
-      root.classList.add("dark-theme");
-    }
-  }, [theme]);
 
   return (
-    <div ref={rootRef} className="urlshortner-root">
+    <div className="urlshortner-root">
       {swipe && <div className="theme-swipe" />}
       <div className="particles-bg">
         <Particles
@@ -219,14 +207,14 @@ function UrlShortner() {
                   <div className="result-content">
                     <span className="result-label">
                       Your shortened URL
-                      <button
-                        onClick={copyToClipboard}
-                        className="copy-btn"
-                        title="Copy to clipboard"
-                      >
-                        📋
-                      </button>
                     </span>
+                    <button
+                      onClick={copyToClipboard}
+                      className="copy-btn"
+                      title="Copy to clipboard"
+                    >
+                      📋
+                    </button>
                     <div className="result-url">
                       <LinkPreview
                         url={`${API_URL}/${shortenedUrl}`}

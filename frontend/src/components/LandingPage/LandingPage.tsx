@@ -1,18 +1,17 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../ThemeContext";
+import { useEffect, useState } from "react";
+import CountUp from "../../Reactbits/CountUp";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 import "./LandingPage.css";
-import CountUp from "../../Reactbits/CountUp";
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const { theme } = useContext(ThemeContext);
 
   const fullText = "Transform your links into powerful connections";
+  const navigate = useNavigate();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -36,7 +35,7 @@ function LandingPage() {
 
   const handleRedirect = () => {
     console.log("Redirecting to /url");
-    window.location.href = "/url";
+    navigate("/url");
   };
 
   const features = [
@@ -92,19 +91,9 @@ function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const root = rootRef.current || document.body;
-    if (theme === "light") {
-      root.classList.add("light-theme");
-      root.classList.remove("dark-theme");
-    } else {
-      root.classList.remove("light-theme");
-      root.classList.add("dark-theme");
-    }
-  }, [theme]);
 
   return (
-    <div ref={rootRef}>
+    <div>
       <div className="bg">
         {/* <Squares
           speed={0.2}
