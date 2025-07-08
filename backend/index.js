@@ -15,7 +15,7 @@ app.use(compression());
 const dbName = "url-short"; // Set your desired database name here
 mongoose
   .connect(process.env.DATABASE_URL, { dbName })
-  .then(() => {
+  .then(() => {f 
     console.log(`Connected to MongoDB database: ${dbName}`);
   })
   .catch((err) => {
