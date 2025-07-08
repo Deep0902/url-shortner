@@ -1,18 +1,17 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { ThemeContext } from "../../ThemeContext";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import CountUp from "../../Reactbits/CountUp";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 import "./LandingPage.css";
-import CountUp from "../../Reactbits/CountUp";
 
 function LandingPage() {
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const { theme } = useContext(ThemeContext);
 
   const fullText = "Transform your links into powerful connections";
+  const navigate = useNavigate();
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -20,23 +19,23 @@ function LandingPage() {
       timer = setTimeout(() => {
         setAnimatedText(fullText.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
-      }, 100);
+      }, 45);
     } else if (isDeleting && currentIndex > 0) {
       timer = setTimeout(() => {
         setAnimatedText(fullText.slice(0, currentIndex - 1));
         setCurrentIndex(currentIndex - 1);
-      }, 40);
+      }, 25);
     } else if (!isDeleting && currentIndex === fullText.length) {
-      timer = setTimeout(() => setIsDeleting(true), 1200);
+      timer = setTimeout(() => setIsDeleting(true), 1800);
     } else if (isDeleting && currentIndex === 0) {
-      timer = setTimeout(() => setIsDeleting(false), 500);
+      timer = setTimeout(() => setIsDeleting(false), 700);
     }
     return () => clearTimeout(timer);
   }, [currentIndex, isDeleting, fullText]);
 
   const handleRedirect = () => {
     console.log("Redirecting to /url");
-    window.location.href = "/url";
+    navigate("/url");
   };
 
   const features = [
@@ -92,19 +91,8 @@ function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const root = rootRef.current || document.body;
-    if (theme === "light") {
-      root.classList.add("light-theme");
-      root.classList.remove("dark-theme");
-    } else {
-      root.classList.remove("light-theme");
-      root.classList.add("dark-theme");
-    }
-  }, [theme]);
-
   return (
-    <div ref={rootRef}>
+    <div>
       <div className="bg">
         {/* <Squares
           speed={0.2}
@@ -121,11 +109,11 @@ function LandingPage() {
         {/* Hero Section */}
         <main className="hero-section fade-on-scroll">
           <div className="hero-content">
-            <h1 className="hero-title">
+            <div className="hero-title">
               <span className="title-highlight">Shorten</span>
               <br />
               <span className="title-normal">Everything</span>
-            </h1>
+            </div>
 
             <p className="hero-subtitle">
               {animatedText}
@@ -140,7 +128,7 @@ function LandingPage() {
 
             {/* Stats */}
             <div className="stats-grid-landing">
-              <div className="stat-item">
+              <div className="stat-item" style={{ animationDelay: `${0.3 * 0}s` }}>
                 <div className="stat-number stat-blue">
                   <CountUp
                     from={0}
@@ -153,7 +141,7 @@ function LandingPage() {
                 </div>
                 <div className="stat-label">Links Shortened</div>
               </div>
-              <div className="stat-item">
+              <div className="stat-item" style={{ animationDelay: `${0.3 * 1}s` }}>
                 <div className="stat-number stat-dark">
                   <CountUp
                     from={0}
@@ -167,7 +155,7 @@ function LandingPage() {
                 </div>
                 <div className="stat-label">Uptime</div>
               </div>
-              <div className="stat-item">
+              <div className="stat-item" style={{ animationDelay: `${0.3 * 2}s` }}>
                 <div className="stat-number stat-gray">
                   <CountUp
                     from={0}
@@ -192,7 +180,11 @@ function LandingPage() {
 
             <div className="features-grid">
               {features.map((feature, index) => (
-                <div key={index} className="feature-card">
+                <div
+                  key={index}
+                  className="feature-card"
+                  style={{ animationDelay: `${0.2 * index}s` }}
+                >
                   <h3 className="feature-title">{feature.title}</h3>
                   <p className="feature-description">{feature.description}</p>
                 </div>

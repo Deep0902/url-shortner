@@ -1,15 +1,14 @@
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import CountUp from "../../Reactbits/CountUp";
+import { LinkPreview } from "../../Reactbits/LinkPreview";
 import Particles from "../../Reactbits/Particles";
-import { ThemeContext } from "../../ThemeContext";
 import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "./UrlShortner.css";
-import CountUp from "../../Reactbits/CountUp";
-import { LinkPreview } from "../../Reactbits/LinkPreview";
 
 interface AlertState {
   show: boolean;
@@ -35,10 +34,8 @@ function UrlShortner() {
     type: "success",
   });
   const [loading, setLoading] = useState(false);
-  const { theme } = useContext(ThemeContext);
   const [swipe] = useState(false);
   const qrcodeRef = useRef<HTMLDivElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
 
   // Helper function to show alerts
   const showAlert = (
@@ -128,24 +125,38 @@ function UrlShortner() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     axios
       .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
       .catch(() => {});
   }, []);
 
+  const fullText = "Transform long URLs into clean, shareable links in seconds";
+  const [animatedText, setAnimatedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
   useEffect(() => {
-    const root = rootRef.current || document.body;
-    if (theme === "light") {
-      root.classList.add("light-theme");
-      root.classList.remove("dark-theme");
-    } else {
-      root.classList.remove("light-theme");
-      root.classList.add("dark-theme");
+    let timer: NodeJS.Timeout;
+    if (!isDeleting && currentIndex < fullText.length) {
+      timer = setTimeout(() => {
+        setAnimatedText(fullText.slice(0, currentIndex + 1));
+        setCurrentIndex(currentIndex + 1);
+      }, 45);
+    } else if (isDeleting && currentIndex > 0) {
+      timer = setTimeout(() => {
+        setAnimatedText(fullText.slice(0, currentIndex - 1));
+        setCurrentIndex(currentIndex - 1);
+      }, 25);
+    } else if (!isDeleting && currentIndex === fullText.length) {
+      timer = setTimeout(() => setIsDeleting(true), 1800);
+    } else if (isDeleting && currentIndex === 0) {
+      timer = setTimeout(() => setIsDeleting(false), 700);
     }
-  }, [theme]);
+    return () => clearTimeout(timer);
+  }, [currentIndex, isDeleting, fullText]);
 
   return (
-    <div ref={rootRef} className="urlshortner-root">
+    <div className="urlshortner-root">
       {swipe && <div className="theme-swipe" />}
       <div className="particles-bg">
         <Particles
@@ -186,7 +197,7 @@ function UrlShortner() {
               <span className="title-normal">Your URLs</span>
             </h1>
             <p className="hero-subtitle">
-              Transform long URLs into clean, shareable links in seconds
+              {animatedText} <span className="cursor">|</span>
             </p>
           </section>
 
@@ -217,8 +228,8 @@ function UrlShortner() {
               <div className="result-section">
                 <div className="result-card">
                   <div className="result-content">
-                    <span className="result-label">
-                      Your shortened URL
+                    <div>
+                      <span className="result-label">Your shortened URL</span>
                       <button
                         onClick={copyToClipboard}
                         className="copy-btn"
@@ -226,20 +237,13 @@ function UrlShortner() {
                       >
                         📋
                       </button>
-                    </span>
+                    </div>
                     <div className="result-url">
                       <LinkPreview
                         url={`${API_URL}/${shortenedUrl}`}
                         className="font-bold remove-decorations"
                       >
-                        <a
-                          href={`${API_URL}/${shortenedUrl}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-
                         {`sho-rty.vercel.app/${shortenedUrl}`}
-                        </a>
                       </LinkPreview>
                     </div>
                   </div>

@@ -28,7 +28,7 @@
 .footer-logo-text {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-white);
+  color: var(--color-text-main);
 }
 
 .footer-links {
