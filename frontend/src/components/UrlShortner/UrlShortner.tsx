@@ -23,7 +23,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 function UrlShortner() {
   const [originalUrl, setOriginalUrl] = useState("");
-  const [shortenedUrl, setShortenedUrl] = useState("rGvemjM0");
+  const [shortenedUrl, setShortenedUrl] = useState("");
   const [stats, setStats] = useState<{
     totalUrls: number | null;
     totalClicks: number | null;
@@ -228,14 +228,16 @@ function UrlShortner() {
               <div className="result-section">
                 <div className="result-card">
                   <div className="result-content">
-                    <span className="result-label">Your shortened URL</span>
-                    <button
-                      onClick={copyToClipboard}
-                      className="copy-btn"
-                      title="Copy to clipboard"
-                    >
-                      📋
-                    </button>
+                    <div>
+                      <span className="result-label">Your shortened URL</span>
+                      <button
+                        onClick={copyToClipboard}
+                        className="copy-btn"
+                        title="Copy to clipboard"
+                      >
+                        📋
+                      </button>
+                    </div>
                     <div className="result-url">
                       <LinkPreview
                         url={`${API_URL}/${shortenedUrl}`}
