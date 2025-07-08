@@ -24,7 +24,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 function UrlShortner() {
   const [originalUrl, setOriginalUrl] = useState("");
-  const [shortenedUrl, setShortenedUrl] = useState("");
+  const [shortenedUrl, setShortenedUrl] = useState("rGvemjM0");
   const [stats, setStats] = useState<{
     totalUrls: number | null;
     totalClicks: number | null;

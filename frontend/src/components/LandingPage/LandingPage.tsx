@@ -8,21 +8,31 @@ import CountUp from "../../Reactbits/CountUp";
 function LandingPage() {
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const { theme } = useContext(ThemeContext);
 
   const fullText = "Transform your links into powerful connections";
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (currentIndex < fullText.length) {
+    let timer: NodeJS.Timeout;
+    if (!isDeleting && currentIndex < fullText.length) {
+      timer = setTimeout(() => {
         setAnimatedText(fullText.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
-      }
-    }, 100);
-
+      }, 45);
+    } else if (isDeleting && currentIndex > 0) {
+      timer = setTimeout(() => {
+        setAnimatedText(fullText.slice(0, currentIndex - 1));
+        setCurrentIndex(currentIndex - 1);
+      }, 25);
+    } else if (!isDeleting && currentIndex === fullText.length) {
+      timer = setTimeout(() => setIsDeleting(true), 1800);
+    } else if (isDeleting && currentIndex === 0) {
+      timer = setTimeout(() => setIsDeleting(false), 700);
+    }
     return () => clearTimeout(timer);
-  }, [currentIndex, fullText]);
+  }, [currentIndex, isDeleting, fullText]);
 
   const handleRedirect = () => {
     console.log("Redirecting to /url");
