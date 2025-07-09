@@ -124,6 +124,9 @@ function LandingPage() {
               <button onClick={handleRedirect} className="btn-primary">
                 Start Shortening
               </button>
+              <button onClick={() => navigate("/sign")} className="btn-primary">
+                Sign In
+              </button>
             </div>
 
             {/* Stats */}
