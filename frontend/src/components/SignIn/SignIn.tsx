@@ -31,7 +31,7 @@ function SignIn() {
             {/* Left Component */}
             <div
               className={`left-component ${
-                currentState === "first" ? "visible" : "visible"
+                currentState === "first" ? "visible" : "hidden"
               }`}
             >
               <div className="component-content">
@@ -72,7 +72,7 @@ function SignIn() {
             {/* Right Component */}
             <div
               className={`right-component ${
-                currentState === "second" ? "visible" : "visible"
+                currentState === "second" ? "visible" : "hidden"
               }`}
             >
               <div className="component-content">
