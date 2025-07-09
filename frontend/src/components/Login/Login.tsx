@@ -4,6 +4,9 @@ import Navbar from "../Navbar/Navbar";
 import "./Login.css";
 import Signin from "./Signin/Signin";
 import Signup from "./Signup/Signup";
+import { BackgroundBeams } from "../../Reactbits/BackgroundBrams";
+import Squares from "../../Reactbits/Squares";
+import Particles from "../../Reactbits/Particles";
 
 function Login() {
   const [currentState, setCurrentState] = useState<"first" | "second">("first");
@@ -82,6 +85,9 @@ function Login() {
           </div>
         </section>
         <Footer />
+        <div className="particles-bg">
+          <Particles />
+        </div>
       </div>
     </>
   );

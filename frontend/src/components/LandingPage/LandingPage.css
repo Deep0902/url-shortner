@@ -309,7 +309,7 @@
     font-size: 2.5rem;
   }
   .feature-card{
-     animation-range: entry 10% cover 60%;
+     animation-range: entry 10% cover 50%;
   }
 }
 

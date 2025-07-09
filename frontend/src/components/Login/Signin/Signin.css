@@ -3,7 +3,7 @@
   height: max-content;
   margin: 6% auto;
   padding: 2em;
-  background-color: var(--color-bg-accent);
+  backdrop-filter: blur(10px);
   color: var(--color-text-main);
   border: 1px solid var(--color-gray);
   display: flex;

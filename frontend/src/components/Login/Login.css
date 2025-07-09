@@ -149,7 +149,7 @@ p {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(2px);
 }
 
 .transition-button:active {
