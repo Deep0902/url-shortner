@@ -13,7 +13,7 @@ p {
   height: 10dvh;
 }
 .animated-layout {
-  height: 90dvh;
+  min-height: 90dvh;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -28,18 +28,18 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s ease-in-out 0.4s, transform 0.6s ease-in-out;
+  transition: opacity 0.6s ease-in-out, transform 0.7s ease-in-out;
   z-index: 1;
 }
 
 .left-component.visible {
   opacity: 1;
-  transform: translateX(-100px);
+  transform: translateX(0);
 }
 
 .left-component.hidden {
-  transform: translateX(0);
   opacity: 0;
+  transform: translateX(100px); /* Slides out to the left */
   pointer-events: none;
 }
 
@@ -79,7 +79,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s ease-in-out 0.4s, transform 0.6s ease-in-out;
+  transition: opacity 0.6s ease-in-out, transform 0.7s ease-in-out;
   z-index: 1;
 }
 
@@ -89,8 +89,8 @@ p {
 }
 
 .right-component.hidden {
-  transform: translateX(-100px);
   opacity: 0;
+  transform: translateX(-100px); /* Slides out to the right */
   pointer-events: none;
 }
 
