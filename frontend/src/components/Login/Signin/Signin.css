@@ -1,0 +1,138 @@
+.credentialsCard {
+  position: relative;
+  height: max-content;
+  margin: 6% auto;
+  padding: 2em;
+  background-color: #e5f7f4;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #00000021;
+  width: 50vh;
+}
+.credentialsCard > label {
+  color: #003321;
+  margin-bottom: 5px;
+}
+.customTopNavbar .topNavbar {
+  position: fixed;
+}
+.credentialsCard > span {
+  margin-bottom: 5px;
+}
+
+.subtext {
+  color: #003321;
+}
+.inputBox {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.inputBox input {
+  border: 1px solid #b3b3b3;
+  margin-top: 8px;
+  width: -webkit-fill-available;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.inputBox input:focus {
+  border: 1px solid #019863;
+  outline: 1px solid #019863;
+}
+.checkboxInput input:focus {
+  border-color: #019863;
+  outline: none;
+  position: relative;
+}
+.checkboxInput {
+  display: flex;
+  margin-bottom: 12px;
+  align-items: center;
+}
+.checkboxInput label {
+  font-size: 15px;
+}
+.styled-checkbox {
+  scale: 1.2;
+}
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.bottomSection p {
+  margin: 5px;
+}
+.or-section {
+  margin-top: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background-color: #019863;
+  margin: 0 10px;
+}
+
+.or-text {
+  color: #019863;
+  font-weight: bold;
+}
+.underlineText {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.password-container {
+  position: relative;
+  width: 250px;
+}
+
+.password-input {
+  width: 100%;
+  padding: 10px;
+  padding-right: 30px; /* space for the button */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.toggle-button {
+  position: absolute;
+  right: 5px;
+  top: 56%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+/* Phone Screen CSS */
+@media (max-width: 760px) {
+  .credentialsCard {
+    width: 35vh;
+    margin: 25% auto;
+  }
+  .credentialsCard > label {
+    font-size: 22px;
+  }
+  .credentialsCard > span {
+    font-size: 11px;
+  }
+  .inputBox input {
+    padding: 7px;
+    font-size: 12px;
+  }
+  .checkboxInput label {
+    font-size: 13px;
+  }
+
+  .bottomSection p {
+    font-size: 12px;
+  }
+}

@@ -1,8 +1,11 @@
 import { useState } from "react";
+import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
-import "./SignIn.css";
+import "./Login.css";
+import Signin from "./Signin/Signin";
+import Signup from "./Signup/Signup";
 
-function SignIn() {
+function Login() {
   const [currentState, setCurrentState] = useState<"first" | "second">("first");
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -35,10 +38,7 @@ function SignIn() {
               }`}
             >
               <div className="component-content">
-                <h2>Sign In Component</h2>
-                <p>
-                  This is the left side component with some placeholder content.
-                </p>
+                <Signin />
               </div>
             </div>
 
@@ -76,18 +76,15 @@ function SignIn() {
               }`}
             >
               <div className="component-content">
-                <h2>Sign Up Component</h2>
-                <p>
-                  This is the right side component that appears after
-                  transition.
-                </p>
+                <Signup />
               </div>
             </div>
           </div>
         </section>
+        <Footer />
       </div>
     </>
   );
 }
 
-export default SignIn;
+export default Login;

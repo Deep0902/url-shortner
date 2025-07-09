@@ -95,7 +95,7 @@
 }
 
 .hero-content {
-  max-width: 1000px;
+  max-width: 80%;
   margin: 0 auto;
 }
 
@@ -144,7 +144,7 @@
 .stats-grid-landing {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 4rem;
   margin-bottom: 5rem;
 }
 

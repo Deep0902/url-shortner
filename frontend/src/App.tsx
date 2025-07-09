@@ -3,9 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import LandingPage from "./components/LandingPage/LandingPage";
+import Login from "./components/Login/Login";
 import UrlShortner from "./components/UrlShortner/UrlShortner";
 import { ThemeContext, type ThemeType } from "./ThemeContext";
-import SignIn from "./components/SignIn/SignIn";
 
 function App() {
   // Detect system theme on first load
@@ -51,7 +51,7 @@ function App() {
         <Routes>
           <Route path="/url" element={<UrlShortner />} />
           <Route path="/" index element={<LandingPage />} />
-          <Route path="/sign" element={<SignIn />} />
+          <Route path="/sign" element={<Login />} />
         </Routes>
       </Router>
     </ThemeContext.Provider>
