@@ -18,7 +18,12 @@ export const createUser = async (req, res) => {
       return res.status(409).json({ error: "User already exists" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, password: hashedPassword, email, urls: [] });
+    const newUser = new User({
+      username,
+      password: hashedPassword,
+      email,
+      urls: [],
+    });
     await newUser.save();
     res
       .status(201)
@@ -33,7 +38,7 @@ export const createUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const email = req.body;
+    const { email } = req.body;
     if (!email) {
       return res.status(400).json({ error: "Email is required" });
     }

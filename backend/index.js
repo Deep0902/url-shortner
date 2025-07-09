@@ -5,8 +5,8 @@ import express from "express";
 import mongoose from "mongoose";
 import { authenticateApiKey } from "./middlewares/auth.js";
 import apiRoutes from "./routes/apiRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
 import redirectRoutes from "./routes/redirectRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 
 const app = express();
