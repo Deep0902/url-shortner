@@ -3,7 +3,9 @@
   height: max-content;
   margin: 6% auto;
   padding: 2em;
-  background-color: #e5f7f4;
+  background-color: var(--color-bg-accent);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-gray);
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -11,7 +13,7 @@
   width: 50vh;
 }
 .credentialsCard > label {
-  color: #003321;
+  color: var(--color-text-main);
   margin-bottom: 5px;
 }
 .customTopNavbar .topNavbar {
@@ -22,7 +24,7 @@
 }
 
 .subtext {
-  color: #003321;
+  color: var(--color-text-main);
 }
 .inputBox {
   margin-bottom: 12px;
@@ -30,7 +32,7 @@
 }
 
 .inputBox input {
-  border: 1px solid #b3b3b3;
+  border: 1px solid var(--color-gray);
   margin-top: 8px;
   width: -webkit-fill-available;
   padding: 10px;
@@ -38,11 +40,11 @@
 }
 
 .inputBox input:focus {
-  border: 1px solid #019863;
-  outline: 1px solid #019863;
+  border: 1px solid var(--color-blue);
+  outline: 1px solid var(--color-blue);
 }
 .checkboxInput input:focus {
-  border-color: #019863;
+  border-color: var(--color-blue);
   outline: none;
   position: relative;
 }
@@ -76,12 +78,12 @@
 .line {
   flex: 1;
   height: 1px;
-  background-color: #019863;
+  background-color: var(--color-blue);
   margin: 0 10px;
 }
 
 .or-text {
-  color: #019863;
+  color: var(--color-blue);
   font-weight: bold;
 }
 .underlineText {
@@ -98,7 +100,7 @@
   width: 100%;
   padding: 10px;
   padding-right: 30px; /* space for the button */
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-gray-dark);
   border-radius: 4px;
 }
 
