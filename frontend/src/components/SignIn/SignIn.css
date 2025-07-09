@@ -44,9 +44,9 @@ p {
 .center-rectangle {
   position: absolute;
   top: 0;
-  width: 50%;
+  width: 40%;
   height: 100%;
-  background-color: #7b68ee;
+  background-color: var( --color-blue);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +55,7 @@ p {
 }
 
 .center-rectangle.right-position {
-  left: 50%;
+  left: 60%;
   border-radius: 5vw 0 0 5vw;
 }
 

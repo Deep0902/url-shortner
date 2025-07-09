@@ -85,7 +85,6 @@ function SignIn() {
             </div>
           </div>
         </section>
-        <div className="rough"></div>
       </div>
     </>
   );
