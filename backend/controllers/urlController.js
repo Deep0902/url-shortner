@@ -6,7 +6,7 @@ export const createShortUrl = async (req, res) => {
   try {
     // Check if the URL count has reached the limit
     const urlCount = await Url.countDocuments();
-    if (urlCount >= 10) {
+    if (urlCount >= 20) {
       return res
         .status(429)
         .json({ error: "Memory is full, please try again later" });
