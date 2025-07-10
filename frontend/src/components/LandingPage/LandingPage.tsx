@@ -128,7 +128,10 @@ function LandingPage() {
 
             {/* Stats */}
             <div className="stats-grid-landing">
-              <div className="stat-item" style={{ animationDelay: `${0.3 * 0}s` }}>
+              <div
+                className="stat-item"
+                style={{ animationDelay: `${0.3 * 0}s` }}
+              >
                 <div className="stat-number stat-blue">
                   <CountUp
                     from={0}
@@ -141,7 +144,10 @@ function LandingPage() {
                 </div>
                 <div className="stat-label">Links Shortened</div>
               </div>
-              <div className="stat-item" style={{ animationDelay: `${0.3 * 1}s` }}>
+              <div
+                className="stat-item"
+                style={{ animationDelay: `${0.3 * 1}s` }}
+              >
                 <div className="stat-number stat-dark">
                   <CountUp
                     from={0}
@@ -155,7 +161,10 @@ function LandingPage() {
                 </div>
                 <div className="stat-label">Uptime</div>
               </div>
-              <div className="stat-item" style={{ animationDelay: `${0.3 * 2}s` }}>
+              <div
+                className="stat-item"
+                style={{ animationDelay: `${0.3 * 2}s` }}
+              >
                 <div className="stat-number stat-gray">
                   <CountUp
                     from={0}
@@ -183,7 +192,7 @@ function LandingPage() {
                 <div
                   key={index}
                   className="feature-card"
-                  style={{ animationDelay: `${0.2 * index}s` }}
+                  style={{ animationDelay: `${0.6 * index}s` }}
                 >
                   <h3 className="feature-title">{feature.title}</h3>
                   <p className="feature-description">{feature.description}</p>
@@ -201,7 +210,13 @@ function LandingPage() {
               Join thousands of users who trust ChopURL for their URL shortening
               needs
             </p>
-            <button onClick={handleRedirect} className="btn-primary">
+            <button
+              onClick={() => {
+                window.scrollTo(0, 0);
+                navigate("/sign");
+              }}
+              className="btn-primary"
+            >
               Get Started Now
             </button>
           </div>
