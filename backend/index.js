@@ -7,6 +7,7 @@ import { authenticateApiKey } from "./middlewares/auth.js";
 import apiRoutes from "./routes/apiRoutes.js";
 import redirectRoutes from "./routes/redirectRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import loginRoutes from "./routes/loginRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -32,6 +33,7 @@ app.use("/api", authenticateApiKey);
 app.use("/api", apiRoutes);
 app.use("/api", userRoutes);
 app.use("/", redirectRoutes);
+app.use("/api", loginRoutes);
 
 // Health check route for root
 app.get("/", (req, res) => {

@@ -6,13 +6,37 @@ import Navbar from "../Navbar/Navbar";
 import "./LandingPage.css";
 
 function LandingPage() {
+  //region State
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-
   const fullText = "Transform your links into powerful connections";
   const navigate = useNavigate();
+  //endregion
 
+  //region Data
+  const features = [
+    {
+      title: "Lightning Fast",
+      description: "Instant URL shortening with quick response times",
+    },
+    {
+      title: "Secure & Reliable",
+      description: "Enterprise-grade security with uptime guarantee",
+    },
+    {
+      title: "Free to Use",
+      description: "No hidden fees, no subscriptions. Just shorten and share",
+    },
+    {
+      title: "Long-Lasting Links",
+      description:
+        "Shortened links stay active for 3 months. Share and track easily",
+    },
+  ];
+  //endregion
+
+  //region Effects
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (!isDeleting && currentIndex < fullText.length) {
@@ -33,64 +57,41 @@ function LandingPage() {
     return () => clearTimeout(timer);
   }, [currentIndex, isDeleting, fullText]);
 
-  const handleRedirect = () => {
-    console.log("Redirecting to /url");
-    navigate("/url");
-  };
-
-  const features = [
-    {
-      title: "Lightning Fast",
-      description: "Instant URL shortening with quick response times",
-    },
-    {
-      title: "Secure & Reliable",
-      description: "Enterprise-grade security with uptime guarantee",
-    },
-    {
-      title: "Free to Use",
-      description: "No hidden fees, no subscriptions. Just shorten and share",
-    },
-    {
-      title: "Long-Lasting Links",
-      description:
-        "Shortened links stay active for 3 months. Share and track easily",
-    },
-  ];
-
   useEffect(() => {
     const observerOptions = {
       root: null,
       rootMargin: "0px",
       threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
     };
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const element = entry.target;
         const ratio = entry.intersectionRatio;
-
         if (ratio === 0) {
-          // Completely out of view
           element.classList.remove("visible", "partial");
         } else if (ratio < 0.3) {
-          // Partially visible
           element.classList.remove("visible");
           element.classList.add("partial");
         } else {
-          // Mostly visible
           element.classList.add("visible");
           element.classList.remove("partial");
         }
       });
     }, observerOptions);
-
-    // Observe all sections
     const sections = document.querySelectorAll(".fade-on-scroll");
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
   }, []);
+  //endregion
 
+  //region Handlers
+  const handleRedirect = () => {
+    console.log("Redirecting to /url");
+    navigate("/url");
+  };
+  //endregion
+
+  //region UI
   return (
     <div>
       <div className="bg">
@@ -227,6 +228,7 @@ function LandingPage() {
       </div>
     </div>
   );
+  //endregion
 }
 
 export default LandingPage;

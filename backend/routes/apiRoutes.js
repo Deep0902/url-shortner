@@ -1,6 +1,5 @@
 import express from "express";
 import { createShortUrl, getStats } from "../controllers/urlController.js";
-
 const router = express.Router();
 
 // POST /api/shorten - Create short URL
