@@ -16,14 +16,14 @@ interface SigninProps {
   setAlert: React.Dispatch<React.SetStateAction<AlertState>>;
 }
 
-function Signin({ setLoading, setAlert }: SigninProps) {
+function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
   //region State
   const [credentials, setCredentials] = useState<{
     email: string;
     password: string;
   }>({
-    email: "qwe@email.com",
-    password: "test",
+    email: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
@@ -97,7 +97,7 @@ function Signin({ setLoading, setAlert }: SigninProps) {
   //region UI
   return (
     <div className="credentialsCard">
-      <label className="">Sign In</label>
+      <span className="label">Sign In</span>
       <span className=" subtext">
         Please login to continue to your account.
       </span>

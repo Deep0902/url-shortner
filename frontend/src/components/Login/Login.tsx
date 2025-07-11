@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Particles from "../../Reactbits/Particles";
-import Footer from "../Footer/Footer";
-import Navbar from "../Navbar/Navbar";
-import Loader from "../Loader/Loader";
 import Alert from "../Alert/Alert";
+import Footer from "../Footer/Footer";
+import Loader from "../Loader/Loader";
+import Navbar from "../Navbar/Navbar";
 import "./Login.css";
 import Signin from "./Signin/Signin";
 import Signup from "./Signup/Signup";
@@ -116,7 +116,12 @@ function Login() {
             }`}
           >
             <div className="component-content">
-              <Signup />
+              <Signup
+                loading={loading}
+                setLoading={setLoading}
+                alert={alert}
+                setAlert={setAlert}
+              />
             </div>
           </div>
         </div>
