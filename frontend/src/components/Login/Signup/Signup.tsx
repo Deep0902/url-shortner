@@ -3,7 +3,10 @@ import { useState } from "react";
 import { API_KEY, API_URL } from "../../../shared/constants";
 import type { AlertState } from "../../../shared/interfaces";
 import "./Signup.css";
-import bcrypt from "bcryptjs";
+import CryptoJS from "crypto-js";
+
+// Add your secret key here (should be the same as in backend)
+const SECRET_KEY = "your-secret-key-here"; // Replace with your actual secret key
 
 interface SignUnProps {
   loading: boolean;
@@ -11,6 +14,7 @@ interface SignUnProps {
   alert: AlertState;
   setAlert: React.Dispatch<React.SetStateAction<AlertState>>;
 }
+
 function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
   //region State
   const [userDetails, setUserDetails] = useState({
@@ -21,6 +25,12 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  //endregion
+
+  //region Encryption Helper
+  const encryptData = (data: string): string => {
+    return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+  };
   //endregion
 
   const showAlert = (
@@ -44,13 +54,16 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
       return;
     }
     console.log("Sign up submitted with credentials:", userDetails);
-    // Hash the password before sending
-    const hashedPassword = await bcrypt.hash(userDetails.password, 10);
+
+    // Encrypt the password before sending
+    const encryptedPassword = encryptData(userDetails.password);
+
     const payload = {
       email: userDetails.email,
-      password: hashedPassword,
+      password: encryptedPassword, // Send encrypted password
       username: userDetails.username,
     };
+
     axios
       .post(`${API_URL}/api/users`, payload, {
         headers: { "x-api-key": API_KEY },
@@ -83,7 +96,7 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
         } else {
           showAlert("Error", "error", "Server error");
         }
-        console.error("Error shortening URL:", error);
+        console.error("Error creating user:", error);
       });
   };
 

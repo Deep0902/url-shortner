@@ -2,7 +2,10 @@ import axios from "axios";
 import { useState } from "react";
 import { API_KEY, API_URL } from "../../../shared/constants";
 import "./Signin.css";
-import bcrypt from "bcryptjs";
+import CryptoJS from "crypto-js";
+
+// Add your secret key here (should be the same in backend)
+const SECRET_KEY = "your-secret-key-here"; // Replace with your actual secret key
 
 interface AlertState {
   show: boolean;
@@ -31,6 +34,12 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
   const [isChecked, setIsChecked] = useState(false);
   //endregion
 
+  //region Encryption Helper
+  const encryptData = (data: string): string => {
+    return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+  };
+  //endregion
+
   //region Handlers
   const showAlert = (
     message: string,
@@ -49,11 +58,15 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
     e.preventDefault();
     setLoading(true);
     console.log("Sign in submitted with credentials:", credentials);
-    const hashedPassword = await bcrypt.hash(credentials.password, 10);
+
+    // Encrypt the password before sending
+    const encryptedPassword = encryptData(credentials.password);
+
     const payload = {
       email: credentials.email,
-      password: hashedPassword,
+      password: encryptedPassword, // Send encrypted password
     };
+
     axios
       .post(`${API_URL}/api/login`, payload, {
         headers: { "x-api-key": API_KEY },
@@ -78,10 +91,16 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
             "error",
             "Incorrect Credentials. Please try again."
           );
+        } else if (error.response && error.response.status === 404) {
+          showAlert(
+            "Error",
+            "error",
+            "User not found"
+          );
         } else {
-          showAlert("Error", "error", "Server error");
+          showAlert("Error", "error", error.resp);
         }
-        console.error("Error shortening URL:", error);
+        console.error("Error logging in:", error);
       });
   };
 
