@@ -2,8 +2,12 @@ import { useContext } from "react";
 import { ThemeContext } from "../../ThemeContext";
 import "./Footer.css";
 
+//region State
 const Footer = () => {
   const { theme } = useContext(ThemeContext);
+//endregion
+
+//region UI
   return (
     <footer className={` footer${theme === "light" ? " footer-light" : ""}`}>
       <div className="footer-content">
@@ -33,6 +37,7 @@ const Footer = () => {
       </div>
     </footer>
   );
+//endregion
 };
 
 export default Footer;
