@@ -5,7 +5,7 @@ import "./Signin.css";
 import CryptoJS from "crypto-js";
 
 // Add your secret key here (should be the same in backend)
-const SECRET_KEY = "your-secret-key-here"; // Replace with your actual secret key
+const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
 
 interface AlertState {
   show: boolean;

@@ -6,7 +6,7 @@ import "./Signup.css";
 import CryptoJS from "crypto-js";
 
 // Add your secret key here (should be the same as in backend)
-const SECRET_KEY = "your-secret-key-here"; // Replace with your actual secret key
+const SECRET_KEY = API_KEY; // Replace with your actual secret key
 
 interface SignUnProps {
   loading: boolean;

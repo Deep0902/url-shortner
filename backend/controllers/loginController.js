@@ -1,8 +1,10 @@
 import User from "../models/users.model.js";
 import CryptoJS from "crypto-js";
+import dotenv from "dotenv";
+dotenv.config();
 
 // Add your secret key here (should be the same as in frontend)
-const SECRET_KEY = "your-secret-key-here"; // Replace with your actual secret key
+const SECRET_KEY = process.env.API_SECRET_KEY; // Use API_SECRET_KEY from .env
 
 // Decryption helper function
 const decryptData = (encryptedData) => {
