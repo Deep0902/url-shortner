@@ -1,19 +1,81 @@
+import axios from "axios";
 import { useState } from "react";
+import Alert from "../../Alert/Alert";
+import Loader from "../../Loader/Loader";
 import "./Signin.css";
-
+interface AlertState {
+  show: boolean;
+  message: string;
+  subMessage?: string;
+  type: "success" | "error" | "warning";
+}
 function Signin() {
+  const API_KEY = import.meta.env.VITE_API_SECRET_KEY;
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [loading, setLoading] = useState(false);
+  const showAlert = (
+    message: string,
+    type: "success" | "error" | "warning",
+    subMessage?: string
+  ) => {
+    setAlert({
+      show: true,
+      message,
+      type,
+      subMessage,
+    });
+  };
+  const hideAlert = () => {
+    setAlert({
+      show: false,
+      message: "",
+      type: "success",
+    });
+  };
+  const [alert, setAlert] = useState<AlertState>({
+    show: false,
+    message: "",
+    type: "success",
+  });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Sign in submitted with credentials:", credentials);
+    axios
+      .post(`${API_URL}/api/login`, credentials, {
+        headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.data.shortUrl) {
+          showAlert("Success!", "success", `URL shortened successfully`);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error.response && error.response.status === 429) {
+          showAlert(
+            "Service Unavailable",
+            "error",
+            "Storage limit reached. Contact admin."
+          );
+        } else {
+          showAlert(
+            "Error",
+            "error",
+            "Failed to shorten URL. Please try again."
+          );
+          console.error("Error shortening URL:", error);
+        }
+      });
   };
   const [credentials, setCredentials] = useState<{
-    user_email: string;
-    user_pass: string;
+    email: string;
+    password: string;
   }>({
-    user_email: "",
-    user_pass: "",
+    email: "qwe@email.com",
+    password: "test",
   });
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
   const handlePasswordView = () => {
     setShowPassword(!showPassword);
   };
@@ -30,6 +92,18 @@ function Signin() {
   };
   return (
     <>
+      <div className={`loader-fade-wrapper${loading ? " show" : ""}`}>
+        <Loader />
+      </div>
+      {alert.show && (
+        <Alert
+          message={alert.message}
+          subMessage={alert.subMessage}
+          type={alert.type}
+          timeout={5000}
+          onClose={hideAlert}
+        />
+      )}
       <div className="credentialsCard">
         <label className="">Sign In</label>
         <span className=" subtext">
@@ -44,13 +118,13 @@ function Signin() {
               placeholder="Email (tom@email.com)"
               name="user_email"
               onChange={handleChangeSignIn}
-              value={credentials.user_email}
+              value={credentials.email}
             />
           </div>
           <div className="inputBox">
             <input
               type={showPassword ? "text" : "password"}
-              value={credentials.user_pass}
+              value={credentials.password}
               name="user_pass"
               onChange={handleChangeSignIn}
               className=""
