@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
+import { API_KEY, API_URL } from "../../../shared/constants";
 import "./Signin.css";
-
 interface AlertState {
   show: boolean;
   message: string;
@@ -16,10 +16,8 @@ interface SigninProps {
   setAlert: React.Dispatch<React.SetStateAction<AlertState>>;
 }
 
-function Signin({ loading, setLoading, alert, setAlert }: SigninProps) {
+function Signin({ setLoading, setAlert }: SigninProps) {
   //region State
-  const API_KEY = import.meta.env.VITE_API_SECRET_KEY;
-  const API_URL = import.meta.env.VITE_API_URL;
   const [credentials, setCredentials] = useState<{
     email: string;
     password: string;
@@ -42,14 +40,6 @@ function Signin({ loading, setLoading, alert, setAlert }: SigninProps) {
       message,
       type,
       subMessage,
-    });
-  };
-
-  const hideAlert = () => {
-    setAlert({
-      show: false,
-      message: "",
-      type: "success",
     });
   };
 

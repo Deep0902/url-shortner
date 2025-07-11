@@ -4,25 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import CountUp from "../../Reactbits/CountUp";
 import { LinkPreview } from "../../Reactbits/LinkPreview";
 import Particles from "../../Reactbits/Particles";
+import { API_KEY, API_URL } from "../../shared/constants";
 import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "./UrlShortner.css";
-
-//region Types
-interface AlertState {
-  show: boolean;
-  message: string;
-  subMessage?: string;
-  type: "success" | "error" | "warning";
-}
-//endregion
-
-//region Constants
-const API_KEY = import.meta.env.VITE_API_SECRET_KEY;
-const API_URL = import.meta.env.VITE_API_URL;
-//endregion
+import type { AlertState } from "../../shared/interfaces";
 
 function UrlShortner() {
   //region State
