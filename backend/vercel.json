@@ -17,7 +17,8 @@
     "deploymentEnabled": {
       "main": true,
       "staging": false,
-      "development": false
+      "development": false,
+      "Deep-dev": false
     }
   }
 }
