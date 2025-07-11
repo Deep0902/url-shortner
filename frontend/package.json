@@ -12,6 +12,8 @@
   "dependencies": {
     "@radix-ui/react-hover-card": "^1.1.14",
     "axios": "^1.10.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.0",
     "html2canvas": "^1.4.1",

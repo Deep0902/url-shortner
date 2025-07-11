@@ -1,5 +1,4 @@
 import User from "../models/users.model.js";
-import bcrypt from "bcrypt";
 
 // region Create user
 export const createUser = async (req, res) => {
@@ -17,10 +16,9 @@ export const createUser = async (req, res) => {
     if (existingUser) {
       return res.status(409).json({ error: "User already exists" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       username,
-      password: hashedPassword,
+      password,
       email,
       urls: [],
     });
@@ -76,9 +74,8 @@ export const editUser = async (req, res) => {
         .status(400)
         .json({ error: "Username and password are required" });
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
     searchUser.username = username;
-    searchUser.password = hashedPassword;
+    searchUser.password = password;
     await searchUser.save();
     res.status(200).json({ message: "User updated successfully" });
   } catch (error) {

@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import { API_KEY, API_URL } from "../../../shared/constants";
 import "./Signin.css";
+import bcrypt from "bcryptjs";
+
 interface AlertState {
   show: boolean;
   message: string;
@@ -43,12 +45,17 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     console.log("Sign in submitted with credentials:", credentials);
+    const hashedPassword = await bcrypt.hash(credentials.password, 10);
+    const payload = {
+      email: credentials.email,
+      password: hashedPassword,
+    };
     axios
-      .post(`${API_URL}/api/login`, credentials, {
+      .post(`${API_URL}/api/login`, payload, {
         headers: { "x-api-key": API_KEY },
       })
       .then((response) => {

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { API_KEY, API_URL } from "../../../shared/constants";
 import type { AlertState } from "../../../shared/interfaces";
 import "./Signup.css";
+import bcrypt from "bcryptjs";
 
 interface SignUnProps {
   loading: boolean;
@@ -36,21 +37,31 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
   };
 
   //region Handlers
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (userDetails.password != userDetails.confirm_pass) {
       showAlert("Try Again", "error", "Passwords don't match!");
       return;
     }
     console.log("Sign up submitted with credentials:", userDetails);
+    // Hash the password before sending
+    const hashedPassword = await bcrypt.hash(userDetails.password, 10);
+    const payload = {
+      email: userDetails.email,
+      password: hashedPassword,
+      username: userDetails.username,
+    };
     axios
-      .post(`${API_URL}/api/users`, userDetails, {
+      .post(`${API_URL}/api/users`, payload, {
         headers: { "x-api-key": API_KEY },
       })
       .then((response) => {
         setLoading(false);
-        if (response.data && response.data.message === "Login successful") {
-          showAlert("Success!", "success", "Login successful!");
+        if (
+          response.status == 201 &&
+          response.data.message === "User created successfully"
+        ) {
+          showAlert("Success!", "success", "User successfully Created!");
         } else {
           showAlert(
             "Error",
@@ -62,11 +73,7 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
       .catch((error) => {
         setLoading(false);
         if (error.response && error.response.status === 409) {
-          showAlert(
-            "Oops",
-            "warning",
-            "User Already Exists!"
-          );
+          showAlert("Oops", "warning", "User Already Exists!");
         } else if (error.response && error.response.status === 401) {
           showAlert(
             "Error",
