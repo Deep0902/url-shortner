@@ -22,7 +22,7 @@ function Login() {
     show: false,
     message: "",
     type: "success",
-    subMessage: ""
+    subMessage: "",
   });
   //endregion
 
@@ -56,7 +56,14 @@ function Login() {
           subMessage={alert.subMessage}
           type={alert.type}
           timeout={5000}
-          onClose={() => setAlert({ ...alert, show: false })}
+          onClose={() =>
+            setAlert({
+              show: false,
+              message: "",
+              type: "success",
+              subMessage: "",
+            })
+          }
         />
       )}
       <section>

@@ -44,9 +44,15 @@ function Alert({
 
   //region Effects
   useEffect(() => {
+    setShow(true); // Always reset show when props change
+  }, [message, subMessage, type]);
+
+  useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
     if (timeout && timeout > 0) {
-      timeoutId = setTimeout(() => setShow(false), timeout);
+      timeoutId = setTimeout(() => {
+        handleClose(); // Call handleClose instead of setShow(false)
+      }, timeout);
     }
     return () => {
       if (timeoutId) {
