@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Alert.css";
 
+//region Types
 interface AlertProps {
   message: string;
   subMessage?: string;
@@ -8,8 +9,9 @@ interface AlertProps {
   timeout?: number;
   onClose?: () => void;
 }
+//endregion
 
-// Icon constants - using the actual icon paths from your public folder
+//region Constants
 const STATIC_UI_IMAGES = {
   ALERT: {
     CLOSE: "/close.svg",
@@ -19,6 +21,7 @@ const STATIC_UI_IMAGES = {
     WARNING: "/warning-toast.svg",
   },
 };
+//endregion
 
 function Alert({
   message,
@@ -27,28 +30,33 @@ function Alert({
   timeout,
   onClose,
 }: AlertProps) {
+  //region State
   const [show, setShow] = useState<boolean>(true);
+  //endregion
 
+  //region Icons
   const iconCloseWhite = STATIC_UI_IMAGES.ALERT.CLOSE;
   const iconCloseRed = STATIC_UI_IMAGES.ALERT.CLOSE_RED;
   const iconTick = STATIC_UI_IMAGES.ALERT.TICK;
   const iconError = STATIC_UI_IMAGES.ALERT.ERROR;
   const iconWarning = STATIC_UI_IMAGES.ALERT.WARNING;
+  //endregion
 
+  //region Effects
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
-
     if (timeout && timeout > 0) {
       timeoutId = setTimeout(() => setShow(false), timeout);
     }
-
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
     };
   }, [timeout]);
+  //endregion
 
+  //region Handlers
   const handleClose = () => {
     setShow(false);
     if (onClose) {
@@ -59,8 +67,9 @@ function Alert({
   const handleKeyUp = () => {
     // Placeholder for keyup handler
   };
+  //endregion
 
-  // Helper function to truncate text (equivalent to ellipsis pipe)
+  //region Helpers
   const ellipsis = (text: string, limit: number): string => {
     return text.length > limit ? text.substring(0, limit) + "..." : text;
   };
@@ -75,7 +84,9 @@ function Alert({
   const getCloseIcon = () => {
     return type === "success" ? iconCloseWhite : iconCloseRed;
   };
+  //endregion
 
+  //region UI
   if (!show) {
     return null;
   }
@@ -107,6 +118,7 @@ function Alert({
       </div>
     </div>
   );
+  //endregion
 }
 
 export default Alert;

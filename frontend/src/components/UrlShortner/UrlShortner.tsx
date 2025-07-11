@@ -10,18 +10,22 @@ import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "./UrlShortner.css";
 
+//region Types
 interface AlertState {
   show: boolean;
   message: string;
   subMessage?: string;
   type: "success" | "error" | "warning";
 }
+//endregion
 
-// Import API key from environment variables
+//region Constants
 const API_KEY = import.meta.env.VITE_API_SECRET_KEY;
 const API_URL = import.meta.env.VITE_API_URL;
+//endregion
 
 function UrlShortner() {
+  //region State
   const [originalUrl, setOriginalUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState("");
   const [stats, setStats] = useState<{
@@ -36,8 +40,13 @@ function UrlShortner() {
   const [loading, setLoading] = useState(false);
   const [swipe] = useState(false);
   const qrcodeRef = useRef<HTMLDivElement>(null);
+  const fullText = "Transform long URLs into clean, shareable links in seconds";
+  const [animatedText, setAnimatedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  //endregion
 
-  // Helper function to show alerts
+  //region Handlers
   const showAlert = (
     message: string,
     type: "success" | "error" | "warning",
@@ -51,7 +60,6 @@ function UrlShortner() {
     });
   };
 
-  // Helper function to hide alerts
   const hideAlert = () => {
     setAlert({
       show: false,
@@ -123,7 +131,9 @@ function UrlShortner() {
     navigator.clipboard.writeText(`${API_URL}/${shortenedUrl}`);
     showAlert("Copied!", "success", "URL copied to clipboard");
   };
+  //endregion
 
+  //region Effects
   useEffect(() => {
     window.scrollTo(0, 0);
     axios
@@ -131,10 +141,6 @@ function UrlShortner() {
       .catch(() => {});
   }, []);
 
-  const fullText = "Transform long URLs into clean, shareable links in seconds";
-  const [animatedText, setAnimatedText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (!isDeleting && currentIndex < fullText.length) {
@@ -154,7 +160,9 @@ function UrlShortner() {
     }
     return () => clearTimeout(timer);
   }, [currentIndex, isDeleting, fullText]);
+  //endregion
 
+  //region UI
   return (
     <div className="urlshortner-root">
       {swipe && <div className="theme-swipe" />}
@@ -170,10 +178,8 @@ function UrlShortner() {
           disableRotation={false}
         />
       </div>
-
       {/* Navbar */}
       <Navbar />
-
       {alert.show && (
         <Alert
           message={alert.message}
@@ -183,11 +189,9 @@ function UrlShortner() {
           onClose={hideAlert}
         />
       )}
-
       <div className={`loader-fade-wrapper${loading ? " show" : ""}`}>
         <Loader />
       </div>
-
       {/* Main Content */}
       <main className="main-content">
         <div className="container">
@@ -200,7 +204,6 @@ function UrlShortner() {
               {animatedText} <span className="cursor">|</span>
             </p>
           </section>
-
           <section className="shortener-card">
             <form
               className="shortener-form"
@@ -223,7 +226,6 @@ function UrlShortner() {
                 </button>
               </div>
             </form>
-
             {shortenedUrl && (
               <div className="result-section">
                 <div className="result-card">
@@ -260,7 +262,6 @@ function UrlShortner() {
               </div>
             )}
           </section>
-
           <section className="stats-section">
             <button
               type="button"
@@ -302,11 +303,11 @@ function UrlShortner() {
           </section>
         </div>
       </main>
-
       {/* Footer */}
       <Footer />
     </div>
   );
+  //endregion
 }
 
 export default UrlShortner;
