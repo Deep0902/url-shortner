@@ -137,7 +137,10 @@
 }
 
 .hero-button-container {
+  display: flex;
+  gap: 20px;
   margin-bottom: 4rem;
+  justify-content: center;
 }
 
 /* Stats */

@@ -9,20 +9,19 @@ function EncryptionManager() {
   const [decryptInput, setDecryptInput] = useState("");
   const [encryptedText, setEncryptedText] = useState("");
   const [decryptedText, setDecryptedText] = useState("");
-  const [secretKey, setSecretKey] = useState(DEFAULT_SECRET_KEY);
 
   const handleEncrypt = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!encryptInput || !secretKey) return;
-    const encrypted = CryptoJS.AES.encrypt(encryptInput, secretKey).toString();
+    if (!encryptInput || !DEFAULT_SECRET_KEY) return;
+    const encrypted = CryptoJS.AES.encrypt(encryptInput, DEFAULT_SECRET_KEY).toString();
     setEncryptedText(encrypted);
   };
 
   const handleDecrypt = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!decryptInput || !secretKey) return;
+    if (!decryptInput || !DEFAULT_SECRET_KEY) return;
     try {
-      const bytes = CryptoJS.AES.decrypt(decryptInput, secretKey);
+      const bytes = CryptoJS.AES.decrypt(decryptInput, DEFAULT_SECRET_KEY);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
       setDecryptedText(decrypted || "Invalid key or ciphertext");
     } catch {
@@ -38,32 +37,7 @@ function EncryptionManager() {
             <h2 style={{ color: "var(--color-blue)", textAlign: "center" }}>
               Encryption / Decryption Utility
             </h2>
-            <div
-              style={{ marginBottom: "2rem", maxWidth: 500, margin: "0 auto" }}
-            >
-              <label
-                htmlFor="secret-key-input"
-                style={{ color: "var(--color-text-main)" }}
-              >
-                Secret Key
-              </label>
-              <input
-                id="secret-key-input"
-                type="text"
-                value={secretKey}
-                onChange={(e) => setSecretKey(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "0.5rem",
-                  marginBottom: "1rem",
-                  background: "var(--color-bg-accent)",
-                  color: "var(--color-text-main)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: 6,
-                }}
-                placeholder="Enter secret key"
-              />
-            </div>
+            <br />
             <div className="encrypt-row">
               <div className="encrypt-col">
                 <form onSubmit={handleEncrypt}>
