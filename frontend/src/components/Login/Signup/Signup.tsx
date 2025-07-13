@@ -49,7 +49,7 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
   //region Handlers
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(false);
+    setLoading(true);
     if (userDetails.password != userDetails.confirm_pass) {
       showAlert("Try Again", "error", "Passwords don't match!");
       return;
