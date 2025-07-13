@@ -4,6 +4,7 @@ import { API_KEY, API_URL } from "../../../shared/constants";
 import type { AlertState } from "../../../shared/interfaces";
 import "./Signup.css";
 import CryptoJS from "crypto-js";
+import { useNavigate } from "react-router-dom";
 
 // Add your secret key here (should be the same as in backend)
 const SECRET_KEY = API_KEY; // Replace with your actual secret key
@@ -25,6 +26,7 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
   //endregion
 
   //region Encryption Helper
@@ -76,6 +78,7 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
           response.data.message === "User created successfully"
         ) {
           showAlert("Success!", "success", "User successfully Created!");
+          navigate("/url-user");
         } else {
           showAlert(
             "Error",

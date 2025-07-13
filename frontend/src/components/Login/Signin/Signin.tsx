@@ -1,8 +1,9 @@
 import axios from "axios";
+import CryptoJS from "crypto-js";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_KEY, API_URL } from "../../../shared/constants";
 import "./Signin.css";
-import CryptoJS from "crypto-js";
 
 // Add your secret key here (should be the same in backend)
 const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
@@ -32,6 +33,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
   });
   const [showPassword, setShowPassword] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
+  const navigate = useNavigate();
   //endregion
 
   //region Encryption Helper
@@ -75,6 +77,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
         setLoading(false);
         if (response.data && response.data.message === "Login successful") {
           showAlert("Success!", "success", "Login successful!");
+          navigate("/url-user");
         } else {
           showAlert(
             "Error",
@@ -92,11 +95,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
             "Incorrect Credentials. Please try again."
           );
         } else if (error.response && error.response.status === 404) {
-          showAlert(
-            "Error",
-            "error",
-            "User not found"
-          );
+          showAlert("Error", "error", "User not found");
         } else {
           showAlert("Error", "error", error.resp);
         }
