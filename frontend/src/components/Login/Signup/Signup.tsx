@@ -157,6 +157,7 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
             value={userDetails.password}
             onChange={handleChange}
             placeholder="Password"
+            autoComplete="new-password"
             required
           />
           <span className="toggle-button" onClick={handlePasswordView}>
@@ -171,6 +172,7 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
             value={userDetails.confirm_pass}
             onChange={handleChange}
             placeholder="Confirm Password"
+            autoComplete="new-password"
             required
           />
           <span className="toggle-button" onClick={handleConfirmPasswordView}>

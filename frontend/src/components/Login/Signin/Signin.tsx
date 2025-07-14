@@ -1,6 +1,6 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_KEY, API_URL } from "../../../shared/constants";
 import "./Signin.css";
@@ -36,6 +36,16 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
   const navigate = useNavigate();
   //endregion
 
+  //region Auto-login from session storage
+  useEffect(() => {
+    const stored = sessionStorage.getItem("userCredentials");
+    if (stored) {
+      const creds = JSON.parse(stored) as { email: string; password: string };
+      setCredentials({ email: creds.email, password: creds.password });
+    }
+  }, []);
+  //endregion
+
   //region Encryption Helper
   const encryptData = (data: string): string => {
     return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
@@ -68,6 +78,20 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
       email: credentials.email,
       password: encryptedPassword, // Send encrypted password
     };
+
+    // Save credentials to session storage if 'Keep Me Logged In' is checked
+    if (isChecked) {
+      sessionStorage.setItem(
+        "userCredentials",
+        JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        })
+      );
+    }
+    else if(!isChecked){
+      sessionStorage.removeItem("userCredentials");
+    }
 
     axios
       .post(`${API_URL}/api/login`, payload, {
@@ -145,6 +169,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
             onChange={handleChangeSignIn}
             className=""
             placeholder="Password (tomiscool)"
+            autoComplete="new-password"
           />
           <span className="toggle-button" onClick={handlePasswordView}>
             👁️
@@ -159,7 +184,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
             onChange={handleCheckboxChange}
           />
           <label htmlFor="customCheckbox" className="">
-            &nbsp;Keep Me Logged In
+            &nbsp;Remember me
           </label>
         </div>
         <button className="btn" type="submit">
