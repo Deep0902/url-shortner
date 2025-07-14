@@ -5,12 +5,12 @@ import CountUp from "../../Reactbits/CountUp";
 import { LinkPreview } from "../../Reactbits/LinkPreview";
 import Particles from "../../Reactbits/Particles";
 import { API_KEY, API_URL } from "../../shared/constants";
+import type { AlertState } from "../../shared/interfaces";
 import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "./UrlShortner.css";
-import type { AlertState } from "../../shared/interfaces";
 
 function UrlShortner() {
   //region State

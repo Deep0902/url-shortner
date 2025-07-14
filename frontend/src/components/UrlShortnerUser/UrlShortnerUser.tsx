@@ -177,7 +177,7 @@ function UrlShortnerUser() {
         />
       </div>
       {/* Navbar */}
-      <Navbar />
+      <Navbar userAvatar={"/avatars/avatar-male-1.svg"} />
       {alert.show && (
         <Alert
           message={alert.message}
