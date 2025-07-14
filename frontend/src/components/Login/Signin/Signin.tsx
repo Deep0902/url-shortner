@@ -88,8 +88,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
           password: credentials.password,
         })
       );
-    }
-    else if(!isChecked){
+    } else if (!isChecked) {
       sessionStorage.removeItem("userCredentials");
     }
 
@@ -141,6 +140,10 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
+
+  const handleForgotPassword = () => {
+    navigate("/forgot");
+  };
   //endregion
 
   //region UI
@@ -169,7 +172,6 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
             onChange={handleChangeSignIn}
             className=""
             placeholder="Password (tomiscool)"
-            autoComplete="new-password"
           />
           <span className="toggle-button" onClick={handlePasswordView}>
             👁️
@@ -197,7 +199,9 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
         <hr className="line" />
       </div>
       <div className="bottomSection">
-        <p className="underlineText ">Forgot Password</p>
+        <p className="underlineText" onClick={handleForgotPassword}>
+          Forgot Password
+        </p>
       </div>
     </div>
   );
