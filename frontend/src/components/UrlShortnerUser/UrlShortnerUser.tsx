@@ -1,25 +1,42 @@
-import "./UrlShortnerUser.css";
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
-import CountUp from "../../Reactbits/CountUp";
 import { LinkPreview } from "../../Reactbits/LinkPreview";
 import Particles from "../../Reactbits/Particles";
 import { API_KEY, API_URL } from "../../shared/constants";
+import type { AlertState } from "../../shared/interfaces";
 import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "../UrlShortner/UrlShortner.css";
-import type { AlertState } from "../../shared/interfaces";
+import "./UrlShortnerUser.css";
 function UrlShortnerUser() {
   //region State
   const [originalUrl, setOriginalUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState("");
-  const [stats, setStats] = useState<{
-    totalUrls: number | null;
-    totalClicks: number | null;
-  }>();
+  // History state for user's shortened links
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyData, setHistoryData] = useState<
+    Array<{
+      shortUrl: string;
+      createdAt: string;
+      expiredAt: string;
+    }>
+  >([
+    // Dummy data, replace with API response
+    {
+      shortUrl: "sho-rty.vercel.app/abc123",
+      createdAt: "2025-07-01",
+      expiredAt: "2025-08-01",
+    },
+    {
+      shortUrl: "sho-rty.vercel.app/xyz789",
+      createdAt: "2025-07-10",
+      expiredAt: "2025-08-10",
+    },
+  ]);
   const [alert, setAlert] = useState<AlertState>({
     show: false,
     message: "",
@@ -96,23 +113,16 @@ function UrlShortnerUser() {
       });
   };
 
-  const handleGetStatus = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${API_URL}/api/stats`, {
-        headers: { "x-api-key": API_KEY },
-      });
-      setStats(response.data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      showAlert(
-        "Error",
-        "error",
-        "Failed to fetch statistics. Please try again."
-      );
-      console.error("Error fetching stats:", error);
-    }
+  // Handler for View History button
+  const handleViewHistory = () => {
+    setHistoryLoading(true);
+    // Simulate loading for 1 second
+    setTimeout(() => {
+      setHistoryLoading(false);
+      setShowHistory(true);
+    }, 1000);
+    // TODO: Replace dummy data with API call to fetch user's link history
+  
   };
 
   const copyToClipboard = () => {
@@ -167,7 +177,7 @@ function UrlShortnerUser() {
         />
       </div>
       {/* Navbar */}
-      <Navbar />
+      <Navbar userAvatar={"/avatars/avatar-male-1.svg"} />
       {alert.show && (
         <Alert
           message={alert.message}
@@ -251,41 +261,49 @@ function UrlShortnerUser() {
             )}
           </section>
           <section className="stats-section">
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={handleGetStatus}
-            >
-              View Statistics
-            </button>
-            {stats && (
-              <div className="stats-grid">
-                <div className="stat-item">
-                  <div className="stat-number">
-                    <CountUp
-                      from={0}
-                      to={stats.totalUrls ?? 0}
-                      separator=","
-                      direction="up"
-                      duration={1}
-                      className="count-up-text"
-                    />
-                  </div>
-                  <div className="stat-label">Total URLs</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-number">
-                    <CountUp
-                      from={0}
-                      to={stats.totalClicks ?? 0}
-                      separator=","
-                      direction="up"
-                      duration={1}
-                      className="count-up-text"
-                    />
-                  </div>
-                  <div className="stat-label">Total Clicks</div>
-                </div>
+            {!showHistory && !historyLoading && (
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={handleViewHistory}
+              >
+                View History
+              </button>
+            )}
+            {historyLoading && (
+              <div className="loader-fade-wrapper show">
+                <Loader />
+              </div>
+            )}
+            {showHistory && !historyLoading && (
+              <div className="history-table-wrapper">
+                <table className="history-table">
+                  <thead>
+                    <tr>
+                      <th>Shortened Link</th>
+                      <th>Created On</th>
+                      <th>Expires On</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {historyData.map((row, idx) => (
+                      <tr key={idx}>
+                        <td>
+                          <a
+                            href={`https://${row.shortUrl}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {row.shortUrl}
+                          </a>
+                        </td>
+                        <td>{row.createdAt}</td>
+                        <td>{row.expiredAt}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {/* TODO: Replace dummy data with API response */}
               </div>
             )}
           </section>
