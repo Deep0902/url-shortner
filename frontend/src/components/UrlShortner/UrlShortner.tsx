@@ -75,6 +75,7 @@ function UrlShortner() {
         if (response.data.shortUrl) {
           setShortenedUrl(response.data.shortUrl);
           showAlert("Success!", "success", `URL shortened successfully`);
+          localStorage.setItem("canShorten", "false"); // Set boolean to false
         }
       })
       .catch((error) => {
@@ -127,6 +128,16 @@ function UrlShortner() {
     axios
       .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
       .catch(() => {});
+
+    // Check localStorage for canShorten
+    const canShorten = localStorage.getItem("canShorten");
+    if (canShorten !== null && canShorten === "false") {
+      showAlert(
+        "Sign In Required",
+        "error",
+        "You need to sign in to shorten more links."
+      );
+    }
   }, []);
 
   useEffect(() => {
