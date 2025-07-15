@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { ThemeContext } from "../../ThemeContext";
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
-import { Avatar, Menu, Portal } from "@chakra-ui/react";
 
 const avatarItems = [
   "/avatars/avatar-male-1.svg",
@@ -20,6 +19,7 @@ interface NavbarProps {
 const Navbar = ({ avatar }: NavbarProps) => {
   const { theme, setTheme } = useContext(ThemeContext);
   const [swipe, setSwipe] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const handleThemeToggle = () => {
     setSwipe(true);
     setTimeout(() => {
@@ -72,30 +72,92 @@ const Navbar = ({ avatar }: NavbarProps) => {
             {theme === "dark" ? "🌙" : "☀️"}
           </button>
           {avatarSrc && (
-            <Menu.Root positioning={{ placement: "bottom-end" }}>
-              <Menu.Trigger rounded="full" focusRing="outside">
-                <Avatar.Root size="sm">
-                  <Avatar.Fallback name="User" />
-                  <Avatar.Image src={avatarSrc} />
-                </Avatar.Root>
-              </Menu.Trigger>
-              <Portal>
-                <Menu.Positioner>
-                  <Menu.Content>
-                    <Menu.Item value="account">Account</Menu.Item>
-                    <Menu.Item value="settings">Settings</Menu.Item>
-                    <Menu.Item
-                      value="logout"
-                      onClick={() => {
-                        handleLogout();
-                      }}
-                    >
-                      Logout
-                    </Menu.Item>
-                  </Menu.Content>
-                </Menu.Positioner>
-              </Portal>
-            </Menu.Root>
+            <div
+              className="navbar-avatar-menu"
+              style={{ position: "relative", display: "inline-block" }}
+            >
+              <button
+                className="navbar-avatar-btn"
+                style={{
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  borderRadius: "50%",
+                }}
+                aria-label="User menu"
+                title="User menu"
+                type="button"
+                onClick={() => setShowMenu((prev) => !prev)}
+              >
+                <img
+                  src={avatarSrc}
+                  alt="User avatar"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
+                  }}
+                />
+              </button>
+              {showMenu && (
+                <div
+                  className="navbar-avatar-dropdown"
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: "calc(100% + 8px)",
+                    background: "#fff",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                    minWidth: "120px",
+                    zIndex: 10,
+                  }}
+                >
+                  <button
+                    className="navbar-avatar-item"
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      background: "none",
+                      border: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Account
+                  </button>
+                  <button
+                    className="navbar-avatar-item"
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      background: "none",
+                      border: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Settings
+                  </button>
+                  <button
+                    className="navbar-avatar-item"
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      background: "none",
+                      border: "none",
+                      textAlign: "left",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

@@ -93,7 +93,6 @@ function ForgotPassword() {
   return (
     <div className="forgot-content">
       <Navbar />
-      {/* Chakra UI Steps Component */}
       <div className="steps-container">
         <div className="steps-row">
           {steps.map((s, idx) => (
