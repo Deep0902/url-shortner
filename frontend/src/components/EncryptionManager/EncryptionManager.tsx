@@ -1,9 +1,8 @@
-import { useState } from "react";
-const DEFAULT_SECRET_KEY = import.meta.env.VITE_API_SECRET_KEY || "";
 import CryptoJS from "crypto-js";
+import { useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import "./EncryptionManager.css";
-import { Button, HStack } from "@chakra-ui/react"
+const DEFAULT_SECRET_KEY = import.meta.env.VITE_API_SECRET_KEY ?? "";
 
 function EncryptionManager() {
   const [encryptInput, setEncryptInput] = useState("");
