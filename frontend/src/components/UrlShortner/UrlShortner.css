@@ -483,7 +483,6 @@
 .loader-fade-wrapper {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
   position: fixed;
   inset: 0;
   z-index: 50;

@@ -5,7 +5,10 @@ import "./App.css";
 import LandingPage from "./components/LandingPage/LandingPage";
 import Login from "./components/Login/Login";
 import UrlShortner from "./components/UrlShortner/UrlShortner";
+import UrlShortnerUser from "./components/UrlShortnerUser/UrlShortnerUser";
 import { ThemeContext, type ThemeType } from "./ThemeContext";
+import EncryptionManager from "./components/EncryptionManager/EncryptionManager";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 
 function App() {
   // Detect system theme on first load
@@ -52,6 +55,9 @@ function App() {
           <Route path="/url" element={<UrlShortner />} />
           <Route path="/" index element={<LandingPage />} />
           <Route path="/sign" element={<Login />} />
+          <Route path="/url-user" element={<UrlShortnerUser />} />
+          <Route path="/encrypt" element={<EncryptionManager />} />
+          <Route path="/forgot" element={<ForgotPassword />} />
         </Routes>
       </Router>
     </ThemeContext.Provider>
