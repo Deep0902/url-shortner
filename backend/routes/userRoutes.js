@@ -13,6 +13,6 @@ router.get("/users", getAllUsers);
 
 router.post("/user", getUserById);
 
-router.get("/users/shorten", createShortUrlUser);
+router.post("/users/shorten", createShortUrlUser);
 
 export default router;

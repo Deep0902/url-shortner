@@ -1,6 +1,7 @@
 import User from "../models/users.model.js";
 import CryptoJS from "crypto-js";
 import dotenv from "dotenv";
+import { nanoid } from "nanoid";
 dotenv.config();
 
 // Use API_SECRET_KEY from .env
@@ -26,7 +27,7 @@ const encryptData = (data) => {
 export const createUser = async (req, res) => {
   try {
     const { username, password: encryptedPassword, email } = req.body;
-    
+
     if (!username || !encryptedPassword || !email) {
       return res
         .status(400)
@@ -35,7 +36,7 @@ export const createUser = async (req, res) => {
 
     // Decrypt the password received from frontend
     const decryptedPassword = decryptData(encryptedPassword);
-    
+
     if (!decryptedPassword) {
       return res.status(400).json({ error: "Invalid password format" });
     }
@@ -50,7 +51,7 @@ export const createUser = async (req, res) => {
 
     // Store the password encrypted in database
     const passwordToStore = encryptData(decryptedPassword);
-    
+
     const newUser = new User({
       username,
       password: passwordToStore,
@@ -95,16 +96,16 @@ export const deleteUser = async (req, res) => {
 export const editUser = async (req, res) => {
   try {
     const { email, username, password: encryptedPassword } = req.body;
-    
+
     if (!email) {
       return res.status(400).json({ error: "Email is required" });
     }
-    
+
     const searchUser = await User.findOne({ email });
     if (!searchUser) {
       return res.status(404).json({ error: "User not found" });
     }
-    
+
     if (!username || !encryptedPassword) {
       return res
         .status(400)
@@ -113,7 +114,7 @@ export const editUser = async (req, res) => {
 
     // Decrypt the password received from frontend
     const decryptedPassword = decryptData(encryptedPassword);
-    
+
     if (!decryptedPassword) {
       return res.status(400).json({ error: "Invalid password format" });
     }
@@ -122,7 +123,7 @@ export const editUser = async (req, res) => {
     searchUser.username = username;
     searchUser.password = encryptData(decryptedPassword); // Store encrypted password
     await searchUser.save();
-    
+
     res.status(200).json({ message: "User updated successfully" });
   } catch (error) {
     console.error("Error editing user:", error);
@@ -137,23 +138,22 @@ export const getAllUsers = async (req, res) => {
     if (!users || users.length === 0) {
       return res.status(404).json({ error: "No users found" });
     }
-    
+
     // Remove sensitive information before sending response
-    const safeUsers = users.map(user => ({
+    const safeUsers = users.map((user) => ({
       _id: user._id,
       username: user.username,
       email: user.email,
       urls: user.urls,
       // Don't include password in response
     }));
-    
+
     res.status(200).json(safeUsers);
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 // region Get user by ID
 export const getUserById = async (req, res) => {
@@ -168,7 +168,7 @@ export const getUserById = async (req, res) => {
     }
     res.status(200).json({
       username: user.username,
-      avatar: user.avatar 
+      avatar: user.avatar,
     });
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -176,32 +176,40 @@ export const getUserById = async (req, res) => {
   }
 };
 
-
 // region Short URL user
 export const createShortUrlUser = async (req, res) => {
   try {
-    // Check if the URL count has reached the limit
-    const urlCount = await Url.countDocuments();
-    if (urlCount >= 20) {
+    const { userId, originalUrl } = req.body;
+    if (!userId || !originalUrl) {
+      return res
+        .status(400)
+        .json({ error: "User ID and Original URL are required" });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Check if the user's urls array has reached the limit
+    if (user.urls.length >= 20) {
       return res
         .status(429)
         .json({ error: "Memory is full, please try again later" });
     }
-    const { originalUrl } = req.body;
-    if (!originalUrl) {
-      return res.status(400).json({ error: "Original URL is required" });
-    }
 
-    // Check if the originalUrl already exists
-    let existingUrl = await Url.findOne({ originalUrl });
+    // Check if the originalUrl already exists in user's urls
+    let existingUrl = user.urls.find((url) => url.originalUrl === originalUrl);
     if (existingUrl) {
+      // Update createdAt and expiresAt
       const createdAt = new Date();
       const expiresAt = new Date(
         createdAt.getTime() + 90 * 24 * 60 * 60 * 1000
-      ); // 3 months from now
+      );
       existingUrl.createdAt = createdAt;
       existingUrl.expiresAt = expiresAt;
-      await existingUrl.save();
+      await user.save();
       return res.status(200).json({ shortUrl: existingUrl.shortUrl });
     }
 
@@ -210,16 +218,24 @@ export const createShortUrlUser = async (req, res) => {
     let isUnique = false;
     while (!isUnique) {
       shortUrl = nanoid(8);
-      const existingShort = await Url.findOne({ shortUrl });
-      if (!existingShort) isUnique = true;
+      // Check uniqueness in user's urls array
+      const exists = user.urls.some((url) => url.shortUrl === shortUrl);
+      if (!exists) isUnique = true;
     }
     const createdAt = new Date();
-    const expiresAt = new Date(createdAt.getTime() + 90 * 24 * 60 * 60 * 1000); // 3 months from now
-    const newUrl = new Url({ originalUrl, shortUrl, createdAt, expiresAt });
-    await newUrl.save();
-    res.status(201).json({ shortUrl: newUrl.shortUrl });
+    const expiresAt = new Date(createdAt.getTime() + 90 * 24 * 60 * 60 * 1000);
+    const newUrl = {
+      originalUrl,
+      shortUrl,
+      clicks: 0,
+      createdAt,
+      expiresAt,
+    };
+    user.urls.push(newUrl);
+    await user.save();
+    res.status(201).json({ shortUrl });
   } catch (error) {
-    console.error("Error creating short URL:", error);
+    console.error("Error creating short URL for user:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

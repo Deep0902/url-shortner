@@ -76,7 +76,6 @@ function UrlShortnerUser() {
       type: "success",
     });
   };
-
   const handleSubmit = () => {
     const websiteRegex =
       /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
@@ -84,11 +83,15 @@ function UrlShortnerUser() {
       showAlert("Invalid URL", "error", "Please enter a valid website URL");
       return;
     }
+    const payload = {
+      originalUrl: originalUrl,
+      userId: location.state.loginResponse.userId,
+    };
     setLoading(true);
     axios
       .post(
-        `${API_URL}/api/shorten`,
-        { originalUrl },
+        `${API_URL}/api/users/shorten`,
+        payload ,
         { headers: { "x-api-key": API_KEY } }
       )
       .then((response) => {
@@ -96,6 +99,7 @@ function UrlShortnerUser() {
         if (response.data.shortUrl) {
           setShortenedUrl(response.data.shortUrl);
           showAlert("Success!", "success", `URL shortened successfully`);
+          localStorage.setItem("canShorten", "false"); // Set boolean to false
         }
       })
       .catch((error) => {
@@ -183,8 +187,7 @@ function UrlShortnerUser() {
     if (location.state && location.state.loginResponse) {
       console.log("Login response from Signin:", location.state.loginResponse);
       checkUser();
-    }
-    else{
+    } else {
       navigate(-1);
       console.log("No login response found in location state");
     }
