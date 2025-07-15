@@ -32,6 +32,7 @@ function UrlShortner() {
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const canShorten = localStorage.getItem("canShorten");
   //endregion
 
   //region Handlers
@@ -61,6 +62,14 @@ function UrlShortner() {
       /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
     if (!websiteRegex.test(originalUrl)) {
       showAlert("Invalid URL", "error", "Please enter a valid website URL");
+      return;
+    }
+    if (canShorten !== null && canShorten === "false") {
+      showAlert(
+        "Sign In Required",
+        "error",
+        "You need to sign in to shorten more links."
+      );
       return;
     }
     setLoading(true);
@@ -128,9 +137,6 @@ function UrlShortner() {
     axios
       .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
       .catch(() => {});
-
-    // Check localStorage for canShorten
-    const canShorten = localStorage.getItem("canShorten");
     if (canShorten !== null && canShorten === "false") {
       showAlert(
         "Sign In Required",
@@ -138,6 +144,7 @@ function UrlShortner() {
         "You need to sign in to shorten more links."
       );
     }
+    // Check localStorage for canShorten
   }, []);
 
   useEffect(() => {
