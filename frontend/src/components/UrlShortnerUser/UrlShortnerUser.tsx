@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { LinkPreview } from "../../Reactbits/LinkPreview";
 import Particles from "../../Reactbits/Particles";
 import { API_KEY, API_URL } from "../../shared/constants";
-import type { AlertState } from "../../shared/interfaces";
+import type { AlertState, UrlStatsResponse } from "../../shared/interfaces";
 import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
@@ -20,25 +20,7 @@ function UrlShortnerUser() {
   // History state for user's shortened links
   const [showHistory, setShowHistory] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
-  const [historyData, setHistoryData] = useState<
-    Array<{
-      shortUrl: string;
-      createdAt: string;
-      expiredAt: string;
-    }>
-  >([
-    // Dummy data, replace with API response
-    {
-      shortUrl: "sho-rty.vercel.app/abc123",
-      createdAt: "2025-07-01",
-      expiredAt: "2025-08-01",
-    },
-    {
-      shortUrl: "sho-rty.vercel.app/xyz789",
-      createdAt: "2025-07-10",
-      expiredAt: "2025-08-10",
-    },
-  ]);
+  const [historyData, setHistoryData] = useState<UrlStatsResponse | null>(null);
   const [alert, setAlert] = useState<AlertState>({
     show: false,
     message: "",
@@ -79,7 +61,6 @@ function UrlShortnerUser() {
     });
   };
   const handleSubmit = () => {
-    console.log("User clicked short url")
     const websiteRegex =
       /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
     if (!websiteRegex.test(originalUrl)) {
@@ -92,11 +73,9 @@ function UrlShortnerUser() {
     };
     setLoading(true);
     axios
-      .post(
-        `${API_URL}/api/users/shorten`,
-        payload ,
-        { headers: { "x-api-key": API_KEY } }
-      )
+      .post(`${API_URL}/api/users/shorten`, payload, {
+        headers: { "x-api-key": API_KEY },
+      })
       .then((response) => {
         setLoading(false);
         if (response.data.shortUrl) {
@@ -125,13 +104,29 @@ function UrlShortnerUser() {
   };
 
   // Handler for View History button
-  const handleViewHistory = () => {
+  const handleViewHistory = async () => {
     setHistoryLoading(true);
     // Simulate loading for 1 second
-    setTimeout(() => {
-      setHistoryLoading(false);
-      setShowHistory(true);
-    }, 1000);
+
+    const payload = {
+      userId: location.state.loginResponse.userId,
+    };
+    axios
+      .post(`${API_URL}/api/users/stats`, payload, {
+        headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        setHistoryLoading(false);
+        setShowHistory(true);
+        console.log(response);
+        setHistoryData(response.data);
+      })
+      .catch((error) => {
+        setHistoryLoading(false);
+        showAlert("Error", "error", "error");
+        console.error("Error in fetching history data", error);
+      });
+
     // TODO: Replace dummy data with API call to fetch user's link history
   };
 
@@ -151,7 +146,9 @@ function UrlShortnerUser() {
       })
       .then((response) => {
         // Set avatar index from response
-        setAvatar(typeof response.data.avatar === "number" ? response.data.avatar : null);
+        setAvatar(
+          typeof response.data.avatar === "number" ? response.data.avatar : null
+        );
         console.log("User check response:", response.data);
       })
       .catch((error) => {
@@ -192,11 +189,14 @@ function UrlShortnerUser() {
   useEffect(() => {
     try {
       if (location.state.loginResponse) {
-      console.log("Login response from Signin:", location.state.loginResponse);
-      checkUser();
+        console.log(
+          "Login response from Signin:",
+          location.state.loginResponse
+        );
+        checkUser();
       } else {
-      navigate(-1);
-      console.log("No login response found in location state");
+        navigate(-1);
+        console.log("No login response found in location state");
       }
     } catch (error) {
       console.error("Error accessing location.state.loginResponse:", error);
@@ -328,27 +328,49 @@ function UrlShortnerUser() {
                       <th>Shortened Link</th>
                       <th>Created On</th>
                       <th>Expires On</th>
+                      <th>Clicks</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {historyData.map((row, idx) => (
+                    {historyData?.urls.map((row, idx) => (
                       <tr key={idx}>
                         <td>
-                          <a
-                            href={`https://${row.shortUrl}`}
+                          <LinkPreview
+                            url={`${API_URL}/${row.shortUrl}`}
+                            className="font-bold remove-decorations"
+                          >
+                            {`sho-rty.vercel.app/${row.shortUrl}`}
+                          </LinkPreview>
+                          {/* <a
+                            href={`${API_URL}/${row.shortUrl}`}
                             target="_blank"
                             rel="noopener noreferrer"
+                            title={`Go to original URL: ${row.originalUrl}`}
                           >
                             {row.shortUrl}
-                          </a>
+                          </a> */}
                         </td>
-                        <td>{row.createdAt}</td>
-                        <td>{row.expiredAt}</td>
+
+                        <td>{new Date(row.createdAt).toLocaleDateString()}</td>
+
+                        <td>{new Date(row.expiresAt).toLocaleDateString()}</td>
+
+                        <td>{row.clicks}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                {/* TODO: Replace dummy data with API response */}
+                <button className="btn-primary" onClick={handleViewHistory}>
+                  Refresh
+                </button>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    setShowHistory(false);
+                  }}
+                >
+                  Close
+                </button>
               </div>
             )}
           </section>

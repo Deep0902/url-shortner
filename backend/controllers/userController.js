@@ -239,3 +239,44 @@ export const createShortUrlUser = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+// region Get user statistics
+export const getUserStats = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Calculate URL count
+    const urlCount = user.urls.length;
+
+    // Calculate total clicks
+    const totalClicks = user.urls.reduce((sum, url) => sum + (url.clicks || 0), 0);
+
+    // Format URL details for response
+    const urlDetails = user.urls.map(url => ({
+      originalUrl: url.originalUrl,
+      shortUrl: url.shortUrl,
+      clicks: url.clicks || 0,
+      createdAt: url.createdAt,
+      expiresAt: url.expiresAt
+    }));
+
+    res.status(200).json({
+      urlCount,
+      totalClicks,
+      urls: urlDetails
+    });
+  } catch (error) {
+    console.error("Error fetching user statistics:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
