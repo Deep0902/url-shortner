@@ -53,6 +53,8 @@ function UrlShortnerUser() {
   const [isDeleting, setIsDeleting] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  // Avatar index state
+  const [avatar, setAvatar] = useState<number | null>(null);
   //endregion
 
   //region Handlers
@@ -148,9 +150,12 @@ function UrlShortnerUser() {
         headers: { "x-api-key": API_KEY },
       })
       .then((response) => {
+        // Set avatar index from response
+        setAvatar(typeof response.data.avatar === "number" ? response.data.avatar : null);
         console.log("User check response:", response.data);
       })
       .catch((error) => {
+        setAvatar(null);
         console.error("Error checking user:", error);
       });
   };
@@ -217,7 +222,7 @@ function UrlShortnerUser() {
         />
       </div>
       {/* Navbar */}
-      <Navbar userAvatar={"/avatars/avatar-male-1.svg"} />
+      <Navbar avatar={avatar} />
       {alert.show && (
         <Alert
           message={alert.message}

@@ -4,11 +4,20 @@ import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
 import { Avatar, Menu, Portal } from "@chakra-ui/react";
 
+const avatarItems = [
+  "/avatars/avatar-male-1.svg",
+  "/avatars/avatar-male-2.svg",
+  "/avatars/avatar-male-3.svg",
+  "/avatars/avatar-girl-1.svg",
+  "/avatars/avatar-girl-2.svg",
+  "/avatars/avatar-girl-3.svg",
+];
+
 interface NavbarProps {
-  userAvatar?: string | null;
+  avatar?: number | null;
 }
 
-const Navbar = ({ userAvatar }: NavbarProps) => {
+const Navbar = ({ avatar }: NavbarProps) => {
   const { theme, setTheme } = useContext(ThemeContext);
   const [swipe, setSwipe] = useState(false);
   const handleThemeToggle = () => {
@@ -35,6 +44,11 @@ const Navbar = ({ userAvatar }: NavbarProps) => {
     }
   }, [theme]);
 
+  const avatarSrc =
+    typeof avatar === "number" && avatar >= 0 && avatar < avatarItems.length
+      ? avatarItems[avatar]
+      : null;
+
   return (
     <nav className="navbar">
       {swipe && <div className="theme-swipe" />}
@@ -57,12 +71,12 @@ const Navbar = ({ userAvatar }: NavbarProps) => {
           >
             {theme === "dark" ? "🌙" : "☀️"}
           </button>
-          {userAvatar && (
+          {avatarSrc && (
             <Menu.Root positioning={{ placement: "bottom-end" }}>
               <Menu.Trigger rounded="full" focusRing="outside">
                 <Avatar.Root size="sm">
                   <Avatar.Fallback name="User" />
-                  <Avatar.Image src={userAvatar} />
+                  <Avatar.Image src={avatarSrc} />
                 </Avatar.Root>
               </Menu.Trigger>
               <Portal>
