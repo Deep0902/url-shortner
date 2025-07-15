@@ -1,6 +1,4 @@
-import { Field, PinInput } from "@chakra-ui/react";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Particles from "../../Reactbits/Particles";
 import Footer from "../Footer/Footer";
@@ -30,13 +28,7 @@ function ForgotPassword() {
   //endregion
 
   //region Form
-  const {
-    handleSubmit: handleOtpFormSubmit,
-    control,
-    formState,
-  } = useForm({
-    defaultValues: { pin: ["", "", "", "", "", ""] },
-  });
+  // No form hook needed for simple HTML forms
   //endregion
 
   //region Handlers
@@ -49,6 +41,38 @@ function ForgotPassword() {
     setAlert({ show: false, message: "" });
     window.alert("Your OTP is 123456");
     setStep(2);
+  };
+
+  const handleOtpSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otp !== "123456") {
+      setAlert({ show: true, message: "Invalid OTP." });
+      return;
+    }
+    setAlert({ show: false, message: "" });
+    setStep(3);
+  };
+
+  const handleOtpChange = (value: string, index: number) => {
+    const otpArray = otp.split("");
+    while (otpArray.length < 6) {
+      otpArray.push("");
+    }
+    otpArray[index] = value;
+    setOtp(otpArray.join(""));
+    
+    // Auto-focus next input
+    if (value && index < 5) {
+      const nextInput = document.getElementById(`otp-${index + 1}`);
+      nextInput?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === "Backspace" && !(e.currentTarget as HTMLInputElement).value && index > 0) {
+      const prevInput = document.getElementById(`otp-${index - 1}`);
+      prevInput?.focus();
+    }
   };
 
   const handlePasswordView = () => {
@@ -121,63 +145,32 @@ function ForgotPassword() {
           </form>
         )}
         {step === 2 && (
-          <form
-            onSubmit={handleOtpFormSubmit((data: { pin: string[] }) => {
-              const otpValue = data.pin.join("");
-              setOtp(otpValue);
-              if (otpValue !== "123456") {
-                setAlert({ show: true, message: "Invalid OTP." });
-                return;
-              }
-              setAlert({ show: false, message: "" });
-              setStep(3);
-            })}
-          >
+          <form onSubmit={handleOtpSubmit}>
             <span className="label">Enter OTP</span>
             <span className="subtext">Check your email for the OTP.</span>
-            <Field.Root invalid={!!formState.errors.pin}>
-              <Controller
-                control={control}
-                name="pin"
-                render={({
-                  field,
-                }: {
-                  field: { value: string[]; onChange: (val: any) => void };
-                }) => (
-                  <PinInput.Root
-                    value={field.value}
-                    onValueChange={(e) => field.onChange(e.value)}
-                    onKeyDown={(e: React.KeyboardEvent) => {
-                      if (
-                        e.key === "Enter" &&
-                        field.value.every((v) => v.length === 1)
-                      ) {
-                        const form = (e.target as HTMLElement).closest("form");
-                        if (form) {
-                          form.dispatchEvent(
-                            new Event("submit", {
-                              cancelable: true,
-                              bubbles: true,
-                            })
-                          );
-                        }
-                      }
-                    }}
-                  >
-                    <PinInput.HiddenInput />
-                    <PinInput.Control>
-                      <PinInput.Input index={0} autoFocus />
-                      <PinInput.Input index={1} />
-                      <PinInput.Input index={2} />
-                      <PinInput.Input index={3} />
-                      <PinInput.Input index={4} />
-                      <PinInput.Input index={5} />
-                    </PinInput.Control>
-                  </PinInput.Root>
-                )}
-              />
-              <Field.ErrorText>{formState.errors.pin?.message}</Field.ErrorText>
-            </Field.Root>
+            <div className="otp-container" style={{ display: 'flex', gap: '8px', justifyContent: 'center', margin: '20px 0' }}>
+              {[0, 1, 2, 3, 4, 5].map((index) => (
+                <input
+                  key={index}
+                  id={`otp-${index}`}
+                  type="text"
+                  maxLength={1}
+                  value={otp[index] || ''}
+                  onChange={(e) => handleOtpChange(e.target.value, index)}
+                  onKeyDown={(e) => handleOtpKeyDown(e, index)}
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    textAlign: 'center',
+                    fontSize: '18px',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    outline: 'none'
+                  }}
+                  autoFocus={index === 0}
+                />
+              ))}
+            </div>
             <button className="btn" type="submit">
               Verify OTP
             </button>
