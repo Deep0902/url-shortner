@@ -1,4 +1,5 @@
 import Url from "../models/url.model.js";
+import User from "../models/users.model.js"; // <-- Add this line
 import { nanoid } from "nanoid";
 
 // region Create short URL
@@ -52,18 +53,28 @@ export const createShortUrl = async (req, res) => {
 export const redirectToOriginalUrl = async (req, res) => {
   try {
     const { shortUrl } = req.params;
+
+    // First, check in users' embedded urls
+    const user = await User.findOne({ "urls.shortUrl": shortUrl });
+    if (user) {
+      const urlDoc = user.urls.find((url) => url.shortUrl === shortUrl);
+      if (urlDoc) {
+        urlDoc.clicks++;
+        await user.save();
+        return res.redirect(urlDoc.originalUrl);
+      }
+    }
+
+    // Fallback: check in global Url collection
     const url = await Url.findOne({ shortUrl });
-    if (!url) {
-      return res.status(404).json({ error: "URL not found" });
-    }
-    console.log("URL Found", url);
     if (url) {
-      url.clicks++; // Increment click count
-      await url.save(); // Save the updated URL document
-      return res.redirect(url.originalUrl); // Redirect to the original URL
-    } else {
-      return res.status(404).json({ error: "URL not found" });
+      url.clicks++;
+      await url.save();
+      return res.redirect(url.originalUrl);
     }
+
+    // If not found in either
+    return res.status(404).json({ error: "URL not found" });
   } catch (error) {
     console.error("Error redirecting to original URL:", error);
     res.status(500).json({ error: "Internal Server Error" });

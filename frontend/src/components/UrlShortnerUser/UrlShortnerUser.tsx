@@ -77,6 +77,7 @@ function UrlShortnerUser() {
     });
   };
   const handleSubmit = () => {
+    console.log("User clicked short url")
     const websiteRegex =
       /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
     if (!websiteRegex.test(originalUrl)) {
@@ -184,7 +185,7 @@ function UrlShortnerUser() {
   }, [currentIndex, isDeleting, fullText]);
 
   useEffect(() => {
-    if (location.state && location.state.loginResponse) {
+    if (location.state.loginResponse) {
       console.log("Login response from Signin:", location.state.loginResponse);
       checkUser();
     } else {

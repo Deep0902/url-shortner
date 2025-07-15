@@ -218,7 +218,7 @@ export const createShortUrlUser = async (req, res) => {
     let isUnique = false;
     while (!isUnique) {
       shortUrl = nanoid(8);
-      // Check uniqueness in user's urls array
+      // Check uniqueness in user's urls array ONLY
       const exists = user.urls.some((url) => url.shortUrl === shortUrl);
       if (!exists) isUnique = true;
     }
