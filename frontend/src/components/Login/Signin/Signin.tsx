@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useState } from "react";
+import CryptoJS from "crypto-js";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_KEY, API_URL } from "../../../shared/constants";
 import "./Signin.css";
-import CryptoJS from "crypto-js";
 
 // Add your secret key here (should be the same in backend)
 const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
@@ -32,6 +33,17 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
   });
   const [showPassword, setShowPassword] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
+  const navigate = useNavigate();
+  //endregion
+
+  //region Auto-login from session storage
+  useEffect(() => {
+    const stored = sessionStorage.getItem("userCredentials");
+    if (stored) {
+      const creds = JSON.parse(stored) as { email: string; password: string };
+      setCredentials({ email: creds.email, password: creds.password });
+    }
+  }, []);
   //endregion
 
   //region Encryption Helper
@@ -67,6 +79,19 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
       password: encryptedPassword, // Send encrypted password
     };
 
+    // Save credentials to session storage if 'Keep Me Logged In' is checked
+    if (isChecked) {
+      sessionStorage.setItem(
+        "userCredentials",
+        JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        })
+      );
+    } else if (!isChecked) {
+      sessionStorage.removeItem("userCredentials");
+    }
+
     axios
       .post(`${API_URL}/api/login`, payload, {
         headers: { "x-api-key": API_KEY },
@@ -75,6 +100,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
         setLoading(false);
         if (response.data && response.data.message === "Login successful") {
           showAlert("Success!", "success", "Login successful!");
+          navigate("/url-user", { state: { loginResponse: response.data } });
         } else {
           showAlert(
             "Error",
@@ -92,11 +118,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
             "Incorrect Credentials. Please try again."
           );
         } else if (error.response && error.response.status === 404) {
-          showAlert(
-            "Error",
-            "error",
-            "User not found"
-          );
+          showAlert("Error", "error", "User not found");
         } else {
           showAlert("Error", "error", error.resp);
         }
@@ -117,6 +139,10 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+  };
+
+  const handleForgotPassword = () => {
+    navigate("/forgot");
   };
   //endregion
 
@@ -160,7 +186,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
             onChange={handleCheckboxChange}
           />
           <label htmlFor="customCheckbox" className="">
-            &nbsp;Keep Me Logged In
+            &nbsp;Remember me
           </label>
         </div>
         <button className="btn" type="submit">
@@ -173,7 +199,9 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
         <hr className="line" />
       </div>
       <div className="bottomSection">
-        <p className="underlineText ">Forgot Password</p>
+        <p className="underlineText" onClick={handleForgotPassword}>
+          Forgot Password
+        </p>
       </div>
     </div>
   );
