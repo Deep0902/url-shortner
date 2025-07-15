@@ -1,7 +1,8 @@
-import type { IconButtonProps, SpanProps } from "@chakra-ui/react";
-import { IconButton, Skeleton, Span } from "@chakra-ui/react";
-import { ThemeProvider, useTheme } from "next-themes";
+import type { IconButtonProps } from "@chakra-ui/react";
+import { Box, IconButton } from "@chakra-ui/react"; // <-- Changed this line
+
 import type { ThemeProviderProps } from "next-themes";
+import { ThemeProvider, useTheme } from "next-themes";
 import * as React from "react";
 import { LuMoon, LuSun } from "react-icons/lu";
 
@@ -71,15 +72,18 @@ export const ColorModeButton = React.forwardRef<
   );
 });
 
-export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
+export const LightMode = React.forwardRef<HTMLSpanElement>(
   function LightMode(props, ref) {
+    // Standard HTML span is fine here if it doesn't need Chakra props,
+    // otherwise use Box as="span" like in DarkMode.
+    // Given the props like `color="fg"`, `display="contents"`, `colorPalette`, `colorScheme`,
+    // it strongly suggests using a Chakra component (like Box) with `as="span"`.
     return (
-      <Span
+      <Box // <-- Changed from <span> to Box
+        as="span" // <-- Render Box as a span HTML element
         color="fg"
         display="contents"
         className="chakra-theme light"
-        colorPalette="gray"
-        colorScheme="light"
         ref={ref}
         {...props}
       />
@@ -87,10 +91,15 @@ export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
   }
 );
 
-export const DarkMode = React.forwardRef<HTMLSpanElement, SpanProps>(
+// Make sure to import `Box` if you use it for `DarkMode`
+// Also, change `SpanProps` type to `BoxProps`
+import type { BoxProps } from "@chakra-ui/react"; // <-- Add this import for BoxProps if not already there
+
+export const DarkMode = React.forwardRef<HTMLSpanElement, BoxProps>( // <-- Changed SpanProps to BoxProps
   function DarkMode(props, ref) {
     return (
-      <Span
+      <Box // <-- Changed from <Span> to Box
+        as="span" // <-- Render Box as a span HTML element
         color="fg"
         display="contents"
         className="chakra-theme dark"
