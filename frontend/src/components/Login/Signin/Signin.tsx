@@ -100,7 +100,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
         setLoading(false);
         if (response.data && response.data.message === "Login successful") {
           showAlert("Success!", "success", "Login successful!");
-          navigate("/url-user");
+         navigate("/url-user", { state: { loginResponse: response.data } });
         } else {
           showAlert(
             "Error",

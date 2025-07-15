@@ -11,6 +11,8 @@ import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "../UrlShortner/UrlShortner.css";
 import "./UrlShortnerUser.css";
+import { useLocation, useNavigate } from "react-router-dom";
+
 function UrlShortnerUser() {
   //region State
   const [originalUrl, setOriginalUrl] = useState("");
@@ -49,6 +51,8 @@ function UrlShortnerUser() {
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
   //endregion
 
   //region Handlers
@@ -122,12 +126,28 @@ function UrlShortnerUser() {
       setShowHistory(true);
     }, 1000);
     // TODO: Replace dummy data with API call to fetch user's link history
-  
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(`${API_URL}/${shortenedUrl}`);
     showAlert("Copied!", "success", "URL copied to clipboard");
+  };
+
+  const checkUser = async () => {
+    const payload = {
+      userId: location.state.loginResponse.userId,
+    };
+
+    axios
+      .post(`${API_URL}/api/user`, payload, {
+        headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        console.log("User check response:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error checking user:", error);
+      });
   };
   //endregion
 
@@ -158,6 +178,17 @@ function UrlShortnerUser() {
     }
     return () => clearTimeout(timer);
   }, [currentIndex, isDeleting, fullText]);
+
+  useEffect(() => {
+    if (location.state && location.state.loginResponse) {
+      console.log("Login response from Signin:", location.state.loginResponse);
+      checkUser();
+    }
+    else{
+      navigate(-1);
+      console.log("No login response found in location state");
+    }
+  }, []);
   //endregion
 
   //region UI

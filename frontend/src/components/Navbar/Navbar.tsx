@@ -20,7 +20,9 @@ const Navbar = ({ userAvatar }: NavbarProps) => {
   };
   const navigate = useNavigate();
   const handleLogout = () => {
-    navigate("/sign");
+    sessionStorage.clear();
+    // Redirect to login and replace history
+    navigate("/sign", { replace: true });
   };
   useEffect(() => {
     const root = document.body;

@@ -154,6 +154,30 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
+
+// region Get user by ID
+export const getUserById = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: "UserID is required" });
+    }
+    const user = await User.findById(userId).lean();
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json({
+      username: user.username,
+      avatar: user.avatar 
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+// region Short URL user
 export const createShortUrlUser = async (req, res) => {
   try {
     // Check if the URL count has reached the limit
