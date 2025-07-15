@@ -1,4 +1,4 @@
-# URL Shortner
+# URL Shortner [Live now!](https://url-shortner-amber-pi.vercel.app/)
 
 A simple URL shortener built with React (frontend) and Node.js/Express with MongoDB (backend).  
 Features:
