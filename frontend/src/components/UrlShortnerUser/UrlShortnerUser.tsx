@@ -185,12 +185,17 @@ function UrlShortnerUser() {
   }, [currentIndex, isDeleting, fullText]);
 
   useEffect(() => {
-    if (location.state.loginResponse) {
+    try {
+      if (location.state.loginResponse) {
       console.log("Login response from Signin:", location.state.loginResponse);
       checkUser();
-    } else {
+      } else {
       navigate(-1);
       console.log("No login response found in location state");
+      }
+    } catch (error) {
+      console.error("Error accessing location.state.loginResponse:", error);
+      navigate(-1);
     }
   }, []);
   //endregion
