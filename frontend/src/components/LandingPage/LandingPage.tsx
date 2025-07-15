@@ -125,6 +125,14 @@ function LandingPage() {
               <button onClick={handleRedirect} className="btn-primary">
                 Start Shortening
               </button>
+              <button
+                onClick={() => {
+                  navigate("/encrypt");
+                }}
+                className="btn-primary"
+              >
+                Encrypt Manager
+              </button>
             </div>
 
             {/* Stats */}

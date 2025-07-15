@@ -1,25 +1,26 @@
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
-import CountUp from "../../Reactbits/CountUp";
 import { LinkPreview } from "../../Reactbits/LinkPreview";
 import Particles from "../../Reactbits/Particles";
 import { API_KEY, API_URL } from "../../shared/constants";
-import type { AlertState } from "../../shared/interfaces";
+import type { AlertState, UrlStatsResponse } from "../../shared/interfaces";
 import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
 import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
-import "./UrlShortner.css";
+import "../UrlShortner/UrlShortner.css";
+import "./UrlShortnerUser.css";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function UrlShortner() {
+function UrlShortnerUser() {
   //region State
   const [originalUrl, setOriginalUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState("");
-  const [stats, setStats] = useState<{
-    totalUrls: number | null;
-    totalClicks: number | null;
-  }>();
+  // History state for user's shortened links
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyData, setHistoryData] = useState<UrlStatsResponse | null>(null);
   const [alert, setAlert] = useState<AlertState>({
     show: false,
     message: "",
@@ -32,7 +33,10 @@ function UrlShortner() {
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const canShorten = localStorage.getItem("canShorten");
+  const location = useLocation();
+  const navigate = useNavigate();
+  // Avatar index state
+  const [avatar, setAvatar] = useState<number | null>(null);
   //endregion
 
   //region Handlers
@@ -56,7 +60,6 @@ function UrlShortner() {
       type: "success",
     });
   };
-
   const handleSubmit = () => {
     const websiteRegex =
       /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
@@ -64,21 +67,15 @@ function UrlShortner() {
       showAlert("Invalid URL", "error", "Please enter a valid website URL");
       return;
     }
-    if (canShorten !== null && canShorten === "false") {
-      showAlert(
-        "Sign In Required",
-        "error",
-        "You need to sign in to shorten more links."
-      );
-      return;
-    }
+    const payload = {
+      originalUrl: originalUrl,
+      userId: location.state.loginResponse.userId,
+    };
     setLoading(true);
     axios
-      .post(
-        `${API_URL}/api/shorten`,
-        { originalUrl },
-        { headers: { "x-api-key": API_KEY } }
-      )
+      .post(`${API_URL}/api/users/shorten`, payload, {
+        headers: { "x-api-key": API_KEY },
+      })
       .then((response) => {
         setLoading(false);
         if (response.data.shortUrl) {
@@ -106,28 +103,58 @@ function UrlShortner() {
       });
   };
 
-  const handleGetStatus = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${API_URL}/api/stats`, {
+  // Handler for View History button
+  const handleViewHistory = async () => {
+    setHistoryLoading(true);
+    // Simulate loading for 1 second
+
+    const payload = {
+      userId: location.state.loginResponse.userId,
+    };
+    axios
+      .post(`${API_URL}/api/users/stats`, payload, {
         headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        setHistoryLoading(false);
+        setShowHistory(true);
+        console.log(response);
+        setHistoryData(response.data);
+      })
+      .catch((error) => {
+        setHistoryLoading(false);
+        showAlert("Error", "error", "error");
+        console.error("Error in fetching history data", error);
       });
-      setStats(response.data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      showAlert(
-        "Error",
-        "error",
-        "Failed to fetch statistics. Please try again."
-      );
-      console.error("Error fetching stats:", error);
-    }
+
+    // TODO: Replace dummy data with API call to fetch user's link history
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(`${API_URL}/${shortenedUrl}`);
     showAlert("Copied!", "success", "URL copied to clipboard");
+  };
+
+  const checkUser = async () => {
+    const payload = {
+      userId: location.state.loginResponse.userId,
+    };
+
+    axios
+      .post(`${API_URL}/api/user`, payload, {
+        headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        // Set avatar index from response
+        setAvatar(
+          typeof response.data.avatar === "number" ? response.data.avatar : null
+        );
+        console.log("User check response:", response.data);
+      })
+      .catch((error) => {
+        setAvatar(null);
+        console.error("Error checking user:", error);
+      });
   };
   //endregion
 
@@ -137,14 +164,6 @@ function UrlShortner() {
     axios
       .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
       .catch(() => {});
-    if (canShorten !== null && canShorten === "false") {
-      showAlert(
-        "Sign In Required",
-        "error",
-        "You need to sign in to shorten more links."
-      );
-    }
-    // Check localStorage for canShorten
   }, []);
 
   useEffect(() => {
@@ -166,6 +185,24 @@ function UrlShortner() {
     }
     return () => clearTimeout(timer);
   }, [currentIndex, isDeleting, fullText]);
+
+  useEffect(() => {
+    try {
+      if (location.state.loginResponse) {
+        console.log(
+          "Login response from Signin:",
+          location.state.loginResponse
+        );
+        checkUser();
+      } else {
+        navigate(-1);
+        console.log("No login response found in location state");
+      }
+    } catch (error) {
+      console.error("Error accessing location.state.loginResponse:", error);
+      navigate(-1);
+    }
+  }, []);
   //endregion
 
   //region UI
@@ -185,7 +222,7 @@ function UrlShortner() {
         />
       </div>
       {/* Navbar */}
-      <Navbar />
+      <Navbar avatar={avatar} />
       {alert.show && (
         <Alert
           message={alert.message}
@@ -204,7 +241,7 @@ function UrlShortner() {
           <section className="hero-section-url">
             <h1 className="hero-title">
               <span className="title-highlight">Shorten</span>{" "}
-              <span className="title-normal">Your URLs</span>
+              <span className="title-normal">Your URLs User</span>
             </h1>
             <p className="hero-subtitle">
               {animatedText} <span className="cursor">|</span>
@@ -269,41 +306,71 @@ function UrlShortner() {
             )}
           </section>
           <section className="stats-section">
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={handleGetStatus}
-            >
-              View Statistics
-            </button>
-            {stats && (
-              <div className="stats-grid">
-                <div className="stat-item">
-                  <div className="stat-number">
-                    <CountUp
-                      from={0}
-                      to={stats.totalUrls ?? 0}
-                      separator=","
-                      direction="up"
-                      duration={1}
-                      className="count-up-text"
-                    />
-                  </div>
-                  <div className="stat-label">Total URLs</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-number">
-                    <CountUp
-                      from={0}
-                      to={stats.totalClicks ?? 0}
-                      separator=","
-                      direction="up"
-                      duration={1}
-                      className="count-up-text"
-                    />
-                  </div>
-                  <div className="stat-label">Total Clicks</div>
-                </div>
+            {!showHistory && !historyLoading && (
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={handleViewHistory}
+              >
+                View History
+              </button>
+            )}
+            {historyLoading && (
+              <div className="loader-fade-wrapper show">
+                <Loader />
+              </div>
+            )}
+            {showHistory && !historyLoading && (
+              <div className="history-table-wrapper">
+                <table className="history-table">
+                  <thead>
+                    <tr>
+                      <th>Shortened Link</th>
+                      <th>Created On</th>
+                      <th>Expires On</th>
+                      <th>Clicks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {historyData?.urls.map((row, idx) => (
+                      <tr key={idx}>
+                        <td>
+                          <LinkPreview
+                            url={`${API_URL}/${row.shortUrl}`}
+                            className="font-bold remove-decorations"
+                          >
+                            {`sho-rty.vercel.app/${row.shortUrl}`}
+                          </LinkPreview>
+                          {/* <a
+                            href={`${API_URL}/${row.shortUrl}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={`Go to original URL: ${row.originalUrl}`}
+                          >
+                            {row.shortUrl}
+                          </a> */}
+                        </td>
+
+                        <td>{new Date(row.createdAt).toLocaleDateString()}</td>
+
+                        <td>{new Date(row.expiresAt).toLocaleDateString()}</td>
+
+                        <td>{row.clicks}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <button className="btn-primary" onClick={handleViewHistory}>
+                  Refresh
+                </button>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    setShowHistory(false);
+                  }}
+                >
+                  Close
+                </button>
               </div>
             )}
           </section>
@@ -316,4 +383,4 @@ function UrlShortner() {
   //endregion
 }
 
-export default UrlShortner;
+export default UrlShortnerUser;
