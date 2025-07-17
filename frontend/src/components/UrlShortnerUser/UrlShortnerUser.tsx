@@ -351,9 +351,20 @@ function UrlShortnerUser() {
                           </a> */}
                         </td>
 
-                        <td>{new Date(row.createdAt).toLocaleDateString()}</td>
-
-                        <td>{new Date(row.expiresAt).toLocaleDateString()}</td>
+                        <td>
+                          {new Date(row.createdAt).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </td>
+                        <td>
+                          {new Date(row.expiresAt).toLocaleDateString("en-GB", {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </td>
 
                         <td>{row.clicks}</td>
                       </tr>
