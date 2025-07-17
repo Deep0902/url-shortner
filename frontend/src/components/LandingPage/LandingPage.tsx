@@ -17,10 +17,6 @@ function LandingPage() {
   //region Data
   const features = [
     {
-      title: "Lightning Fast",
-      description: "Instant URL shortening with quick response times",
-    },
-    {
       title: "Secure & Reliable",
       description: "Enterprise-grade security with uptime guarantee",
     },
