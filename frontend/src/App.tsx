@@ -43,6 +43,16 @@ function App() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
+  useEffect(() => {
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute(
+        "content",
+        theme === "light" ? "#fff" : "#10131a" // match your CSS variables
+      );
+    }
+  }, [theme]);
+
   const themeContextValue = useMemo(
     () => ({ theme, setTheme }),
     [theme, setTheme]
