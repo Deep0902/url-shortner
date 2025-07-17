@@ -19,24 +19,16 @@ export default defineConfig({
         theme_color: "#ffffff",
         icons: [
           {
-            src: "url-short-72x72.png",
-            sizes: "72x72",
-            type: "image/png",
-          },
-          {
-            src: "url-short-96x96.png",
-            sizes: "96x96",
-            type: "image/png",
-          },
-          {
             src: "url-short-192x192.png",
             sizes: "192x192",
             type: "image/png",
+            purpose: "any maskable",
           },
           {
             src: "url-short-512x512.png",
             sizes: "512x512",
             type: "image/png",
+            purpose: "any maskable",
           },
           {
             src: "url-short.svg",
@@ -64,12 +56,6 @@ export default defineConfig({
           },
           {
             src: "tick.svg",
-            sizes: "any",
-            type: "image/svg+xml",
-            purpose: "any maskable",
-          },
-          {
-            src: "vite.svg",
             sizes: "any",
             type: "image/svg+xml",
             purpose: "any maskable",

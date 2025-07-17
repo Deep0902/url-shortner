@@ -1,5 +1,14 @@
 import express from "express";
-import { createUser, deleteUser, editUser, getAllUsers, createShortUrlUser, getUserById, getUserStats } from "../controllers/userController.js";
+import {
+  createUser,
+  deleteUser,
+  editUser,
+  getAllUsers,
+  createShortUrlUser,
+  getUserById,
+  getUserStats,
+  deleteUserUrl,
+} from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -16,5 +25,7 @@ router.post("/user", getUserById);
 router.post("/users/shorten", createShortUrlUser);
 
 router.post("/users/stats", getUserStats);
+
+router.delete("/users/delete-url", deleteUserUrl);
 
 export default router;

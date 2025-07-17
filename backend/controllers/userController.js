@@ -244,7 +244,7 @@ export const createShortUrlUser = async (req, res) => {
 export const getUserStats = async (req, res) => {
   try {
     const { userId } = req.body;
-    
+
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
     }
@@ -259,24 +259,63 @@ export const getUserStats = async (req, res) => {
     const urlCount = user.urls.length;
 
     // Calculate total clicks
-    const totalClicks = user.urls.reduce((sum, url) => sum + (url.clicks || 0), 0);
+    const totalClicks = user.urls.reduce(
+      (sum, url) => sum + (url.clicks || 0),
+      0
+    );
 
     // Format URL details for response
-    const urlDetails = user.urls.map(url => ({
+    const urlDetails = user.urls.map((url) => ({
       originalUrl: url.originalUrl,
       shortUrl: url.shortUrl,
       clicks: url.clicks || 0,
       createdAt: url.createdAt,
-      expiresAt: url.expiresAt
+      expiresAt: url.expiresAt,
     }));
 
     res.status(200).json({
       urlCount,
       totalClicks,
-      urls: urlDetails
+      urls: urlDetails,
     });
   } catch (error) {
     console.error("Error fetching user statistics:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//region Delete user URL
+export const deleteUserUrl = async (req, res) => {
+  try {
+    const { userId, shortUrl } = req.body;
+
+    if (!userId || !shortUrl) {
+      return res
+        .status(400)
+        .json({ error: "User ID and Short URL are required" });
+    }
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Find the index of the URL to delete
+    const urlIndex = user.urls.findIndex((url) => url.shortUrl === shortUrl);
+    if (urlIndex === -1) {
+      return res
+        .status(404)
+        .json({ error: "Short URL not found for this user" });
+    }
+
+    // Remove the URL from user's urls array
+    user.urls.splice(urlIndex, 1);
+    await user.save();
+
+    res.status(200).json({ message: "Short URL deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user URL:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
