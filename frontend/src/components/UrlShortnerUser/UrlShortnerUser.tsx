@@ -1,6 +1,8 @@
 import axios from "axios";
 import { QRCodeCanvas } from "qrcode.react";
 import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import CountUp from "../../Reactbits/CountUp";
 import { LinkPreview } from "../../Reactbits/LinkPreview";
 import Particles from "../../Reactbits/Particles";
 import { API_KEY, API_URL } from "../../shared/constants";
@@ -11,8 +13,6 @@ import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "../UrlShortner/UrlShortner.css";
 import "./UrlShortnerUser.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import CountUp from "../../Reactbits/CountUp";
 
 function UrlShortnerUser() {
   //region State
@@ -61,6 +61,8 @@ function UrlShortnerUser() {
       type: "success",
     });
   };
+
+  //region Shortrn URL
   const handleSubmit = () => {
     const websiteRegex =
       /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
@@ -104,7 +106,7 @@ function UrlShortnerUser() {
       });
   };
 
-  // Handler for View History button
+  // region History
   const handleViewHistory = async () => {
     setHistoryLoading(true);
     // Simulate loading for 1 second
@@ -134,6 +136,7 @@ function UrlShortnerUser() {
     showAlert("Copied!", "success", "URL copied to clipboard");
   };
 
+  //region CheckUser
   const checkUser = async () => {
     const payload = {
       userId: location.state.loginResponse.userId,
@@ -155,6 +158,8 @@ function UrlShortnerUser() {
         console.error("Error checking user:", error);
       });
   };
+
+  //region Delete short URL
   const handleDeleteShortUrl = async (shortUrl: string) => {
     setLoading(true);
 
@@ -181,7 +186,6 @@ function UrlShortnerUser() {
         console.error("Error checking user:", error);
       });
   };
-  //endregion
 
   //region Effects
   useEffect(() => {
