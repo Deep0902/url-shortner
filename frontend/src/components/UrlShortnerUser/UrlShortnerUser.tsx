@@ -12,6 +12,7 @@ import Navbar from "../Navbar/Navbar";
 import "../UrlShortner/UrlShortner.css";
 import "./UrlShortnerUser.css";
 import { useLocation, useNavigate } from "react-router-dom";
+import CountUp from "../../Reactbits/CountUp";
 
 function UrlShortnerUser() {
   //region State
@@ -126,8 +127,6 @@ function UrlShortnerUser() {
         showAlert("Error", "error", "error");
         console.error("Error in fetching history data", error);
       });
-
-    // TODO: Replace dummy data with API call to fetch user's link history
   };
 
   const copyToClipboard = () => {
@@ -152,6 +151,32 @@ function UrlShortnerUser() {
         console.log("User check response:", response.data);
       })
       .catch((error) => {
+        setAvatar(null);
+        console.error("Error checking user:", error);
+      });
+  };
+  const handleDeleteShortUrl = async (shortUrl: string) => {
+    setLoading(true);
+
+    const payload = {
+      userId: location.state.loginResponse.userId,
+      shortUrl: shortUrl,
+    };
+
+    axios
+      .delete(`${API_URL}/api/users/delete-url`, {
+        data: payload,
+        headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        if (response.status == 200) {
+          setLoading(false);
+          showAlert("Success!", "success", `Link Deleted Successfully`);
+          handleViewHistory();
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
         setAvatar(null);
         console.error("Error checking user:", error);
       });
@@ -321,27 +346,29 @@ function UrlShortnerUser() {
               </div>
             )}
             {showHistory && !historyLoading && (
-              <div className="history-table-wrapper">
-                <table className="history-table">
-                  <thead>
-                    <tr>
-                      <th>Shortened Link</th>
-                      <th>Created On</th>
-                      <th>Expires On</th>
-                      <th>Clicks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {historyData?.urls.map((row, idx) => (
-                      <tr key={idx}>
-                        <td>
-                          <LinkPreview
-                            url={`${API_URL}/${row.shortUrl}`}
-                            className="font-bold remove-decorations"
-                          >
-                            {`sho-rty.vercel.app/${row.shortUrl}`}
-                          </LinkPreview>
-                          {/* <a
+              <div>
+                <div className="history-table-wrapper">
+                  <table className="history-table">
+                    <thead>
+                      <tr>
+                        <th>Shortened Link</th>
+                        <th>Created On</th>
+                        <th>Expires On</th>
+                        <th>Clicks</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {historyData?.urls.map((row, idx) => (
+                        <tr key={idx}>
+                          <td>
+                            <LinkPreview
+                              url={`${API_URL}/${row.shortUrl}`}
+                              className="font-bold remove-decorations"
+                            >
+                              {`sho-rty.vercel.app/${row.shortUrl}`}
+                            </LinkPreview>
+                            {/* <a
                             href={`${API_URL}/${row.shortUrl}`}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -349,39 +376,84 @@ function UrlShortnerUser() {
                           >
                             {row.shortUrl}
                           </a> */}
-                        </td>
+                          </td>
 
-                        <td>
-                          {new Date(row.createdAt).toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </td>
-                        <td>
-                          {new Date(row.expiresAt).toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </td>
+                          <td>
+                            {new Date(row.createdAt).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )}
+                          </td>
+                          <td>
+                            {new Date(row.expiresAt).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "numeric",
+                                month: "short",
+                                year: "numeric",
+                              }
+                            )}
+                          </td>
 
-                        <td>{row.clicks}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <button className="btn-primary" onClick={handleViewHistory}>
-                  Refresh
-                </button>
-                <button
-                  className="btn-primary"
-                  onClick={() => {
-                    setShowHistory(false);
-                  }}
-                >
-                  Close
-                </button>
+                          <td>{row.clicks}</td>
+                          <td>
+                            <button
+                              className="btn-secondary"
+                              onClick={() => handleDeleteShortUrl(row.shortUrl)}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  <br />
+                  <button className="btn-primary" onClick={handleViewHistory}>
+                    Refresh
+                  </button>
+                  &nbsp;
+                  <button
+                    className="btn-primary"
+                    onClick={() => {
+                      setShowHistory(false);
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+                <div className="stats-grid">
+                  <div className="stat-item">
+                    <div className="stat-number">
+                      <CountUp
+                        from={0}
+                        to={historyData?.urlCount ?? 0}
+                        separator=","
+                        direction="up"
+                        duration={1}
+                        className="count-up-text"
+                      />
+                    </div>
+                    <div className="stat-label">Total URLs</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className="stat-number">
+                      <CountUp
+                        from={0}
+                        to={historyData?.totalClicks ?? 0}
+                        separator=","
+                        direction="up"
+                        duration={1}
+                        className="count-up-text"
+                      />
+                    </div>
+                    <div className="stat-label">Total Clicks</div>
+                  </div>
+                </div>
               </div>
             )}
           </section>
