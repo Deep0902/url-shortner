@@ -123,7 +123,7 @@ function LandingPage() {
 
             <div className="hero-button-container">
               <button onClick={handleRedirect} className="btn-primary">
-                Start Shortening
+                Try out a demo!
               </button>
               <button
                 onClick={() => {
@@ -132,6 +132,15 @@ function LandingPage() {
                 className="btn-primary"
               >
                 Encrypt Manager
+              </button>
+              <button
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                  navigate("/sign");
+                }}
+                className="btn-primary"
+              >
+                Sign In
               </button>
             </div>
 

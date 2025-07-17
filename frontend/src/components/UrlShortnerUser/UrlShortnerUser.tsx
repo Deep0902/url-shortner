@@ -74,9 +74,7 @@ function UrlShortnerUser() {
       originalUrl: originalUrl,
       userId: location.state.loginResponse.userId,
     };
-    if(showHistory){
-      handleViewHistory();
-    }
+
     setLoading(true);
     axios
       .post(`${API_URL}/api/users/shorten`, payload, {
@@ -87,7 +85,9 @@ function UrlShortnerUser() {
         if (response.data.shortUrl) {
           setShortenedUrl(response.data.shortUrl);
           showAlert("Success!", "success", `URL shortened successfully`);
-          localStorage.setItem("canShorten", "false"); // Set boolean to false
+          if (showHistory) {
+            handleViewHistory();
+          }
         }
       })
       .catch((error) => {
