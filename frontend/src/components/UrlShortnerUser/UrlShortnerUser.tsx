@@ -18,6 +18,8 @@ function UrlShortnerUser() {
   //region State
   const [originalUrl, setOriginalUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState("");
+  // Copy button state
+  const [copied, setCopied] = useState(false);
   // History state for user's shortened links
   const [showHistory, setShowHistory] = useState(false);
   const [historyLoading, setHistoryLoading] = useState(false);
@@ -85,6 +87,7 @@ function UrlShortnerUser() {
       .then((response) => {
         setLoading(false);
         if (response.data.shortUrl) {
+          setCopied(false); // Reset copy state when new URL is generated
           setShortenedUrl(response.data.shortUrl);
           showAlert("Success!", "success", `URL shortened successfully`);
           localStorage.setItem("canShorten", "false"); // Set boolean to false
@@ -136,7 +139,8 @@ function UrlShortnerUser() {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(`${API_URL}/${shortenedUrl}`);
-    showAlert("Copied!", "success", "URL copied to clipboard");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
   };
 
   //region CheckUser
@@ -235,6 +239,7 @@ function UrlShortnerUser() {
       navigate(-1);
     }
   }, []);
+
   //endregion
 
   //region UI
@@ -312,7 +317,7 @@ function UrlShortnerUser() {
                         className="copy-btn"
                         title="Copy to clipboard"
                       >
-                        📋
+                        {copied ? "✅" : "🔗"}
                       </button>
                     </div>
                     <div className="result-url">
