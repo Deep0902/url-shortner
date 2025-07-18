@@ -319,3 +319,26 @@ export const deleteUserUrl = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+//region Change Avatar
+export const changeAvatar = async (req, res) => {
+  try {
+    let { userId, avatar } = req.body;
+    if (!userId || typeof avatar !== "number") {
+      return res.status(400).json({ error: "Payload error" });
+    }
+    if (avatar < 0 || avatar > 5) {
+      return res.status(400).json({ error: "Avatar out of bounds" });
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.avatar = avatar;
+    await user.save();
+    res.status(200).json({ message: "Avatar updated successfully" });
+  } catch (error) {
+    console.error("Error in changine avatar", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
