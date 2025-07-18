@@ -122,6 +122,7 @@ function Login() {
                 setLoading={setLoading}
                 alert={alert}
                 setAlert={setAlert}
+                onMobileSignIn={() => setCurrentState("first")}
               />
             </div>
           </div>

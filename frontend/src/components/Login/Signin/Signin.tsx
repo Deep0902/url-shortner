@@ -20,10 +20,14 @@ interface SigninProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   alert: AlertState;
   setAlert: React.Dispatch<React.SetStateAction<AlertState>>;
-  onMobileSignup?: () => void; // Add onMobileSignup prop
+  onMobileSignup?: () => void;
 }
 
-function Signin({ setLoading, setAlert, onMobileSignup }: Readonly<SigninProps>) {
+function Signin({
+  setLoading,
+  setAlert,
+  onMobileSignup,
+}: Readonly<SigninProps>) {
   //region State
   const [credentials, setCredentials] = useState<{
     email: string;
@@ -142,10 +146,6 @@ function Signin({ setLoading, setAlert, onMobileSignup }: Readonly<SigninProps>)
     setIsChecked(!isChecked);
   };
 
-  const handleForgotPassword = () => {
-    navigate("/forgot");
-  };
-
   const handleMobileSignup = () => {
     if (onMobileSignup) {
       onMobileSignup();
@@ -206,13 +206,10 @@ function Signin({ setLoading, setAlert, onMobileSignup }: Readonly<SigninProps>)
         <hr className="line" />
       </div>
       <div className="bottomSection">
-        <p className="underlineText" onClick={handleForgotPassword}>
+        <p className="underlineText" onClick={() => navigate("/forgot")}>
           Forgot Password
         </p>
-        <p
-          className="underlineText mobile-signup"
-          onClick={onMobileSignup}
-        >
+        <p className="underlineText mobile-signup" onClick={onMobileSignup}>
           Sign Up
         </p>
       </div>
