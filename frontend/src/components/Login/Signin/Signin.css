@@ -114,6 +114,9 @@
   cursor: pointer;
   font-size: 16px;
 }
+.mobile-signup{
+  display: none;
+}
 /* Phone Screen CSS */
 @media (max-width: 760px) {
   .credentialsCard {
@@ -136,5 +139,8 @@
 
   .bottomSection p {
     font-size: 12px;
+  }
+  .mobile-signup {
+    display: block;
   }
 }

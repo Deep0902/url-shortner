@@ -80,6 +80,7 @@ function Login() {
                 setLoading={setLoading}
                 alert={alert}
                 setAlert={setAlert}
+                onMobileSignup={() => setCurrentState("second")}
               />
             </div>
           </div>
