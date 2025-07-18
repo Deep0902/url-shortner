@@ -117,7 +117,7 @@
 /* Phone Screen CSS */
 @media (max-width: 760px) {
   .credentialsCard {
-    width: 35vh;
+    width: auto;
     margin: 25% auto;
   }
   .credentialsCard > .label {
