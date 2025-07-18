@@ -4,6 +4,14 @@ import Particles from "../../Reactbits/Particles";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 import "./ForgotPassword.css";
+import Loader from "../Loader/Loader";
+import Alert from "../Alert/Alert";
+import type { AlertState } from "../../shared/interfaces";
+import { API_KEY, API_URL } from "../../shared/constants";
+import axios from "axios";
+import CryptoJS from "crypto-js";
+
+const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
 
 function ForgotPassword() {
   //region State
@@ -11,12 +19,27 @@ function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
-  const [alert, setAlert] = useState<{ show: boolean; message: string }>({
+  // const [encrypted, setEncrypted] = useState("");
+  const [alert, setAlert] = useState<AlertState>({
     show: false,
     message: "",
+    type: "success",
   });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const showAlert = (
+    message: string,
+    type: "success" | "error" | "warning",
+    subMessage?: string
+  ) => {
+    setAlert({
+      show: true,
+      message,
+      type,
+      subMessage,
+    });
+  };
   //endregion
 
   //region Steps
@@ -32,24 +55,13 @@ function ForgotPassword() {
   //endregion
 
   //region Handlers
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email !== "qwe@email.com") {
-      setAlert({ show: true, message: "Email doesn't exist." });
-      return;
-    }
-    setAlert({ show: false, message: "" });
-    window.alert("Your OTP is 123456");
-    setStep(2);
-  };
 
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (otp !== "123456") {
-      setAlert({ show: true, message: "Invalid OTP." });
+      showAlert("Invalid OTP", "error", "Please enter the correct OTP");
       return;
     }
-    setAlert({ show: false, message: "" });
     setStep(3);
   };
 
@@ -60,7 +72,7 @@ function ForgotPassword() {
     }
     otpArray[index] = value;
     setOtp(otpArray.join(""));
-    
+
     // Auto-focus next input
     if (value && index < 5) {
       const nextInput = document.getElementById(`otp-${index + 1}`);
@@ -68,8 +80,15 @@ function ForgotPassword() {
     }
   };
 
-  const handleOtpKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (e.key === "Backspace" && !(e.currentTarget as HTMLInputElement).value && index > 0) {
+  const handleOtpKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (
+      e.key === "Backspace" &&
+      !(e.currentTarget as HTMLInputElement).value &&
+      index > 0
+    ) {
       const prevInput = document.getElementById(`otp-${index - 1}`);
       prevInput?.focus();
     }
@@ -80,18 +99,91 @@ function ForgotPassword() {
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
+    setShowPassword(false);
+    setLoading(true);
     e.preventDefault();
+    const encrypted = encryptData(password);
+    const payload = {
+      email: email,
+      encryptedPassword: encrypted,
+    };
+    console.log("Payload: ", payload);
+    axios
+      .post(`${API_URL}/api/forgot-password`, payload, {
+        headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200 && response.data.message) {
+          showAlert("Success", "success", "Password successfully updated!");
+          navigate("/url-user", {
+            state: { loginResponse: response.data },
+          });
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        if (error.status == 400) {
+          showAlert("Error", "error", "Invalid password format");
+        }
+        showAlert("Error", "error", "Failed to update Password");
+        console.error("Error shortening URL", error.data.message);
+      });
+  };
+
+  const handleForgotEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log();
+
+    setLoading(true);
+    axios
+      .post(
+        `${API_URL}/api/forgot-email`,
+        { email: email },
+        { headers: { "x-api-key": API_KEY } }
+      )
+      .then((response) => {
+        setLoading(false);
+        if (response.status == 200 && response.data.message) {
+          showAlert("OTP", "warning", "OTP is 123456");
+          setStep(2);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        showAlert("Error", "error", "Failed to fetch email");
+        console.error("Error shortening URL:", error);
+      });
+  };
+
+  const encryptData = (data: string): string => {
+    return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+  };
+
+  const hideAlert = () => {
     setAlert({
-      show: true,
-      message: "Password successfully updated! Redirecting...",
+      show: false,
+      message: "",
+      type: "success",
     });
-    setTimeout(() => navigate("/sign"), 3000);
   };
   //endregion
 
   //region UI
   return (
     <div className="forgot-content">
+      {alert.show && (
+        <Alert
+          message={alert.message}
+          subMessage={alert.subMessage}
+          type={alert.type}
+          timeout={5000}
+          onClose={hideAlert}
+        />
+      )}
+      <div className={`loader-fade-wrapper${loading ? " show" : ""}`}>
+        <Loader />
+      </div>
       <Navbar />
       <div className="steps-container">
         <div className="steps-row">
@@ -118,13 +210,8 @@ function ForgotPassword() {
         </div>
       </div>
       <div className="credentialsCard">
-        {alert.show && (
-          <div className="inputBox">
-            <span style={{ color: "red" }}>{alert.message}</span>
-          </div>
-        )}
         {step === 1 && (
-          <form onSubmit={handleEmailSubmit}>
+          <form onSubmit={handleForgotEmail}>
             <span className="label">Forgot Password</span>
             <span className="subtext">Enter your email to receive an OTP.</span>
             <div className="inputBox">
@@ -147,24 +234,32 @@ function ForgotPassword() {
           <form onSubmit={handleOtpSubmit}>
             <span className="label">Enter OTP</span>
             <span className="subtext">Check your email for the OTP.</span>
-            <div className="otp-container" style={{ display: 'flex', gap: '8px', justifyContent: 'center', margin: '20px 0' }}>
+            <div
+              className="otp-container"
+              style={{
+                display: "flex",
+                gap: "8px",
+                justifyContent: "center",
+                margin: "20px 0",
+              }}
+            >
               {[0, 1, 2, 3, 4, 5].map((index) => (
                 <input
                   key={index}
                   id={`otp-${index}`}
                   type="text"
                   maxLength={1}
-                  value={otp[index] || ''}
+                  value={otp[index] || ""}
                   onChange={(e) => handleOtpChange(e.target.value, index)}
                   onKeyDown={(e) => handleOtpKeyDown(e, index)}
                   style={{
-                    width: '40px',
-                    height: '40px',
-                    textAlign: 'center',
-                    fontSize: '18px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    outline: 'none'
+                    width: "40px",
+                    height: "40px",
+                    textAlign: "center",
+                    fontSize: "18px",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                    outline: "none",
                   }}
                   autoFocus={index === 0}
                 />

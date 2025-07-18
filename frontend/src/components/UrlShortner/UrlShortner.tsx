@@ -33,6 +33,8 @@ function UrlShortner() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const canShorten = localStorage.getItem("canShorten");
+  const [copied, setCopied] = useState(false);
+
   //endregion
 
   //region Handlers
@@ -127,7 +129,8 @@ function UrlShortner() {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(`${API_URL}/${shortenedUrl}`);
-    showAlert("Copied!", "success", "URL copied to clipboard");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
   };
   //endregion
 
@@ -243,7 +246,7 @@ function UrlShortner() {
                         className="copy-btn"
                         title="Copy to clipboard"
                       >
-                        📋
+                        {copied ? "✔️" : "🔗"}
                       </button>
                     </div>
                     <div className="result-url">
