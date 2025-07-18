@@ -317,7 +317,7 @@ function UrlShortnerUser() {
                         className="copy-btn"
                         title="Copy to clipboard"
                       >
-                        {copied ? "✅" : "🔗"}
+                        {copied ? "✔️" : "🔗"}
                       </button>
                     </div>
                     <div className="result-url">

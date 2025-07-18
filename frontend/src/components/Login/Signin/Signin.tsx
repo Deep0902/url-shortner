@@ -73,6 +73,7 @@ function Signin({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShowPassword(false);
     setLoading(true);
     console.log("Sign in submitted with credentials:", credentials);
 
