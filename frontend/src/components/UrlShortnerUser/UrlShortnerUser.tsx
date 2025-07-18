@@ -36,6 +36,7 @@ function UrlShortnerUser() {
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [username, setUsername] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   // Avatar index state
@@ -159,6 +160,7 @@ function UrlShortnerUser() {
           typeof response.data.avatar === "number" ? response.data.avatar : null
         );
         console.log("User check response:", response.data);
+        setUsername(response.data.username);
       })
       .catch((error) => {
         setAvatar(null);
@@ -277,6 +279,7 @@ function UrlShortnerUser() {
         <div className="container">
           <section className="hero-section-url">
             <h1 className="hero-title">
+              <p>Hello {username}!</p>
               <span className="title-highlight">Shorten</span>{" "}
               <span className="title-normal">Your URLs User</span>
             </h1>
