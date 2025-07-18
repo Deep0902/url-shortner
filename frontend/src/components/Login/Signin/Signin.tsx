@@ -146,11 +146,6 @@ function Signin({
     setIsChecked(!isChecked);
   };
 
-  const handleMobileSignup = () => {
-    if (onMobileSignup) {
-      onMobileSignup();
-    }
-  };
   //endregion
 
   //region UI

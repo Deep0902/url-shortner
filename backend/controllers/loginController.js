@@ -93,7 +93,7 @@ export const updateForgotPassword = async (req, res) => {
     // Update user details
     user.password = encryptData(decryptedPassword); // Store encrypted password
     await user.save();
-    return res.status(200).json({ message: "Password updated successfully" });
+    return res.status(200).json({ message: "Password updated successfully", userId: user._id });
   } catch (error) {
     console.error("Error in updating password", error);
     res.status(500).json({ error: "Internal server error" });

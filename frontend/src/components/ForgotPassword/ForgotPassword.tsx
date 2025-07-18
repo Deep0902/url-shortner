@@ -116,6 +116,9 @@ function ForgotPassword() {
         setLoading(false);
         if (response.status == 200 && response.data.message) {
           showAlert("Success", "success", "Password successfully updated!");
+          navigate("/url-user", {
+            state: { loginResponse: response.data },
+          });
         }
       })
       .catch((error) => {

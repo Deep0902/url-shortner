@@ -83,7 +83,9 @@ function Signup({
           response.data.message === "User created successfully"
         ) {
           showAlert("Success!", "success", "User successfully Created!");
-          navigate("/url-user");
+          navigate("/url-user", {
+            state: { loginResponse: { userId: response.data.userId } },
+          });
         } else {
           showAlert(
             "Error",
