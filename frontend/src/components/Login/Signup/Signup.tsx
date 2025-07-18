@@ -14,9 +14,14 @@ interface SignUnProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   alert: AlertState;
   setAlert: React.Dispatch<React.SetStateAction<AlertState>>;
+  onMobileSignIn?: () => void;
 }
 
-function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
+function Signup({
+  setLoading,
+  setAlert,
+  onMobileSignIn,
+}: Readonly<SignUnProps>) {
   //region State
   const [userDetails, setUserDetails] = useState({
     password: "",
@@ -51,6 +56,8 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
   //region Handlers
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShowPassword(false);
+    setShowConfirmPassword(false);
     setLoading(true);
     if (userDetails.password != userDetails.confirm_pass) {
       showAlert("Try Again", "error", "Passwords don't match!");
@@ -78,7 +85,9 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
           response.data.message === "User created successfully"
         ) {
           showAlert("Success!", "success", "User successfully Created!");
-          navigate("/url-user");
+          navigate("/url-user", {
+            state: { loginResponse: { userId: response.data.userId } },
+          });
         } else {
           showAlert(
             "Error",
@@ -183,6 +192,19 @@ function Signup({ setLoading, setAlert }: Readonly<SignUnProps>) {
         <button className="btn" type="submit">
           Sign Up
         </button>
+        <div className="or-section ">
+          <hr className="line" />
+          <span className="or-text ">or</span>
+          <hr className="line" />
+        </div>
+        <div className="bottomSection">
+          <p className="underlineText" onClick={() => navigate("/forgot")}>
+            Forgot Password
+          </p>
+          <p className="underlineText mobile-signup" onClick={onMobileSignIn}>
+            Sign In
+          </p>
+        </div>
       </form>
     </div>
   );

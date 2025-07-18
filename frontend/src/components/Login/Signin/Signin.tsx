@@ -20,9 +20,14 @@ interface SigninProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   alert: AlertState;
   setAlert: React.Dispatch<React.SetStateAction<AlertState>>;
+  onMobileSignup?: () => void;
 }
 
-function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
+function Signin({
+  setLoading,
+  setAlert,
+  onMobileSignup,
+}: Readonly<SigninProps>) {
   //region State
   const [credentials, setCredentials] = useState<{
     email: string;
@@ -68,6 +73,7 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShowPassword(false);
     setLoading(true);
     console.log("Sign in submitted with credentials:", credentials);
 
@@ -141,9 +147,6 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
     setIsChecked(!isChecked);
   };
 
-  const handleForgotPassword = () => {
-    navigate("/forgot");
-  };
   //endregion
 
   //region UI
@@ -199,8 +202,11 @@ function Signin({ setLoading, setAlert }: Readonly<SigninProps>) {
         <hr className="line" />
       </div>
       <div className="bottomSection">
-        <p className="underlineText" onClick={handleForgotPassword}>
+        <p className="underlineText" onClick={() => navigate("/forgot")}>
           Forgot Password
+        </p>
+        <p className="underlineText mobile-signup" onClick={onMobileSignup}>
+          Sign Up
         </p>
       </div>
     </div>

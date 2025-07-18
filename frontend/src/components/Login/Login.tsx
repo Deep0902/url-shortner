@@ -80,6 +80,7 @@ function Login() {
                 setLoading={setLoading}
                 alert={alert}
                 setAlert={setAlert}
+                onMobileSignup={() => setCurrentState("second")}
               />
             </div>
           </div>
@@ -121,6 +122,7 @@ function Login() {
                 setLoading={setLoading}
                 alert={alert}
                 setAlert={setAlert}
+                onMobileSignIn={() => setCurrentState("first")}
               />
             </div>
           </div>

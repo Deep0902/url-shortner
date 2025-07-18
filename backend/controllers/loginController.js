@@ -17,6 +17,10 @@ const decryptData = (encryptedData) => {
   }
 };
 
+const encryptData = (data) => {
+  return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+};
+//region Login user
 export const loginUser = async (req, res) => {
   try {
     const { email, password: encryptedPassword } = req.body; // password is encrypted from frontend
@@ -48,5 +52,50 @@ export const loginUser = async (req, res) => {
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+//region Forgot - Email
+export const forgotEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: "Email required" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json({ message: true });
+  } catch (error) {
+    console.error("Error in receiving email", error);
+    res.status(500).json({ error: "Ineternal server error" });
+  }
+};
+
+//region Forgot - Password
+export const updateForgotPassword = async (req, res) => {
+  try {
+    const { email, encryptedPassword } = req.body;
+    if (!email || !encryptedPassword) {
+      return res.status(400).json({ error: "Email or password missing" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const decryptedPassword = decryptData(encryptedPassword);
+
+    if (!decryptedPassword) {
+      return res.status(400).json({ error: "Invalid password format" });
+    }
+
+    // Update user details
+    user.password = encryptData(decryptedPassword); // Store encrypted password
+    await user.save();
+    return res.status(200).json({ message: "Password updated successfully", userId: user._id });
+  } catch (error) {
+    console.error("Error in updating password", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
