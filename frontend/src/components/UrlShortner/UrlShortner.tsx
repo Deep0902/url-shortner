@@ -60,9 +60,13 @@ function UrlShortner() {
   };
 
   const handleSubmit = () => {
+    let urlToShorten = originalUrl.trim();
+    if (!/^https?:\/\//i.test(urlToShorten)) {
+      urlToShorten = "https://" + urlToShorten;
+    }
     const websiteRegex =
-      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
-    if (!websiteRegex.test(originalUrl)) {
+      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-./?%&=]*)?$/i;
+    if (!websiteRegex.test(urlToShorten)) {
       showAlert("Invalid URL", "error", "Please enter a valid website URL");
       return;
     }
@@ -78,7 +82,7 @@ function UrlShortner() {
     axios
       .post(
         `${API_URL}/api/shorten`,
-        { originalUrl },
+        { originalUrl: urlToShorten },
         { headers: { "x-api-key": API_KEY } }
       )
       .then((response) => {
@@ -225,7 +229,7 @@ function UrlShortner() {
                 <input
                   value={originalUrl}
                   onChange={(e) => setOriginalUrl(e.target.value)}
-                  type="url"
+                  type="text"
                   className="url-input"
                   placeholder="Enter your long URL here..."
                   required

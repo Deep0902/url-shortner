@@ -67,14 +67,19 @@ function UrlShortnerUser() {
 
   //region Shortrn URL
   const handleSubmit = () => {
+    let urlToShorten = originalUrl.trim();
+    // If missing protocol, add https://
+    if (!/^https?:\/\//i.test(urlToShorten)) {
+      urlToShorten = "https://" + urlToShorten;
+    }
     const websiteRegex =
-      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
-    if (!websiteRegex.test(originalUrl)) {
+      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-./?%&=]*)?$/i;
+    if (!websiteRegex.test(urlToShorten)) {
       showAlert("Invalid URL", "error", "Please enter a valid website URL");
       return;
     }
     const payload = {
-      originalUrl: originalUrl,
+      originalUrl: urlToShorten,
       userId: location.state.loginResponse.userId,
     };
 
@@ -299,7 +304,7 @@ function UrlShortnerUser() {
                 <input
                   value={originalUrl}
                   onChange={(e) => setOriginalUrl(e.target.value)}
-                  type="url"
+                  type="text"
                   className="url-input"
                   placeholder="Enter your long URL here..."
                   required

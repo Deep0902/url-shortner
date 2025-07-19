@@ -17,8 +17,13 @@ export const createShortUrl = async (req, res) => {
       return res.status(400).json({ error: "Original URL is required" });
     }
 
+    let urlToSave = originalUrl.trim();
+    if (!/^https?:\/\//i.test(urlToSave)) {
+      urlToSave = "https://" + urlToSave;
+    }
+
     // Check if the originalUrl already exists
-    let existingUrl = await Url.findOne({ originalUrl });
+    let existingUrl = await Url.findOne({ originalUrl: urlToSave });
     if (existingUrl) {
       const createdAt = new Date();
       const expiresAt = new Date(
@@ -40,7 +45,7 @@ export const createShortUrl = async (req, res) => {
     }
     const createdAt = new Date();
     const expiresAt = new Date(createdAt.getTime() + 90 * 24 * 60 * 60 * 1000); // 3 months from now
-    const newUrl = new Url({ originalUrl, shortUrl, createdAt, expiresAt });
+    const newUrl = new Url({ originalUrl: urlToSave, shortUrl, createdAt, expiresAt });
     await newUrl.save();
     res.status(201).json({ shortUrl: newUrl.shortUrl });
   } catch (error) {
