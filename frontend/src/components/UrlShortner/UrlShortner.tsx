@@ -60,14 +60,23 @@ function UrlShortner() {
   };
 
   const handleSubmit = () => {
+    // In handleSubmit, update the normalization and regex for edge cases:
     let urlToShorten = originalUrl.trim();
-    if (!/^https?:\/\//i.test(urlToShorten)) {
+    if (
+      !/^https?:\/\//i.test(urlToShorten) &&
+      !/^ftp:\/\//i.test(urlToShorten) &&
+      !/^sftp:\/\//i.test(urlToShorten)
+    ) {
       urlToShorten = "https://" + urlToShorten;
     }
     const websiteRegex =
-      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-./?%&=]*)?$/i;
+      /^(https?|ftp|sftp):\/\/((([\w-]+\.)+[\w-]{2,}|localhost|\d{1,3}(\.\d{1,3}){3})(:\d+)?)(\/[\w\-./?%&=]*)?$/i;
     if (!websiteRegex.test(urlToShorten)) {
-      showAlert("Invalid URL", "error", "Please enter a valid website URL");
+      showAlert(
+        "Invalid URL",
+        "error",
+        "Please enter a valid URL (supports http, https, ftp, sftp, localhost, IPs)"
+      );
       return;
     }
     if (canShorten !== null && canShorten === "false") {

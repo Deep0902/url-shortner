@@ -69,13 +69,21 @@ function UrlShortnerUser() {
   const handleSubmit = () => {
     let urlToShorten = originalUrl.trim();
     // If missing protocol, add https://
-    if (!/^https?:\/\//i.test(urlToShorten)) {
+    if (
+      !/^https?:\/\//i.test(urlToShorten) &&
+      !/^ftp:\/\//i.test(urlToShorten) &&
+      !/^sftp:\/\//i.test(urlToShorten)
+    ) {
       urlToShorten = "https://" + urlToShorten;
     }
     const websiteRegex =
-      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w\-./?%&=]*)?$/i;
+      /^(https?|ftp|sftp):\/\/((([\w-]+\.)+[\w-]{2,}|localhost|\d{1,3}(\.\d{1,3}){3})(:\d+)?)(\/[\w\-./?%&=]*)?$/i;
     if (!websiteRegex.test(urlToShorten)) {
-      showAlert("Invalid URL", "error", "Please enter a valid website URL");
+      showAlert(
+        "Invalid URL",
+        "error",
+        "Please enter a valid URL (supports http, https, ftp, sftp, localhost, IPs)"
+      );
       return;
     }
     const payload = {
@@ -103,9 +111,9 @@ function UrlShortnerUser() {
         setLoading(false);
         if (error.response && error.response.status === 429) {
           showAlert(
-            "Service Unavailable",
+            "Storage Limit Reached",
             "error",
-            "Storage limit reached. Contact admin."
+            "Delete existing URLs to free up space."
           );
         } else {
           showAlert(
@@ -446,6 +454,7 @@ function UrlShortnerUser() {
                     Close
                   </button>
                 </div>
+
                 <div className="stats-grid">
                   <div className="stat-item">
                     <div className="stat-number">
@@ -472,6 +481,28 @@ function UrlShortnerUser() {
                       />
                     </div>
                     <div className="stat-label">Total Clicks</div>
+                  </div>
+                </div>
+                <div className="progressbar-wrapper">
+                  <div className="progressbar-label">
+                    {historyData?.urlCount ?? 0} / 20 URLs Shortened
+                  </div>
+                  <div className="progressbar-bg">
+                    <div
+                      className="progressbar-fill"
+                      style={{
+                        width: `${Math.min(
+                          ((historyData?.urlCount ?? 0) / 20) * 100,
+                          100
+                        )}%`,
+                        background:
+                          (historyData?.urlCount ?? 0) >= 20
+                            ? "var(--color-error)"
+                            : (historyData?.urlCount ?? 0) > 17
+                            ? "orange"
+                            : "var(--color-blue)",
+                      }}
+                    />
                   </div>
                 </div>
               </div>
