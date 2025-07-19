@@ -60,10 +60,23 @@ function UrlShortner() {
   };
 
   const handleSubmit = () => {
+    // In handleSubmit, update the normalization and regex for edge cases:
+    let urlToShorten = originalUrl.trim();
+    if (
+      !/^https?:\/\//i.test(urlToShorten) &&
+      !/^ftp:\/\//i.test(urlToShorten) &&
+      !/^sftp:\/\//i.test(urlToShorten)
+    ) {
+      urlToShorten = "https://" + urlToShorten;
+    }
     const websiteRegex =
-      /^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[\w-./?%&=]*)?$/i;
-    if (!websiteRegex.test(originalUrl)) {
-      showAlert("Invalid URL", "error", "Please enter a valid website URL");
+      /^(https?|ftp|sftp):\/\/((([\w-]+\.)+[\w-]{2,}|localhost|\d{1,3}(\.\d{1,3}){3})(:\d+)?)(\/[\w\-./?%&=]*)?$/i;
+    if (!websiteRegex.test(urlToShorten)) {
+      showAlert(
+        "Invalid URL",
+        "error",
+        "Please enter a valid URL (supports http, https, ftp, sftp, localhost, IPs)"
+      );
       return;
     }
     if (canShorten !== null && canShorten === "false") {
@@ -78,7 +91,7 @@ function UrlShortner() {
     axios
       .post(
         `${API_URL}/api/shorten`,
-        { originalUrl },
+        { originalUrl: urlToShorten },
         { headers: { "x-api-key": API_KEY } }
       )
       .then((response) => {
@@ -225,7 +238,7 @@ function UrlShortner() {
                 <input
                   value={originalUrl}
                   onChange={(e) => setOriginalUrl(e.target.value)}
-                  type="url"
+                  type="text"
                   className="url-input"
                   placeholder="Enter your long URL here..."
                   required

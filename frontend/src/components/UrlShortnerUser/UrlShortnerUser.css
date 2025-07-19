@@ -48,3 +48,35 @@
 .history-table a:hover {
   color: var(--color-blue);
 }
+
+/* Progressbar Styles */
+.progressbar-wrapper {
+  opacity: 0;
+  transform: translateY(100px);
+  animation: statFadeIn 0.5s ease-out 1.2s forwards;
+  margin: 2rem 0 1rem 0;
+  width: 100%;
+}
+
+.progressbar-label {
+  font-size: 1rem;
+  color: var(--color-blue-dark);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.progressbar-bg {
+  width: 100%;
+  height: 16px;
+  background: var(--color-bg-accent);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px var(--color-shadow);
+  position: relative;
+}
+
+.progressbar-fill {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+}
