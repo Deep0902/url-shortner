@@ -198,12 +198,15 @@ function Signup({
           <hr className="line" />
         </div>
         <div className="bottomSection">
-          <p className="underlineText" onClick={() => navigate("/forgot")}>
-            Forgot Password
-          </p>
-          <p className="underlineText mobile-signup" onClick={onMobileSignIn}>
-            Sign In
-          </p>
+          <span>
+            Already Have an account?&nbsp;
+            <span
+              className="underlineText"
+              onClick={() => onMobileSignIn && onMobileSignIn()}
+            >
+              Sign In
+            </span>
+          </span>
         </div>
       </form>
     </div>

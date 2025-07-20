@@ -10,8 +10,7 @@ import Signup from "./Signup/Signup";
 
 function Login() {
   //region State
-  const [currentState, setCurrentState] = useState<"first" | "second">("first");
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState<{
     show: boolean;
@@ -27,18 +26,8 @@ function Login() {
   //endregion
 
   //region Handlers
-  const handleButtonClick = () => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      if (currentState === "second") {
-        setCurrentState("first");
-      } else {
-        setCurrentState("second");
-      }
-      setTimeout(() => {
-        setIsTransitioning(false);
-      }, 700);
-    }, 400);
+  const handleToggle = () => {
+    setIsSignUp(!isSignUp);
   };
   //endregion
 
@@ -46,7 +35,8 @@ function Login() {
   return (
     <div className="signin-container">
       <Navbar />
-      {/* Loader and Alert UI moved here */}
+
+      {/* Loader and Alert UI */}
       <div className={`loader-fade-wrapper${loading ? " show" : ""}`}>
         <Loader />
       </div>
@@ -66,68 +56,66 @@ function Login() {
           }
         />
       )}
+
       <section>
         <div className="animated-layout">
-          {/* Left Component */}
-          <div
-            className={`left-component ${
-              currentState === "first" ? "visible" : "hidden"
-            }`}
-          >
-            <div className="component-content">
-              <Signin
-                loading={loading}
-                setLoading={setLoading}
-                alert={alert}
-                setAlert={setAlert}
-                onMobileSignup={() => setCurrentState("second")}
-              />
+          {/* Toggle Switch */}
+          <div className="toggle-container">
+            {/* Labels */}
+            <div className="toggle-labels">
+              <span className={!isSignUp ? "active" : "inactive"} onClick={() => setIsSignUp(false)}>Sign In</span>
+              <span className={isSignUp ? "active" : "inactive"} onClick={() => setIsSignUp(true)}>Sign Up</span>
+            </div>
+
+            {/* Toggle Switch */}
+            <div className="toggle-switch" onClick={handleToggle}>
+              <div className={`toggle-circle ${isSignUp ? "moved" : ""}`}>
+                <div className={`toggle-arrow ${isSignUp ? "rotated" : ""}`}>
+                  <svg viewBox="0 0 12 12" fill="none">
+                    <path
+                      d="M6 1L11 6L6 11M11 6H1"
+                      stroke="#374151"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Center Rectangle */}
-          <div
-            className={`center-rectangle ${
-              currentState === "first" ? "right-position" : "left-position"
-            }`}
-          >
-            <div
-              className={`rectangle-content ${
-                isTransitioning ? "text-hidden" : "text-visible"
-              }`}
-            >
-              {currentState === "first" && <h3>Welcome Back!</h3>}
-              {currentState === "second" && <h3>You're one step away!</h3>}
-
-              {currentState === "first" && <p>We're glad to see you again!</p>}
-              {currentState === "second" && <p>Just a bit more</p>}
-              <br />
-              <button className="btn-secondary" onClick={handleButtonClick}>
-                {currentState === "first"
-                  ? "Don't have an account?"
-                  : "Already have an account?"}
-              </button>
+          {/* 3D Flip Container */}
+          <div className={`flip-container ${isSignUp ? "flipped" : ""}`}>
+            {/* Sign In Form (Front) */}
+            <div className="form-side front">
+              <div className="component-content">
+                <Signin
+                  loading={loading}
+                  setLoading={setLoading}
+                  alert={alert}
+                  setAlert={setAlert}
+                  onMobileSignup={() => setIsSignUp(true)}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Right Component */}
-          <div
-            className={`right-component ${
-              currentState === "second" ? "visible" : "hidden"
-            }`}
-          >
-            <div className="component-content">
-              <Signup
-                loading={loading}
-                setLoading={setLoading}
-                alert={alert}
-                setAlert={setAlert}
-                onMobileSignIn={() => setCurrentState("first")}
-              />
+            {/* Sign Up Form (Back) */}
+            <div className="form-side back">
+              <div className="component-content">
+                <Signup
+                  loading={loading}
+                  setLoading={setLoading}
+                  alert={alert}
+                  setAlert={setAlert}
+                  onMobileSignIn={() => setIsSignUp(false)}
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
+
       <Footer />
       <div className="particles-bg">
         <Particles />
