@@ -123,14 +123,6 @@ function LandingPage() {
               </button>
               <button
                 onClick={() => {
-                  navigate("/encrypt");
-                }}
-                className="btn-primary"
-              >
-                Encrypt Manager
-              </button>
-              <button
-                onClick={() => {
                   window.scrollTo(0, 0);
                   navigate("/sign");
                 }}

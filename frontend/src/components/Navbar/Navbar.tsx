@@ -112,22 +112,9 @@ const Navbar = ({ avatar }: NavbarProps) => {
                     borderRadius: "8px",
                     boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                     minWidth: "120px",
-                    zIndex: 10,
+                    zIndex: 5,
                   }}
                 >
-                  <button
-                    className="navbar-avatar-item"
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      background: "none",
-                      border: "none",
-                      textAlign: "left",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Account
-                  </button>
                   <button
                     className="navbar-avatar-item"
                     style={{

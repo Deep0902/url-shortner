@@ -58,6 +58,26 @@ function App() {
     [theme, setTheme]
   );
 
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/serviceworker.js", { scope: "/" })
+        .catch(() => {});
+      window.addEventListener("beforeinstallprompt", (event: any) => {
+        event.preventDefault();
+        const installDiv = document.getElementById("divInstallApp");
+        if (installDiv) {
+          installDiv.innerHTML =
+            '<button id="installApp" class="btn btn-outline-secondary ms-1">Install App</button>';
+          installDiv.onclick = () => {
+            event.prompt();
+            installDiv.innerHTML = "";
+          };
+        }
+      });
+    }
+  }, []);
+
   return (
     <ThemeContext.Provider value={themeContextValue}>
       <Router>
