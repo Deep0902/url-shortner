@@ -63,8 +63,8 @@ function Login() {
           <div className="toggle-container">
             {/* Labels */}
             <div className="toggle-labels">
-              <span className={!isSignUp ? "active" : "inactive"}>Sign In</span>
-              <span className={isSignUp ? "active" : "inactive"}>Sign Up</span>
+              <span className={!isSignUp ? "active" : "inactive"} onClick={() => setIsSignUp(false)}>Sign In</span>
+              <span className={isSignUp ? "active" : "inactive"} onClick={() => setIsSignUp(true)}>Sign Up</span>
             </div>
 
             {/* Toggle Switch */}
