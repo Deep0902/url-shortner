@@ -376,83 +376,66 @@ function UrlShortnerUser() {
             {showHistory && !historyLoading && (
               <div>
                 <div className="history-table-wrapper">
-                  <table className="history-table">
-                    <thead>
-                      <tr>
-                        <th>Shortened Link</th>
-                        <th>Created On</th>
-                        <th>Expires On</th>
-                        <th>Clicks</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {historyData?.urls.map((row, idx) => (
-                        <tr key={idx}>
-                          <td>
-                            <LinkPreview
-                              url={`${API_URL}/${row.shortUrl}`}
-                              className="font-bold remove-decorations"
-                            >
-                              {`sho-rty.vercel.app/${row.shortUrl}`}
-                            </LinkPreview>
-                            {/* <a
-                            href={`${API_URL}/${row.shortUrl}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={`Go to original URL: ${row.originalUrl}`}
-                          >
-                            {row.shortUrl}
-                          </a> */}
-                          </td>
-
-                          <td>
-                            {new Date(row.createdAt).toLocaleDateString(
-                              "en-GB",
-                              {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              }
-                            )}
-                          </td>
-                          <td>
-                            {new Date(row.expiresAt).toLocaleDateString(
-                              "en-GB",
-                              {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              }
-                            )}
-                          </td>
-
-                          <td>{row.clicks}</td>
-                          <td>
-                            <button
-                              className="btn-secondary"
-                              onClick={() => handleDeleteShortUrl(row.shortUrl)}
-                            >
-                              Delete
-                            </button>
-                          </td>
+                  {historyData?.urls && historyData.urls.length > 0 ? (
+                    <table className="history-table">
+                      <thead>
+                        <tr>
+                          <th>Shortened Link</th>
+                          <th>Created On</th>
+                          <th>Expires On</th>
+                          <th>Clicks</th>
+                          <th></th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <br />
-                  <button className="btn-primary" onClick={handleViewHistory}>
-                    Refresh
-                  </button>
-                  &nbsp;
-                  <button
-                    className="btn-primary"
-                    onClick={() => {
-                      setShowHistory(false);
-                    }}
-                  >
-                    Close
-                  </button>
+                      </thead>
+                      <tbody>
+                        {historyData.urls.map((row, idx) => (
+                          <tr key={idx}>
+                            <td>
+                              <LinkPreview
+                                url={`${API_URL}/${row.shortUrl}`}
+                                className="font-bold remove-decorations"
+                              >
+                                {`sho-rty.vercel.app/${row.shortUrl}`}
+                              </LinkPreview>
+                            </td>
+                            <td>
+                              {new Date(row.createdAt).toLocaleDateString(
+                                "en-GB",
+                                {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                }
+                              )}
+                            </td>
+                            <td>
+                              {new Date(row.expiresAt).toLocaleDateString(
+                                "en-GB",
+                                {
+                                  day: "numeric",
+                                  month: "short",
+                                  year: "numeric",
+                                }
+                              )}
+                            </td>
+                            <td>{row.clicks}</td>
+                            <td>
+                              <button
+                                className="btn-secondary"
+                                onClick={() =>
+                                  handleDeleteShortUrl(row.shortUrl)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="no-data-found">No links yet. Shorten one now!</div>
+                  )}
                 </div>
 
                 <div className="stats-grid">
