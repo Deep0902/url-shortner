@@ -22,7 +22,7 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  perspective: 1000px;
+  perspective: 100dvw;
 }
 
 /* 3D Flip Container */

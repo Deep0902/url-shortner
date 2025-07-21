@@ -63,7 +63,6 @@ function Signup({
       showAlert("Try Again", "error", "Passwords don't match!");
       return;
     }
-    console.log("Sign up submitted with credentials:", userDetails);
 
     // Encrypt the password before sending
     const encryptedPassword = encryptData(userDetails.password);
