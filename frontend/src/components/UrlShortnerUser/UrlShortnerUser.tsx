@@ -376,7 +376,7 @@ function UrlShortnerUser() {
             {showHistory && !historyLoading && (
               <div>
                 <div className="history-table-wrapper">
-                  {historyData?.urls && historyData.urls.length > 0 ? (
+                  {historyData?.urls && historyData.urls.length > 0 && (
                     <table className="history-table">
                       <thead>
                         <tr>
@@ -388,7 +388,7 @@ function UrlShortnerUser() {
                         </tr>
                       </thead>
                       <tbody>
-                        {historyData.urls.map((row, idx) => (
+                        {historyData?.urls.map((row, idx) => (
                           <tr key={idx}>
                             <td>
                               <LinkPreview
@@ -397,7 +397,16 @@ function UrlShortnerUser() {
                               >
                                 {`sho-rty.vercel.app/${row.shortUrl}`}
                               </LinkPreview>
+                              {/* <a
+                            href={`${API_URL}/${row.shortUrl}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={`Go to original URL: ${row.originalUrl}`}
+                          >
+                            {row.shortUrl}
+                          </a> */}
                             </td>
+
                             <td>
                               {new Date(row.createdAt).toLocaleDateString(
                                 "en-GB",
@@ -418,6 +427,7 @@ function UrlShortnerUser() {
                                 }
                               )}
                             </td>
+
                             <td>{row.clicks}</td>
                             <td>
                               <button
@@ -433,9 +443,20 @@ function UrlShortnerUser() {
                         ))}
                       </tbody>
                     </table>
-                  ) : (
-                    <div className="no-data-found">No links yet. Shorten one now!</div>
                   )}
+                  <br />
+                  <button className="btn-primary" onClick={handleViewHistory}>
+                    Refresh
+                  </button>
+                  &nbsp;
+                  <button
+                    className="btn-primary"
+                    onClick={() => {
+                      setShowHistory(false);
+                    }}
+                  >
+                    Close
+                  </button>
                 </div>
 
                 <div className="stats-grid">
