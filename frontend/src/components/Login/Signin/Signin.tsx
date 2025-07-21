@@ -75,7 +75,6 @@ function Signin({
     e.preventDefault();
     setShowPassword(false);
     setLoading(true);
-    console.log("Sign in submitted with credentials:", credentials);
 
     // Encrypt the password before sending
     const encryptedPassword = encryptData(credentials.password);

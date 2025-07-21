@@ -185,131 +185,138 @@ function ForgotPassword() {
         <Loader />
       </div>
       <Navbar />
-      <div className="steps-container">
-        <div className="steps-row">
-          {steps.map((s, idx) => (
-            <div key={s.label} className="step-item">
-              <div
-                className={`step-circle${step === idx + 1 ? " active" : ""}`}
-              >
-                {idx + 1}
+      <div className="forgot-password-content">
+        <div className="steps-container">
+          <br />
+          <div className="steps-row">
+            {steps.map((s, idx) => (
+              <div key={s.label} className="step-item">
+                <div
+                  className={`step-circle${step === idx + 1 ? " active" : ""}`}
+                >
+                  {idx + 1}
+                </div>
+                <div
+                  className={`step-label${step === idx + 1 ? " active" : ""}`}
+                >
+                  {s.label}
+                </div>
               </div>
-              <div className={`step-label${step === idx + 1 ? " active" : ""}`}>
-                {s.label}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="steps-progress-bar">
-          <div
-            className="steps-progress"
-            style={{
-              width: `${((step - 1) / (steps.length - 1)) * 100}%`,
-            }}
-          />
-        </div>
-      </div>
-      <div className="credentialsCard">
-        {step === 1 && (
-          <form onSubmit={handleForgotEmail}>
-            <span className="label">Forgot Password</span>
-            <span className="subtext">Enter your email to receive an OTP.</span>
-            <div className="inputBox">
-              <input
-                type="email"
-                placeholder="Email (qwe@email.com)"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className=""
-                autoFocus
-              />
-            </div>
-
-            <button className="btn" type="submit">
-              Send OTP
-            </button>
-          </form>
-        )}
-        {step === 2 && (
-          <form onSubmit={handleOtpSubmit}>
-            <span className="label">Enter OTP</span>
-            <span className="subtext">Check your email for the OTP.</span>
+            ))}
+          </div>
+          <div className="steps-progress-bar">
             <div
-              className="otp-container"
+              className="steps-progress"
               style={{
-                display: "flex",
-                gap: "8px",
-                justifyContent: "center",
-                margin: "20px 0",
+                width: `${((step - 1) / (steps.length - 1)) * 100}%`,
               }}
-            >
-              {[0, 1, 2, 3, 4, 5].map((index) => (
+            />
+          </div>
+        </div>
+        <div className="credentialsCard">
+          {step === 1 && (
+            <form onSubmit={handleForgotEmail}>
+              <span className="label">Forgot Password</span>
+              <span className="subtext">
+                Enter your email to receive an OTP.
+              </span>
+              <div className="inputBox">
                 <input
-                  key={index}
-                  id={`otp-${index}`}
-                  type="text"
-                  maxLength={1}
-                  value={otp[index] || ""}
-                  onChange={(e) => handleOtpChange(e.target.value, index)}
-                  onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    textAlign: "center",
-                    fontSize: "18px",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    outline: "none",
-                  }}
-                  autoFocus={index === 0}
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className=""
+                  autoFocus
                 />
-              ))}
-            </div>
-            <button className="btn" type="submit">
-              Verify OTP
-            </button>
-          </form>
-        )}
-        {step === 3 && (
-          <form onSubmit={handlePasswordSubmit}>
-            <span className="label">Set New Password</span>
-            <span className="subtext">Enter your new password.</span>
-            <div className="inputBox">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                name="password"
-                onChange={(e) => setPassword(e.target.value)}
-                className=""
-                placeholder="New Password"
-                autoComplete="new-password"
-                autoFocus
-              />
-              <button
-                type="button"
-                className="toggle-button"
-                onClick={handlePasswordView}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                tabIndex={0}
+              </div>
+
+              <button className="btn" type="submit">
+                Send OTP
+              </button>
+            </form>
+          )}
+          {step === 2 && (
+            <form onSubmit={handleOtpSubmit}>
+              <span className="label">Enter OTP</span>
+              <span className="subtext">Check your email for the OTP.</span>
+              <div
+                className="otp-container"
                 style={{
-                  background: "none",
-                  border: "none",
-                  position: "absolute",
-                  right: 5,
-                  top: "56%",
-                  transform: "translateY(-50%)",
-                  fontSize: 16,
-                  cursor: "pointer",
+                  display: "flex",
+                  gap: "8px",
+                  justifyContent: "center",
+                  margin: "20px 0",
                 }}
               >
-                👁️
+                {[0, 1, 2, 3, 4, 5].map((index) => (
+                  <input
+                    key={index}
+                    id={`otp-${index}`}
+                    type="text"
+                    maxLength={1}
+                    value={otp[index] || ""}
+                    onChange={(e) => handleOtpChange(e.target.value, index)}
+                    onKeyDown={(e) => handleOtpKeyDown(e, index)}
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      textAlign: "center",
+                      fontSize: "18px",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      outline: "none",
+                    }}
+                    autoFocus={index === 0}
+                  />
+                ))}
+              </div>
+              <button className="btn" type="submit">
+                Verify OTP
               </button>
-            </div>
-            <button className="btn" type="submit">
-              Update Password
-            </button>
-          </form>
-        )}
+            </form>
+          )}
+          {step === 3 && (
+            <form onSubmit={handlePasswordSubmit}>
+              <span className="label">Set New Password</span>
+              <span className="subtext">Enter your new password.</span>
+              <div className="inputBox">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  name="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className=""
+                  placeholder="New Password"
+                  autoComplete="new-password"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  className="toggle-button"
+                  onClick={handlePasswordView}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  tabIndex={0}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    position: "absolute",
+                    right: 5,
+                    top: "56%",
+                    transform: "translateY(-50%)",
+                    fontSize: 16,
+                    cursor: "pointer",
+                  }}
+                >
+                  👁️
+                </button>
+              </div>
+              <button className="btn" type="submit">
+                Update Password
+              </button>
+            </form>
+          )}
+        </div>
       </div>
       <Footer />
       <div className="particles-bg">
