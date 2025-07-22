@@ -98,7 +98,7 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
           >
             {theme === "dark" ? "🌙" : "☀️"}
           </button>
-          {avatarSrc && (
+          {(avatar && avatarSrc) && (
             <div className="navbar-avatar-menu">
               <button
                 className="navbar-avatar-btn"

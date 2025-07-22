@@ -156,7 +156,6 @@
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
-  z-index: 1;
 }
 
 .logo {
@@ -285,11 +284,10 @@
 
 .btn-primary:hover {
   background: var(--color-blue-dark);
-  transform: translateY(-1px);
 }
 
 .btn-primary:active {
-  transform: translateY(0);
+  scale: 1.05;
 }
 
 .btn-secondary {
@@ -408,7 +406,6 @@
   margin-top: 1.5rem;
   margin-left: auto;
   margin-right: auto;
-  animation: fadeIn 0.4s ease-out;
 }
 
 .stat-item {
@@ -555,10 +552,10 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    /* transform: translateY(20px); */
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    /* transform: translateY(0); */
   }
 }

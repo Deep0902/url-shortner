@@ -75,11 +75,14 @@
 .navbar-avatar-item:hover {
   background: var(--color-bg-accent) !important;
 }
-
-.modal h2 {
-  color: var(--color-text-main);
-  margin-bottom: 8px;
-  text-align: center;
+.modal {
+  position: relative;
+  z-index: 6;
+  h2 {
+    color: var(--color-text-main);
+    margin-bottom: 8px;
+    text-align: center;
+  }
 }
 
 /* Avatar Selection Styles */
