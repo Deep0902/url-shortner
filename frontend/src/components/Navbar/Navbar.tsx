@@ -17,10 +17,11 @@ const avatarItems = [
 
 interface NavbarProps {
   avatar?: number | null;
+  userId?: string | null;
   onAvatarChange?: (avatarIndex: number) => void; // Add callback prop
 }
 
-const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
+const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
   const { theme, setTheme } = useContext(ThemeContext);
   const [swipe, setSwipe] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -45,6 +46,7 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
 
   const handleAvatarSelect = (avatarIndex: number) => {
     console.log("Avatar selected: ", avatarIndex);
+    handleChangeAvatar(avatarIndex);
     setSelectedAvatar(avatarIndex);
     // Call the parent component's callback if provided
     if (onAvatarChange) {
@@ -53,6 +55,27 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
     // You can also save to localStorage or sessionStorage here
     sessionStorage.setItem("selectedAvatar", avatarIndex.toString());
   };
+
+  const handleChangeAvatar = async (avatar: number) => {
+    const payload = {
+      userId: userId,
+      avatar: avatar,
+    }
+    try{
+      await axios.put(`${API_URL}/users/avatar`, payload, {
+        headers: { "x-api-key": API_KEY },
+      }).then((response)=>{
+        console.log("Avatar updated successfully:", response.data);
+        // Optionally, you can update the avatar in sessionStorage
+      })
+      .catch((error)=>{
+        console.error("Error updating avatar:", error);
+      });
+    }
+    catch{
+      console.error("Error updating avatar:");
+    }
+  }
 
   useEffect(() => {
     const root = document.body;
