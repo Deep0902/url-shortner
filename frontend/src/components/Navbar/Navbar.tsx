@@ -1,8 +1,12 @@
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../../ThemeContext";
-import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
+import { API_KEY, API_URL } from "../../shared/constants";
+import { ThemeContext } from "../../ThemeContext";
+import Modal from "../Modal/Modal";
+import "./Navbar.css";
 
+const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
 const avatarItems = [
   "/avatars/avatar-male-1.svg",
   "/avatars/avatar-male-2.svg",
@@ -14,12 +18,29 @@ const avatarItems = [
 
 interface NavbarProps {
   avatar?: number | null;
+  userId?: string | null;
+  username?: string | null;
+  onAvatarChange?: (avatarIndex: number) => void; // Add callback prop
 }
 
-const Navbar = ({ avatar }: NavbarProps) => {
+const Navbar = ({ avatar, userId, username, onAvatarChange }: NavbarProps) => {
+  //region State
   const { theme, setTheme } = useContext(ThemeContext);
   const [swipe, setSwipe] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showChangeAvatar, setShowChangeAvatar] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState<number>(avatar || 0);
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [editedUsername, setEditedUsername] = useState("");
+  const [currentUsername, setCurrentUsername] = useState<string | null | undefined>(username);
+
+  useEffect(() => {
+    setCurrentUsername(username);
+  }, [username]);
+  //endregion
+
+  //region handlers
   const handleThemeToggle = () => {
     setSwipe(true);
     setTimeout(() => {
@@ -27,12 +48,71 @@ const Navbar = ({ avatar }: NavbarProps) => {
     }, 300);
     setTimeout(() => setSwipe(false), 600);
   };
+
   const navigate = useNavigate();
+
+  const encryptData = (data: string): string => {
+    return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+  };
+
   const handleLogout = () => {
     sessionStorage.clear();
     // Redirect to login and replace history
     navigate("/sign", { replace: true });
   };
+
+  const handleAvatarSelect = (avatarIndex: number) => {
+    setSelectedAvatar(avatarIndex);
+    // Call the parent component's callback if provided
+    if (onAvatarChange) {
+      onAvatarChange(avatarIndex);
+    }
+    // You can also save to localStorage or sessionStorage here
+    sessionStorage.setItem("selectedAvatar", avatarIndex.toString());
+  };
+
+  const handleChangeAvatar = async (avatar: number) => {
+    if (avatar === selectedAvatar) {
+      return;
+    }
+    const payload = {
+      userId: userId,
+      avatar: avatar,
+    };
+    await axios
+      .put(`${API_URL}/api/users/avatar`, payload, {
+        headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        console.log("Avatar updated successfully:", response.data);
+        // Optionally, you can update the avatar in sessionStorage
+      })
+      .catch((error) => {
+        console.error("Error updating avatar:", error);
+        setSelectedAvatar(avatar);
+      });
+  };
+
+  const handleSaveUsername = async () => {
+    await axios
+      .put(
+        `${API_URL}/api/username`,
+        { userId, username: editedUsername },
+        {
+          headers: { "x-api-key": API_KEY },
+        }
+      )
+      .then(() => {
+        setCurrentUsername(editedUsername);
+        setIsEditingUsername(false);
+      })
+      .catch(() => {
+        // Optionally show error
+      });
+  };
+  //endregion
+
+  //region effects
   useEffect(() => {
     const root = document.body;
     if (theme === "light") {
@@ -44,11 +124,32 @@ const Navbar = ({ avatar }: NavbarProps) => {
     }
   }, [theme]);
 
-  const avatarSrc =
-    typeof avatar === "number" && avatar >= 0 && avatar < avatarItems.length
-      ? avatarItems[avatar]
-      : null;
+  // Update selectedAvatar when prop changes
+  useEffect(() => {
+    if (typeof avatar === "number") {
+      setSelectedAvatar(avatar);
+    }
+  }, [avatar]);
 
+  // When opening settings modal, reset edit state
+  useEffect(() => {
+    if (showSettings) {
+      setIsEditingUsername(false);
+      setEditedUsername(currentUsername ?? "");
+    }
+  }, [showSettings, currentUsername]);
+  //endregion
+
+  //region derived
+  const avatarSrc =
+    typeof selectedAvatar === "number" &&
+    selectedAvatar >= 0 &&
+    selectedAvatar < avatarItems.length
+      ? avatarItems[selectedAvatar]
+      : avatarItems[0]; // Default to first avatar if none selected
+  //endregion
+
+  //region UI
   return (
     <nav className="navbar">
       {swipe && <div className="theme-swipe" />}
@@ -71,20 +172,10 @@ const Navbar = ({ avatar }: NavbarProps) => {
           >
             {theme === "dark" ? "🌙" : "☀️"}
           </button>
-          {avatarSrc && (
-            <div
-              className="navbar-avatar-menu"
-              style={{ position: "relative", display: "inline-block" }}
-            >
+          {avatar && avatarSrc && (
+            <div className="navbar-avatar-menu">
               <button
                 className="navbar-avatar-btn"
-                style={{
-                  background: "none",
-                  border: "none",
-                  padding: 0,
-                  cursor: "pointer",
-                  borderRadius: "50%",
-                }}
                 aria-label="User menu"
                 title="User menu"
                 type="button"
@@ -101,45 +192,26 @@ const Navbar = ({ avatar }: NavbarProps) => {
                 />
               </button>
               {showMenu && (
-                <div
-                  className="navbar-avatar-dropdown"
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    top: "calc(100% + 8px)",
-                    background: "#fff",
-                    border: "1px solid #ccc",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                    minWidth: "120px",
-                    zIndex: 5,
-                  }}
-                >
+                <div className="navbar-avatar-dropdown">
                   <button
                     className="navbar-avatar-item"
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      background: "none",
-                      border: "none",
-                      textAlign: "left",
-                      cursor: "pointer",
+                    onClick={() => {
+                      setShowChangeAvatar(true);
+                      setShowMenu(false);
+                    }}
+                  >
+                    Change Avatar
+                  </button>
+                  <button
+                    className="navbar-avatar-item"
+                    onClick={() => {
+                      setShowSettings(true);
+                      setShowMenu(false);
                     }}
                   >
                     Settings
                   </button>
-                  <button
-                    className="navbar-avatar-item"
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      background: "none",
-                      border: "none",
-                      textAlign: "left",
-                      cursor: "pointer",
-                    }}
-                    onClick={handleLogout}
-                  >
+                  <button className="navbar-avatar-item" onClick={handleLogout}>
                     Logout
                   </button>
                 </div>
@@ -148,8 +220,116 @@ const Navbar = ({ avatar }: NavbarProps) => {
           )}
         </div>
       </div>
+      <div className="modal">
+        {showChangeAvatar && (
+          <Modal
+            open={showChangeAvatar}
+            onClose={() => {
+              handleChangeAvatar(selectedAvatar);
+              setShowChangeAvatar(false);
+            }}
+          >
+            <div className="avatar-selection">
+              <h2>Choose Your Avatar</h2>
+              <p
+                style={{
+                  marginBottom: "24px",
+                  color: "var(--color-text-secondary)",
+                }}
+              >
+                Select an avatar that represents you
+              </p>
+              <div className="avatar-grid">
+                {avatarItems.map((avatarSrc, index) => (
+                  <button
+                    key={index}
+                    className={`avatar-option${
+                      selectedAvatar === index ? " selected" : ""
+                    }`}
+                    onClick={() => handleAvatarSelect(index)}
+                  >
+                    <img
+                      src={avatarSrc}
+                      alt={`Avatar ${index + 1}`}
+                      className="avatar-img"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </Modal>
+        )}
+        {showSettings && (
+          <Modal
+            open={showSettings}
+            onClose={() => {
+              setShowSettings(false);
+            }}
+          >
+            <div className="settings-modal-content">
+              <h2 className="settings-title">Account Settings</h2>
+              <div className="settings-field">
+                <span className="settings-label">Username</span>
+                <div className="settings-value settings-username-row">
+                  {isEditingUsername ? (
+                    <>
+                      <input
+                        className="settings-username-input"
+                        value={editedUsername}
+                        onChange={(e) => setEditedUsername(e.target.value)}
+                      />
+                      <button
+                        className="btn btn-primary btn-xs"
+                        onClick={handleSaveUsername}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="btn btn-light btn-xs"
+                        onClick={() => {
+                          setIsEditingUsername(false);
+                          setEditedUsername(currentUsername ?? "");
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span>{currentUsername}</span>
+                      <button
+                        className="btn btn-light btn-xs"
+                        style={{ marginLeft: 8 }}
+                        onClick={() => setIsEditingUsername(true)}
+                      >
+                        Edit
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="settings-field">
+                <label className="settings-label">Email</label>
+                <div className="settings-value">qwe@email.com</div>
+              </div>
+              <div className="settings-field">
+                <label className="settings-label">Password</label>
+                <div className="settings-value settings-password">********</div>
+              </div>
+              <button
+                className="btn btn-primary"
+                style={{ marginTop: "1.5rem" }}
+                onClick={() => setShowSettings(false)}
+              >
+                Close
+              </button>
+            </div>
+          </Modal>
+        )}
+      </div>
     </nav>
   );
+  //endregion
 };
 
 export default Navbar;
