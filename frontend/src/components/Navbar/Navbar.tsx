@@ -30,6 +30,9 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
   const [showChangeAvatar, setShowChangeAvatar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<number>(avatar || 0);
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [editedUsername, setEditedUsername] = useState("");
+  const [currentUsername, setCurrentUsername] = useState("");
   //endregion
 
   //region handlers
@@ -84,6 +87,24 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
         setSelectedAvatar(avatar);
       });
   };
+
+  const handleSaveUsername = async () => {
+    await axios
+      .put(
+        `${API_URL}/api/username`,
+        { userId, username: editedUsername },
+        {
+          headers: { "x-api-key": API_KEY },
+        }
+      )
+      .then(() => {
+        setCurrentUsername(editedUsername);
+        setIsEditingUsername(false);
+      })
+      .catch(() => {
+        // Optionally show error
+      });
+  };
   //endregion
 
   //region effects
@@ -104,6 +125,14 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
       setSelectedAvatar(avatar);
     }
   }, [avatar]);
+
+  // When opening settings modal, reset edit state
+  useEffect(() => {
+    if (showSettings) {
+      setIsEditingUsername(false);
+      setEditedUsername(currentUsername);
+    }
+  }, [showSettings, currentUsername]);
   //endregion
 
   //region derived
@@ -232,8 +261,65 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
               setShowSettings(false);
             }}
           >
-            <div className="avatar-selection">
-              <h2>This is Settings</h2>
+            <div className="settings-modal-content">
+              <h2 className="settings-title">Account Settings</h2>
+              <div className="settings-field">
+                <label className="settings-label">Username</label>
+                <div className="settings-value settings-username-row">
+                  {isEditingUsername ? (
+                    <>
+                      <input
+                        className="settings-username-input"
+                        value={editedUsername}
+                        onChange={(e) => setEditedUsername(e.target.value)}
+                      />
+                      <button
+                        className="btn btn-primary btn-xs"
+                        onClick={handleSaveUsername}
+                        style={{ marginLeft: 8 }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        className="btn btn-light btn-xs"
+                        onClick={() => {
+                          setIsEditingUsername(false);
+                          setEditedUsername(currentUsername);
+                        }}
+                        style={{ marginLeft: 4 }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span>{currentUsername}</span>
+                      <button
+                        className="btn btn-light btn-xs"
+                        style={{ marginLeft: 8 }}
+                        onClick={() => setIsEditingUsername(true)}
+                      >
+                        Edit
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="settings-field">
+                <label className="settings-label">Email</label>
+                <div className="settings-value">qwe@email.com</div>
+              </div>
+              <div className="settings-field">
+                <label className="settings-label">Password</label>
+                <div className="settings-value settings-password">********</div>
+              </div>
+              <button
+                className="btn btn-primary"
+                style={{ marginTop: "1.5rem" }}
+                onClick={() => setShowSettings(false)}
+              >
+                Close
+              </button>
             </div>
           </Modal>
         )}
