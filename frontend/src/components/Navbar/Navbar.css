@@ -129,6 +129,69 @@
   border: 2px solid var(--color-bg-main);
 }
 
+.navbar-avatar-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.navbar-avatar-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.navbar-avatar-btn img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.navbar-avatar-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: var(--color-bg-main);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+  z-index: 10;
+}
+
+.navbar-avatar-item {
+  width: 100%;
+  padding: 8px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--color-text-main);
+}
+
+.avatar-option {
+  background: none;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  transform: scale(1);
+}
+
+.avatar-option.selected {
+  border: 3px solid var(--color-blue);
+  transform: scale(1.1);
+}
+
+.avatar-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: block;
+}
+
 @media (max-width: 768px) {
   .navbar-content {
     max-width: 90%;

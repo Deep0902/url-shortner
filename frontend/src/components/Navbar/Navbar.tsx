@@ -99,19 +99,9 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
             {theme === "dark" ? "🌙" : "☀️"}
           </button>
           {avatarSrc && (
-            <div
-              className="navbar-avatar-menu"
-              style={{ position: "relative", display: "inline-block" }}
-            >
+            <div className="navbar-avatar-menu">
               <button
                 className="navbar-avatar-btn"
-                style={{
-                  background: "none",
-                  border: "none",
-                  padding: 0,
-                  cursor: "pointer",
-                  borderRadius: "50%",
-                }}
                 aria-label="User menu"
                 title="User menu"
                 type="button"
@@ -128,30 +118,9 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
                 />
               </button>
               {showMenu && (
-                <div
-                  className="navbar-avatar-dropdown"
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    top: "calc(100% + 8px)",
-                    background: "var(--color-bg-main)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                    minWidth: "120px",
-                  }}
-                >
+                <div className="navbar-avatar-dropdown">
                   <button
                     className="navbar-avatar-item"
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      background: "none",
-                      border: "none",
-                      textAlign: "left",
-                      cursor: "pointer",
-                      color: "var(--color-text-main)",
-                    }}
                     onClick={() => {
                       setShowModal(true);
                       setShowMenu(false);
@@ -159,31 +128,9 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
                   >
                     Change Avatar
                   </button>
+                  <button className="navbar-avatar-item">Settings</button>
                   <button
                     className="navbar-avatar-item"
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      background: "none",
-                      border: "none",
-                      textAlign: "left",
-                      cursor: "pointer",
-                      color: "var(--color-text-main)",
-                    }}
-                  >
-                    Settings
-                  </button>
-                  <button
-                    className="navbar-avatar-item"
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      background: "none",
-                      border: "none",
-                      textAlign: "left",
-                      cursor: "pointer",
-                      color: "var(--color-text-main)",
-                    }}
                     onClick={handleLogout}
                   >
                     Logout
@@ -211,33 +158,15 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
                 {avatarItems.map((avatarSrc, index) => (
                   <button
                     key={index}
-                    className={`avatar-option ${
-                      selectedAvatar === index ? "selected" : ""
+                    className={`avatar-option${
+                      selectedAvatar === index ? " selected" : ""
                     }`}
                     onClick={() => handleAvatarSelect(index)}
-                    style={{
-                      background: "none",
-                      border:
-                        selectedAvatar === index
-                          ? "3px solid var(--color-blue)"
-                          : "2px solid var(--color-border)",
-                      borderRadius: "50%",
-                      padding: "4px",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      transform:
-                        selectedAvatar === index ? "scale(1.1)" : "scale(1)",
-                    }}
                   >
                     <img
                       src={avatarSrc}
                       alt={`Avatar ${index + 1}`}
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        borderRadius: "50%",
-                        display: "block",
-                      }}
+                      className="avatar-img"
                     />
                   </button>
                 ))}
