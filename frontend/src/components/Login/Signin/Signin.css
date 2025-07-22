@@ -1,7 +1,7 @@
 .credentialsCard {
   position: relative;
   height: max-content;
-  margin: 6% auto;
+  margin: 0 auto;
   padding: 2em;
   backdrop-filter: blur(10px);
   color: var(--color-text-main);

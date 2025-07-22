@@ -4,7 +4,7 @@
   justify-content: center;
   width: 100%;
   top: 2%;
-  z-index: 1001;
+  z-index: 101;
   animation: toast-appear 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
 }
 .toast {
