@@ -2,7 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
 import { ThemeContext } from "../../ThemeContext";
 import "./Navbar.css";
+import { API_KEY, API_URL } from "../../shared/constants";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const avatarItems = [
   "/avatars/avatar-male-1.svg",
@@ -42,6 +44,7 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
   };
 
   const handleAvatarSelect = (avatarIndex: number) => {
+    console.log("Avatar selected: ", avatarIndex);
     setSelectedAvatar(avatarIndex);
     // Call the parent component's callback if provided
     if (onAvatarChange) {
@@ -98,7 +101,7 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
           >
             {theme === "dark" ? "🌙" : "☀️"}
           </button>
-          {(avatar && avatarSrc) && (
+          {avatar && avatarSrc && (
             <div className="navbar-avatar-menu">
               <button
                 className="navbar-avatar-btn"
@@ -129,10 +132,7 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
                     Change Avatar
                   </button>
                   <button className="navbar-avatar-item">Settings</button>
-                  <button
-                    className="navbar-avatar-item"
-                    onClick={handleLogout}
-                  >
+                  <button className="navbar-avatar-item" onClick={handleLogout}>
                     Logout
                   </button>
                 </div>
@@ -143,7 +143,13 @@ const Navbar = ({ avatar, onAvatarChange }: NavbarProps) => {
       </div>
       <div className="modal">
         {showModal && (
-          <Modal open={showModal} onClose={() => setShowModal(false)}>
+          <Modal
+            open={showModal}
+            onClose={() => {
+              console.log("Modal Closed");
+              setShowModal(false);
+            }}
+          >
             <div className="avatar-selection">
               <h2>Choose Your Avatar</h2>
               <p
