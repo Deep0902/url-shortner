@@ -2,13 +2,14 @@ import express from "express";
 import {
   createUser,
   deleteUser,
-  editUser,
+  editUserName,
   getAllUsers,
   createShortUrlUser,
   getUserById,
   getUserStats,
   deleteUserUrl,
-  changeAvatar
+  changeAvatar,
+  editUserPassword,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -17,7 +18,9 @@ router.post("/users", createUser);
 
 router.delete("/users", deleteUser);
 
-router.put("/users", editUser);
+router.put("/username", editUserName);
+
+router.put("/userpassword", editUserPassword);
 
 router.get("/users", getAllUsers);
 
