@@ -1,11 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import Modal from "../Modal/Modal";
-import { ThemeContext } from "../../ThemeContext";
-import "./Navbar.css";
-import { API_KEY, API_URL } from "../../shared/constants";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { API_KEY, API_URL } from "../../shared/constants";
+import { ThemeContext } from "../../ThemeContext";
+import Modal from "../Modal/Modal";
+import "./Navbar.css";
 
+const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
 const avatarItems = [
   "/avatars/avatar-male-1.svg",
   "/avatars/avatar-male-2.svg",
@@ -22,12 +23,16 @@ interface NavbarProps {
 }
 
 const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
+  //region State
   const { theme, setTheme } = useContext(ThemeContext);
   const [swipe, setSwipe] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showChangeAvatar, setShowChangeAvatar] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<number>(avatar || 0);
+  //endregion
 
+  //region handlers
   const handleThemeToggle = () => {
     setSwipe(true);
     setTimeout(() => {
@@ -37,6 +42,10 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
   };
 
   const navigate = useNavigate();
+
+  const encryptData = (data: string): string => {
+    return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
+  };
 
   const handleLogout = () => {
     sessionStorage.clear();
@@ -55,6 +64,9 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
   };
 
   const handleChangeAvatar = async (avatar: number) => {
+    if (avatar === selectedAvatar) {
+      return;
+    }
     const payload = {
       userId: userId,
       avatar: avatar,
@@ -69,9 +81,12 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
       })
       .catch((error) => {
         console.error("Error updating avatar:", error);
+        setSelectedAvatar(avatar);
       });
   };
+  //endregion
 
+  //region effects
   useEffect(() => {
     const root = document.body;
     if (theme === "light") {
@@ -89,14 +104,18 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
       setSelectedAvatar(avatar);
     }
   }, [avatar]);
+  //endregion
 
+  //region derived
   const avatarSrc =
     typeof selectedAvatar === "number" &&
     selectedAvatar >= 0 &&
     selectedAvatar < avatarItems.length
       ? avatarItems[selectedAvatar]
       : avatarItems[0]; // Default to first avatar if none selected
+  //endregion
 
+  //region UI
   return (
     <nav className="navbar">
       {swipe && <div className="theme-swipe" />}
@@ -143,13 +162,21 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
                   <button
                     className="navbar-avatar-item"
                     onClick={() => {
-                      setShowModal(true);
+                      setShowChangeAvatar(true);
                       setShowMenu(false);
                     }}
                   >
                     Change Avatar
                   </button>
-                  <button className="navbar-avatar-item">Settings</button>
+                  <button
+                    className="navbar-avatar-item"
+                    onClick={() => {
+                      setShowSettings(true);
+                      setShowMenu(false);
+                    }}
+                  >
+                    Settings
+                  </button>
                   <button className="navbar-avatar-item" onClick={handleLogout}>
                     Logout
                   </button>
@@ -160,12 +187,12 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
         </div>
       </div>
       <div className="modal">
-        {showModal && (
+        {showChangeAvatar && (
           <Modal
-            open={showModal}
+            open={showChangeAvatar}
             onClose={() => {
               handleChangeAvatar(selectedAvatar);
-              setShowModal(false);
+              setShowChangeAvatar(false);
             }}
           >
             <div className="avatar-selection">
@@ -198,9 +225,22 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
             </div>
           </Modal>
         )}
+        {showSettings && (
+          <Modal
+            open={showSettings}
+            onClose={() => {
+              setShowSettings(false);
+            }}
+          >
+            <div className="avatar-selection">
+              <h2>This is Settings</h2>
+            </div>
+          </Modal>
+        )}
       </div>
     </nav>
   );
+  //endregion
 };
 
 export default Navbar;
