@@ -19,10 +19,11 @@ const avatarItems = [
 interface NavbarProps {
   avatar?: number | null;
   userId?: string | null;
+  username?: string | null;
   onAvatarChange?: (avatarIndex: number) => void; // Add callback prop
 }
 
-const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
+const Navbar = ({ avatar, userId, username, onAvatarChange }: NavbarProps) => {
   //region State
   const { theme, setTheme } = useContext(ThemeContext);
   const [swipe, setSwipe] = useState(false);
@@ -32,7 +33,11 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
   const [selectedAvatar, setSelectedAvatar] = useState<number>(avatar || 0);
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [editedUsername, setEditedUsername] = useState("");
-  const [currentUsername, setCurrentUsername] = useState("");
+  const [currentUsername, setCurrentUsername] = useState<string | null | undefined>(username);
+
+  useEffect(() => {
+    setCurrentUsername(username);
+  }, [username]);
   //endregion
 
   //region handlers
@@ -130,7 +135,7 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
   useEffect(() => {
     if (showSettings) {
       setIsEditingUsername(false);
-      setEditedUsername(currentUsername);
+      setEditedUsername(currentUsername ?? "");
     }
   }, [showSettings, currentUsername]);
   //endregion
@@ -264,7 +269,7 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
             <div className="settings-modal-content">
               <h2 className="settings-title">Account Settings</h2>
               <div className="settings-field">
-                <label className="settings-label">Username</label>
+                <span className="settings-label">Username</span>
                 <div className="settings-value settings-username-row">
                   {isEditingUsername ? (
                     <>
@@ -276,7 +281,6 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
                       <button
                         className="btn btn-primary btn-xs"
                         onClick={handleSaveUsername}
-                        style={{ marginLeft: 8 }}
                       >
                         Save
                       </button>
@@ -284,9 +288,8 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
                         className="btn btn-light btn-xs"
                         onClick={() => {
                           setIsEditingUsername(false);
-                          setEditedUsername(currentUsername);
+                          setEditedUsername(currentUsername ?? "");
                         }}
-                        style={{ marginLeft: 4 }}
                       >
                         Cancel
                       </button>

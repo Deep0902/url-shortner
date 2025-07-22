@@ -74,7 +74,6 @@
 .progressbar-fill {
   height: 100%;
   border-radius: 8px;
-  /* transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s; */
 }
 .no-data-found{
   color: var(--color-text-main);

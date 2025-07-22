@@ -4,6 +4,7 @@
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
+  z-index: 1;
 }
 
 .navbar-content {
@@ -153,6 +154,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   min-width: 120px;
   z-index: 10;
+  overflow: hidden;
 }
 
 .navbar-avatar-item {
@@ -189,12 +191,10 @@
 }
 
 .settings-modal-content {
-  /* background: var(--color-bg-accent); */
   padding: 2rem 1.5rem;
   border-radius: 12px;
   min-width: 320px;
   color: var(--color-text-main);
-  /* box-shadow: 0 2px 16px var(--color-shadow); */
 }
 
 .settings-title {

@@ -274,7 +274,7 @@ function UrlShortnerUser() {
         />
       </div>
       {/* Navbar */}
-      <Navbar avatar={avatar} userId={location.state.loginResponse.userId} />
+      <Navbar avatar={avatar} userId={location.state.loginResponse.userId} username={username} />
       {alert.show && (
         <Alert
           message={alert.message}
