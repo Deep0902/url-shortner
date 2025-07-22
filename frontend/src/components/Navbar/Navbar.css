@@ -100,17 +100,9 @@
   margin: 0 auto;
 }
 
-.avatar-option {
-  position: relative;
-}
-
 .avatar-option:hover {
   transform: scale(1.05) !important;
   border-color: var(--color-blue) !important;
-}
-
-.avatar-option.selected {
-  box-shadow: 0 0 0 2px var(--color-bg-main), 0 0 0 5px var(--color-blue);
 }
 
 /* Add a checkmark for selected avatar */
@@ -186,6 +178,7 @@
 .avatar-option.selected {
   border: 3px solid var(--color-blue);
   transform: scale(1.1);
+  box-shadow: 0 0 0 2px var(--color-bg-main), 0 0 0 5px var(--color-blue);
 }
 
 .avatar-img {
