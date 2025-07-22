@@ -45,8 +45,6 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
   };
 
   const handleAvatarSelect = (avatarIndex: number) => {
-    console.log("Avatar selected: ", avatarIndex);
-    handleChangeAvatar(avatarIndex);
     setSelectedAvatar(avatarIndex);
     // Call the parent component's callback if provided
     if (onAvatarChange) {
@@ -60,22 +58,19 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
     const payload = {
       userId: userId,
       avatar: avatar,
-    }
-    try{
-      await axios.put(`${API_URL}/users/avatar`, payload, {
+    };
+    await axios
+      .put(`${API_URL}/api/users/avatar`, payload, {
         headers: { "x-api-key": API_KEY },
-      }).then((response)=>{
+      })
+      .then((response) => {
         console.log("Avatar updated successfully:", response.data);
         // Optionally, you can update the avatar in sessionStorage
       })
-      .catch((error)=>{
+      .catch((error) => {
         console.error("Error updating avatar:", error);
       });
-    }
-    catch{
-      console.error("Error updating avatar:");
-    }
-  }
+  };
 
   useEffect(() => {
     const root = document.body;
@@ -169,7 +164,7 @@ const Navbar = ({ avatar, userId, onAvatarChange }: NavbarProps) => {
           <Modal
             open={showModal}
             onClose={() => {
-              console.log("Modal Closed");
+              handleChangeAvatar(selectedAvatar);
               setShowModal(false);
             }}
           >
