@@ -29,7 +29,7 @@ function Alert({
   type = "success",
   timeout,
   onClose,
-}: AlertProps) {
+}: Readonly<AlertProps>) {
   //region State
   const [show, setShow] = useState<boolean>(true);
   //endregion

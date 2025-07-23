@@ -35,21 +35,21 @@ const Navbar = ({
   onAvatarChange,
   onUsernameChange,
 }: NavbarProps) => {
-  //region State
+  //region state
   const { theme, setTheme } = useContext(ThemeContext);
   const [swipe, setSwipe] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showChangeAvatar, setShowChangeAvatar] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState<number>(avatar || 0);
-  const [previousAvatar, setPreviousAvatar] = useState<number>(avatar || 0); // Track previous avatar selection
+  const [previousAvatar, setPreviousAvatar] = useState<number>(avatar || 0);
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [editedUsername, setEditedUsername] = useState("");
   const [currentUsername, setCurrentUsername] = useState<
     string | null | undefined
   >(username);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false); // Add deleteLoading state
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [alert, setAlert] = useState<AlertState>({
     show: false,
     message: "",
@@ -59,33 +59,53 @@ const Navbar = ({
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  //endregion
+
+  //region effects
   useEffect(() => {
     setCurrentUsername(username);
   }, [username]);
+
+  useEffect(() => {
+    const root = document.body;
+    if (theme === "light") {
+      root.classList.add("light-theme");
+      root.classList.remove("dark-theme");
+    } else {
+      root.classList.remove("light-theme");
+      root.classList.add("dark-theme");
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    if (typeof avatar === "number") {
+      setSelectedAvatar(avatar);
+    }
+  }, [avatar]);
+
+  useEffect(() => {
+    if (showSettings) {
+      setIsEditingUsername(false);
+      setEditedUsername(currentUsername ?? "");
+    }
+  }, [showSettings, currentUsername]);
   //endregion
 
   //region handlers
+  const navigate = useNavigate();
 
   const showAlert = (
     message: string,
     type: "success" | "error" | "warning",
     subMessage?: string
   ) => {
-    setAlert({
-      show: true,
-      message,
-      type,
-      subMessage,
-    });
+    setAlert({ show: true, message, type, subMessage });
   };
 
   const hideAlert = () => {
-    setAlert({
-      show: false,
-      message: "",
-      type: "success",
-    });
+    setAlert({ show: false, message: "", type: "success" });
   };
+
   const handleThemeToggle = () => {
     setSwipe(true);
     setTimeout(() => {
@@ -94,55 +114,26 @@ const Navbar = ({
     setTimeout(() => setSwipe(false), 600);
   };
 
-  const navigate = useNavigate();
-
   const encryptData = (data: string): string => {
     return CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
   };
 
   const handleLogout = () => {
     sessionStorage.clear();
-    // Redirect to login and replace history
     navigate("/sign", { replace: true });
   };
 
   const handleAvatarSelect = (avatarIndex: number) => {
     setSelectedAvatar(avatarIndex);
-    // Call the parent component's callback if provided
     if (onAvatarChange) {
       onAvatarChange(avatarIndex);
     }
-    // You can also save to localStorage or sessionStorage here
     sessionStorage.setItem("selectedAvatar", avatarIndex.toString());
   };
 
-  const handleDeleteUser = async () => {
-    setDeleteLoading(true);
-    await axios
-      .delete(`${API_URL}/api/users`, {
-        data: { userId },
-        headers: { "x-api-key": API_KEY },
-      })
-      .then((response) => {
-        setDeleteLoading(false);
-        console.log(response);
-      })
-      .catch((error) => {
-        setDeleteLoading(false);
-        console.error("Error updating avatar:", error);
-        showAlert("Error updating avatar", "error");
-      });
-    navigate(-1);
-  };
-
   const handleChangeAvatar = async (avatar: number) => {
-    if (avatar === selectedAvatar) {
-      return;
-    }
-    const payload = {
-      userId: userId,
-      avatar: avatar,
-    };
+    if (avatar === selectedAvatar) return;
+    const payload = { userId, avatar };
     await axios
       .put(`${API_URL}/api/users/avatar`, payload, {
         headers: { "x-api-key": API_KEY },
@@ -150,7 +141,6 @@ const Navbar = ({
       .then((response) => {
         console.log("Avatar updated successfully:", response.data);
         showAlert("Avatar successfully updated", "success");
-        // Optionally, you can update the avatar in sessionStorage
       })
       .catch((error) => {
         console.error("Error updating avatar:", error);
@@ -159,16 +149,13 @@ const Navbar = ({
       });
   };
 
-  // In handleSaveUsername, after successful update, call a callback prop if provided:
   const handleSaveUsername = async () => {
     setDeleteLoading(true);
     await axios
       .put(
         `${API_URL}/api/username`,
         { userId, username: editedUsername },
-        {
-          headers: { "x-api-key": API_KEY },
-        }
+        { headers: { "x-api-key": API_KEY } }
       )
       .then((response) => {
         setDeleteLoading(false);
@@ -177,11 +164,10 @@ const Navbar = ({
         showAlert("Username successfully updated", "success");
         setIsEditingUsername(false);
         if (typeof onUsernameChange === "function") {
-          onUsernameChange(editedUsername); // <-- Call parent to trigger update
+          onUsernameChange(editedUsername);
         }
       })
       .catch((error) => {
-        // Optionally show error
         setDeleteLoading(false);
         showAlert("Error updating username", "error");
         console.error(error);
@@ -189,7 +175,6 @@ const Navbar = ({
   };
 
   const handleUpdatePassword = async () => {
-    console.log("Password Updated");
     if (!oldPassword || !newPassword || !confirmNewPassword) {
       showAlert("Please fill all fields", "error");
       return;
@@ -200,7 +185,6 @@ const Navbar = ({
     }
     const encryptOldPassword = encryptData(oldPassword);
     const encryptNewPassword = encryptData(newPassword);
-    // In handleUpdatePassword, encode passwords before sending:
     await axios
       .put(
         `${API_URL}/api/users/userpassword`,
@@ -221,40 +205,32 @@ const Navbar = ({
         showAlert(errorMsg, "error");
       });
   };
+
   const resetPasswordFields = () => {
     setIsChangingPassword(false);
     setOldPassword("");
     setNewPassword("");
     setConfirmNewPassword("");
   };
-  //endregion
 
-  //region effects
-  useEffect(() => {
-    const root = document.body;
-    if (theme === "light") {
-      root.classList.add("light-theme");
-      root.classList.remove("dark-theme");
-    } else {
-      root.classList.remove("light-theme");
-      root.classList.add("dark-theme");
-    }
-  }, [theme]);
-
-  // Update selectedAvatar when prop changes
-  useEffect(() => {
-    if (typeof avatar === "number") {
-      setSelectedAvatar(avatar);
-    }
-  }, [avatar]);
-
-  // When opening settings modal, reset edit state
-  useEffect(() => {
-    if (showSettings) {
-      setIsEditingUsername(false);
-      setEditedUsername(currentUsername ?? "");
-    }
-  }, [showSettings, currentUsername]);
+  const handleDeleteUser = async () => {
+    setDeleteLoading(true);
+    await axios
+      .delete(`${API_URL}/api/users`, {
+        data: { userId },
+        headers: { "x-api-key": API_KEY },
+      })
+      .then((response) => {
+        setDeleteLoading(false);
+        console.log(response);
+      })
+      .catch((error) => {
+        setDeleteLoading(false);
+        console.error("Error updating avatar:", error);
+        showAlert("Error updating avatar", "error");
+      });
+    navigate(-1);
+  };
   //endregion
 
   //region derived
@@ -263,7 +239,7 @@ const Navbar = ({
     selectedAvatar >= 0 &&
     selectedAvatar < avatarItems.length
       ? avatarItems[selectedAvatar]
-      : avatarItems[0]; // Default to first avatar if none selected
+      : avatarItems[0];
   //endregion
 
   //region UI
@@ -311,11 +287,7 @@ const Navbar = ({
                   <img
                     src={avatarSrc}
                     alt="User avatar"
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: "50%",
-                    }}
+                    style={{ width: 32, height: 32, borderRadius: "50%" }}
                   />
                 </button>
                 {showMenu && (
@@ -323,7 +295,7 @@ const Navbar = ({
                     <button
                       className="navbar-avatar-item"
                       onClick={() => {
-                        setPreviousAvatar(selectedAvatar); // Store current avatar before opening
+                        setPreviousAvatar(selectedAvatar);
                         setShowChangeAvatar(true);
                         setShowMenu(false);
                       }}
@@ -356,7 +328,7 @@ const Navbar = ({
             <Modal
               open={showChangeAvatar}
               onClose={() => {
-                setSelectedAvatar(previousAvatar); // Reset to previous avatar if modal closed
+                setSelectedAvatar(previousAvatar);
                 setShowChangeAvatar(false);
               }}
             >
@@ -368,7 +340,7 @@ const Navbar = ({
                 <div className="avatar-grid">
                   {avatarItems.map((avatarSrc, index) => (
                     <button
-                      key={index}
+                      key={avatarSrc}
                       className={`avatar-option${
                         selectedAvatar === index ? " selected" : ""
                       }`}
@@ -450,11 +422,11 @@ const Navbar = ({
                   </div>
                 </div>
                 <div className="settings-field">
-                  <label className="settings-label">Email</label>
+                  <span className="settings-label">Email</span>
                   <div className="settings-value">qwe@email.com</div>
                 </div>
                 <div className="settings-field">
-                  <label className="settings-label">Password</label>
+                  <span className="settings-label">Password</span>
                   <div className="settings-value settings-password-row">
                     {isChangingPassword ? (
                       <form
@@ -554,9 +526,7 @@ const Navbar = ({
                   <div className="delete-modal-actions">
                     <button
                       className="btn btn-danger"
-                      onClick={() => {
-                        handleDeleteUser();
-                      }}
+                      onClick={() => handleDeleteUser()}
                     >
                       Yes
                     </button>

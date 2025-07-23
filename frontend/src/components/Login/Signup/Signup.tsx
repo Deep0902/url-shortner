@@ -1,10 +1,10 @@
 import axios from "axios";
+import CryptoJS from "crypto-js";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { API_KEY, API_URL } from "../../../shared/constants";
 import type { AlertState } from "../../../shared/interfaces";
 import "./Signup.css";
-import CryptoJS from "crypto-js";
-import { useNavigate } from "react-router-dom";
 
 // Add your secret key here (should be the same as in backend)
 const SECRET_KEY = API_KEY; // Replace with your actual secret key

@@ -2,9 +2,9 @@ import { useEffect, useRef } from "react";
 import "./Modal.css";
 
 interface ModalProps {
-  open: boolean;
-  onClose: () => void;
-  children?: React.ReactNode;
+  readonly open: boolean;
+  readonly onClose: () => void;
+  readonly children?: React.ReactNode;
 }
 
 // Global variable to track the topmost modal
