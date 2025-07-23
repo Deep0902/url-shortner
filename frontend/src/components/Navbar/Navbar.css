@@ -92,6 +92,11 @@
   padding: 20px;
 }
 
+.avatar-selection-desc {
+  margin-bottom: 24px;
+  color: var(--color-text-secondary);
+}
+
 .avatar-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -99,6 +104,11 @@
   justify-items: center;
   max-width: 300px;
   margin: 0 auto;
+}
+
+.avatar-update-btn {
+  margin-top: 1.5rem;
+  width: 100%;
 }
 
 .avatar-option:hover {
@@ -273,6 +283,29 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
+}
+
+.settings-password-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  width: 100%;
+}
+
+.settings-password-input {
+  font-size: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-gray);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-main);
+  min-width: 120px;
 }
 
 @media (max-width: 768px) {
