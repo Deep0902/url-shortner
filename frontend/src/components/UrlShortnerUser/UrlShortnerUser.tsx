@@ -176,6 +176,7 @@ function UrlShortnerUser() {
         setUsername(response.data.username);
       })
       .catch((error) => {
+        navigate(-1);
         setAvatar(null);
         console.error("Error checking user:", error);
       });
@@ -274,7 +275,12 @@ function UrlShortnerUser() {
         />
       </div>
       {/* Navbar */}
-      <Navbar avatar={avatar} userId={location.state.loginResponse.userId} username={username} />
+      <Navbar
+        avatar={avatar}
+        userId={location.state.loginResponse.userId}
+        username={username}
+        onUsernameChange={() => checkUser()} // <-- This will re-fetch user data
+      />
       {alert.show && (
         <Alert
           message={alert.message}

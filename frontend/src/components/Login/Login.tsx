@@ -68,7 +68,9 @@ function Login() {
                 onClick={() => setIsSignUp(false)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={e => (e.key === "Enter" || e.key === " ") && setIsSignUp(false)}
+                onKeyDown={(e) =>
+                  (e.key === "Enter" || e.key === " ") && setIsSignUp(false)
+                }
               >
                 Sign In
               </span>
@@ -77,14 +79,24 @@ function Login() {
                 onClick={() => setIsSignUp(true)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={e => (e.key === "Enter" || e.key === " ") && setIsSignUp(true)}
+                onKeyDown={(e) =>
+                  (e.key === "Enter" || e.key === " ") && setIsSignUp(true)
+                }
               >
                 Sign Up
               </span>
             </div>
 
             {/* Toggle Switch */}
-            <div className="toggle-switch" onClick={handleToggle}>
+            <div
+              className="toggle-switch"
+              onClick={handleToggle}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) =>
+                (e.key === "Enter" || e.key === " ") && handleToggle()
+              }
+            >
               <div className={`toggle-circle ${isSignUp ? "moved" : ""}`}>
                 <div className={`toggle-arrow ${isSignUp ? "rotated" : ""}`}>
                   <svg viewBox="0 0 12 12" fill="none">

@@ -20,7 +20,7 @@ router.delete("/users", deleteUser);
 
 router.put("/username", editUserName);
 
-router.put("/userpassword", editUserPassword);
+router.put("/users/userpassword", editUserPassword);
 
 router.get("/users", getAllUsers);
 

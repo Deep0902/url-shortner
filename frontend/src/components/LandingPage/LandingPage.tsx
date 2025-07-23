@@ -196,7 +196,7 @@ function LandingPage() {
             <div className="features-grid">
               {features.map((feature, index) => (
                 <div
-                  key={index}
+                  key={feature.title}
                   className="feature-card"
                   style={{ animationDelay: `${0.6 * index}s` }}
                 >
