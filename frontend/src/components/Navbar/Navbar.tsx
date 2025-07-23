@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_KEY, API_URL } from "../../shared/constants";
 import { ThemeContext } from "../../ThemeContext";
+import Loader from "../Loader/Loader"; // Import the Loader component
 import Modal from "../Modal/Modal";
 import "./Navbar.css";
 
@@ -33,7 +34,11 @@ const Navbar = ({ avatar, userId, username, onAvatarChange }: NavbarProps) => {
   const [selectedAvatar, setSelectedAvatar] = useState<number>(avatar || 0);
   const [isEditingUsername, setIsEditingUsername] = useState(false);
   const [editedUsername, setEditedUsername] = useState("");
-  const [currentUsername, setCurrentUsername] = useState<string | null | undefined>(username);
+  const [currentUsername, setCurrentUsername] = useState<
+    string | null | undefined
+  >(username);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false); // Add deleteLoading state
 
   useEffect(() => {
     setCurrentUsername(username);
@@ -323,8 +328,54 @@ const Navbar = ({ avatar, userId, username, onAvatarChange }: NavbarProps) => {
               >
                 Close
               </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => setShowDeleteConfirm(true)}
+              >
+                Delete
+              </button>
             </div>
           </Modal>
+        )}
+        {showDeleteConfirm && (
+          <>
+            <div
+              className={`loader-fade-wrapper${deleteLoading ? " show" : ""}`}
+            >
+              <Loader />
+            </div>
+            <Modal
+              open={showDeleteConfirm}
+              onClose={() => setShowDeleteConfirm(false)}
+            >
+              <div className="delete-modal-content">
+                <h3 className="delete-modal-title">
+                  Are you sure you want to delete the account?
+                </h3>
+                <p className="delete-modal-warning">This cannot be undone.</p>
+                <div className="delete-modal-actions">
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => {
+                      setDeleteLoading(true);
+                      setTimeout(() => {
+                        setDeleteLoading(false);
+                        setShowDeleteConfirm(false);
+                      }, 1000);
+                    }}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    className="btn btn-light"
+                    onClick={() => setShowDeleteConfirm(false)}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          </>
         )}
       </div>
     </nav>

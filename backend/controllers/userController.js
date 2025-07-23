@@ -71,18 +71,19 @@ export const createUser = async (req, res) => {
 //region Delete user
 export const deleteUser = async (req, res) => {
   try {
-    const { email } = req.body;
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
+    const { email, userId } = req.body;
+    if (!email || !userId) {
+      return res.status(400).json({ error: "Email and UserID are required" });
     }
-    const searchUser = await User.findOne({
-      email,
-    });
+    const searchUser = await User.findById(userId);
     if (!searchUser) {
       return res.status(404).json({ error: "User not found" });
+    }
+    if (searchUser.email !== email) {
+      return res.status(403).json({ error: "Email not matched" });
     } else {
       await User.deleteOne({
-        email,
+        _id: userId,
       });
       res.status(200).json({ message: "User deleted successfully" });
     }

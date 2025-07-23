@@ -247,6 +247,34 @@
   min-width: 120px;
 }
 
+/* Delete Modal Styles */
+.delete-modal-content {
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  min-width: 320px;
+  color: var(--color-text-main);
+  text-align: center;
+}
+
+.delete-modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-error, #e53e3e);
+  margin-bottom: 1rem;
+}
+
+.delete-modal-warning {
+  color: var(--color-error, #e53e3e);
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.delete-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
 @media (max-width: 768px) {
   .navbar-content {
     max-width: 90%;
