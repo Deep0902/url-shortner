@@ -71,21 +71,18 @@ export const createUser = async (req, res) => {
 //region Delete user
 export const deleteUser = async (req, res) => {
   try {
-    const { email } = req.body;
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
+    const { userId } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: "UserID is required" });
     }
-    const searchUser = await User.findOne({
-      email,
-    });
+    const searchUser = await User.findById(userId);
     if (!searchUser) {
       return res.status(404).json({ error: "User not found" });
-    } else {
-      await User.deleteOne({
-        email,
-      });
-      res.status(200).json({ message: "User deleted successfully" });
     }
+    await User.deleteOne({
+      _id: userId,
+    });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -126,9 +123,9 @@ export const editUserName = async (req, res) => {
 //region Edit User Password
 export const editUserPassword = async (req, res) => {
   try {
-    const { userId, encryptedPassword } = req.body;
+    const { userId, oldPassword, newPassword } = req.body;
 
-    if (!encryptedPassword) {
+    if (!oldPassword || !newPassword) {
       return res.status(400).json({ error: "password is required" });
     }
 
@@ -138,21 +135,28 @@ export const editUserPassword = async (req, res) => {
     }
 
     // Decrypt the password received from frontend
-    const decryptedPassword = decryptData(encryptedPassword);
+    const decryptedOldPassword = decryptData(oldPassword);
+    const decryptedNewPassword = decryptData(newPassword);
 
-    if (!decryptedPassword) {
+    if (!decryptedOldPassword || !decryptedNewPassword) {
       return res.status(400).json({ error: "Invalid password format" });
     }
 
-    const passwordToStore = encryptData(decryptedPassword);
+    // Decrypt stored password for comparison
+    const storedPassword = decryptData(searchUser.password);
 
-    // Update user details
+    if (decryptedOldPassword !== storedPassword) {
+      return res.status(409).json({ error: "Old password does not match" });
+    }
+
+    // Encrypt and update the new password
+    const passwordToStore = encryptData(decryptedNewPassword);
     searchUser.password = passwordToStore;
     await searchUser.save();
 
-    res.status(200).json({ message: "User updated successfully" });
+    res.status(200).json({ message: "User password updated successfully" });
   } catch (error) {
-    console.error("Error editing user:", error);
+    console.error("Error editing user password:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

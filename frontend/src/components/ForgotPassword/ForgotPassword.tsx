@@ -19,7 +19,6 @@ function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
-  // const [encrypted, setEncrypted] = useState("");
   const [alert, setAlert] = useState<AlertState>({
     show: false,
     message: "",
