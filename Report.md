@@ -9,9 +9,9 @@ ChopURL is a modern, full-stack URL shortener application designed to provide fa
 ## 2. Motivation & Intentions
 
 ### Why I Started
-- To learn and implement a full-stack application using modern technologies.
-- To solve the common problem of sharing long URLs in a concise, manageable format.
+- To learn and implement a full-stack application using MERN Stack.
 - To explore authentication, security, and scalable architecture in a real-world scenario.
+- To explore strategies for securing API calls, even when operating over unsecured networks, ensuring data integrity and confidentiality.
 
 ### Project Goals
 - Build a robust and scalable URL shortener.
