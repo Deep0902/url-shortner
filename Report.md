@@ -103,15 +103,25 @@ ChopURL is a modern, full-stack URL shortener application designed to provide fa
 
 ---
 
+
 ## 8. API Endpoints
 
-- `POST /api/login` - User login (returns JWT token and user info)
-- `POST /api/register` - User registration
-- `POST /api/shorten` - Shorten a long URL (requires authentication)
+- `POST /api/login` - User login (returns user info)
+- `POST /api/users` - User registration
+- `PUT /api/users/avatar` - Change user avatar
+- `PUT /api/username` - Edit username
+- `PUT /api/users/userpassword` - Edit user password
+- `DELETE /api/users` - Delete user
+- `POST /api/users/shorten` - Shorten a long URL for a user (requires authentication)
+- `DELETE /api/users/url` - Delete a user's short URL
+- `POST /api/users/stats` - Get user statistics
+- `POST /api/users/getuser` - Get user by ID
+- `GET /api/users/all` - Get all users
+- `POST /api/forgot-email` - Forgot password (email check)
+- `PUT /api/forgot-password` - Password reset (update password)
+- `POST /api/shorten` - Shorten a long URL (global, not user-specific)
+- `GET /api/stats` - Get global usage statistics
 - `GET /:shortUrl` - Redirect to original URL
-- `GET /api/stats` - Get usage statistics
-- `POST /api/forgot-password` - Password reset
-- `POST /api/user` - Get user info (requires JWT)
 - All endpoints require an **API key** and most require a valid JWT token.
 
 ---

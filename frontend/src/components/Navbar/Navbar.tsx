@@ -287,7 +287,6 @@ const Navbar = ({
                   <img
                     src={avatarSrc}
                     alt="User avatar"
-                    style={{ width: 32, height: 32, borderRadius: "50%" }}
                   />
                 </button>
                 {showMenu && (
