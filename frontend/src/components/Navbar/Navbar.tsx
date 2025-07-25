@@ -563,13 +563,13 @@ const Navbar = ({
                 <p className="delete-modal-warning">This cannot be undone.</p>
                 <div className="delete-modal-actions">
                   <button
-                    className="btn btn-danger"
+                    className="btn-secondary"
                     onClick={() => handleDeleteUser()}
                   >
                     Yes
                   </button>
                   <button
-                    className="btn btn-light"
+                    className="btn-primary"
                     onClick={() => setShowDeleteConfirm(false)}
                   >
                     No

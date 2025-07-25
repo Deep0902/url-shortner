@@ -302,12 +302,12 @@
   .delete-modal-title {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--color-error, #e53e3e);
+    color: var(--color-text-main);
     margin-bottom: 1rem;
   }
 
   .delete-modal-warning {
-    color: var(--color-error, #e53e3e);
+    color: var(--color-text-main);
     margin-bottom: 1.5rem;
     font-weight: 500;
   }
