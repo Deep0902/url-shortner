@@ -1,6 +1,6 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_KEY, API_URL } from "../../shared/constants";
 import type { AlertState } from "../../shared/interfaces";
@@ -242,6 +242,35 @@ const Navbar = ({
       : avatarItems[0];
   //endregion
 
+  //region refs
+  const avatarMenuRef = useRef<HTMLDivElement>(null);
+  //endregion
+
+  //region effects (dropdown close on outside click or escape)
+  useEffect(() => {
+    if (!showMenu) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        avatarMenuRef.current &&
+        !avatarMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    }
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setShowMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showMenu]);
+  //endregion
+
   //region UI
   return (
     <>
@@ -276,7 +305,7 @@ const Navbar = ({
               {theme === "dark" ? "🌙" : "☀️"}
             </button>
             {avatar && avatarSrc && (
-              <div className="navbar-avatar-menu">
+              <div className="navbar-avatar-menu" ref={avatarMenuRef}>
                 <button
                   className="navbar-avatar-btn"
                   aria-label="User menu"
