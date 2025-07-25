@@ -66,6 +66,7 @@
         font-family: var(--font-family-main);
       }
       .url-input:focus {
+        font-family: var(--font-family-main);
         background-color: var(--color-gray-dark-alpha);
         scale: 1.03;
       }
