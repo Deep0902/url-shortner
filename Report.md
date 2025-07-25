@@ -102,12 +102,60 @@ ChopURL is a modern, full-stack URL shortener application designed to provide fa
 
 ---
 
+
 ## 6. Tech Stack 🧰
 
 - **Frontend:** ⚛️ React, TypeScript, Vite, Axios, Framer Motion, QRCode.react, React Hook Form
 - **Backend:** 🟩 Node.js, Express, Mongoose, nanoid, bcrypt, dotenv, compression, jsonwebtoken
 - **Database:** 🍃 MongoDB Atlas
 - **Testing:** 🧪 Jest, Supertest
+
+---
+
+
+## 7. Frontend Components & Routing 🧩
+
+### Main Components
+
+- 🛎️ **Alert**: Displays feedback messages (success, error, warning) to the user after actions like login, signup, or URL shortening.
+- 🔐 **EncryptionManager**: Handles encryption and decryption logic for sensitive data, such as passwords, before sending to the backend.
+- 🦶 **Footer**: Renders the application’s footer, including branding, links, and copyright.
+- 🔑 **ForgotPassword**: Provides a form for users to request a password reset, handling email input and feedback.
+- 🏠 **LandingPage**: The main landing page for ChopURL, showcasing features, statistics, and calls to action for sign-in and demo.
+- ⏳ **Loader**: Displays a loading spinner or animation during API calls or page transitions.
+- 🔓 **Login**: Contains authentication logic and UI for user sign-in and sign-up, including subcomponents:
+  - 🔑 **Signin**: Handles user login form, validation, and API calls.
+  - 📝 **Signup**: Handles user registration form, validation, and API calls.
+- 🗃️ **Modal**: Provides a reusable modal dialog for confirmations, forms, and popups.
+- 🧭 **Navbar**: The top navigation bar, including logo, theme toggle, avatar menu, and links to other pages.
+- ✂️ **UrlShortner**: Main component for anonymous URL shortening, including input, result display, and statistics.
+- 👤 **UrlShortnerUser**: User-specific URL shortener dashboard, showing personalized stats, history, and management options.
+
+### Shared/Utility Components
+
+- 🧩 **Reactbits**: Contains reusable UI bits and effects:
+  - 🌌 **Aurora**, 🟦 **BackgroundBrams**, 🔢 **CountUp**, 🔗 **LinkPreview**, ✨ **Particles**, 🟪 **Squares**, 🌊 **Waves**: Visual effects, animated backgrounds, and utility UI elements for enhanced user experience.
+- 🌗 **ThemeContext**: Provides theme state and toggling logic (light/dark mode) across the app.
+- 🛠️ **lib/utils.ts**: Utility functions used throughout the frontend.
+- 📦 **shared/constants.ts, shared/interfaces.ts**: TypeScript interfaces and constants for API endpoints, types, and shared values.
+
+### Routing Flow 🧭
+
+Routing is handled via React Router. The main flow is:
+
+- 🏠 **LandingPage** (`/`): Entry point, links to sign-in (`/sign`) and demo (`/url`).
+- 🔓 **Login/Signin** (`/sign`): User authentication. On successful login, redirects to **UrlShortnerUser**.
+- 📝 **Login/Signup** (`/signup`): User registration. On success, may redirect to **UrlShortnerUser**.
+- 🔑 **ForgotPassword** (`/forgot`): Password reset flow.
+- ✂️ **UrlShortner** (`/url`): Anonymous URL shortening demo.
+- 👤 **UrlShortnerUser** (`/url-user`): Authenticated user dashboard for managing URLs.
+- 🗃️ **Other routes** (e.g., `/modal`, `/settings`): Used for popups, modals, and account management.
+
+**Routing Flow Example:**
+
+1. 🏠 User lands on **LandingPage** → clicks "Sign In" → goes to 🔓 **Login/Signin** → logs in → redirected to 👤 **UrlShortnerUser**.
+2. User can navigate back to 🏠 **LandingPage** or to ✂️ **UrlShortner** for demo.
+3. All navigation is handled via the 🧭 **Navbar** and React Router.
 
 ---
 
