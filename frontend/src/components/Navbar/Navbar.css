@@ -211,7 +211,7 @@
 .settings-modal-content {
   padding: 2rem 1.5rem;
   border-radius: 12px;
-  min-width: 50dvw;
+  min-width: 30dvw;
   color: var(--color-text-main);
 
   .settings-title {

@@ -1,5 +1,8 @@
 /* History Table Styles */
 .history-table-wrapper {
+  .close-btn {
+    background-color: var(--color-bg-secondary);
+  }
   margin-top: 2rem;
   background: var(--color-bg-accent);
   border-radius: 12px;

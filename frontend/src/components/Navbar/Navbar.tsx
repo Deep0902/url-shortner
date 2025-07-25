@@ -1,6 +1,6 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_KEY, API_URL } from "../../shared/constants";
 import type { AlertState } from "../../shared/interfaces";
@@ -384,7 +384,7 @@ const Navbar = ({
                 </div>
                 <div className="edit-buttons-avatar">
                   <button
-                    className="btn btn-secondary"
+                    className="btn-secondary"
                     onClick={() => {
                       setSelectedAvatar(previousAvatar);
                       setShowChangeAvatar(false);
@@ -438,7 +438,7 @@ const Navbar = ({
                             Save
                           </button>
                           <button
-                            className="btn btn-light btn-xs"
+                            className="btn-secondary"
                             type="button"
                             onClick={() => {
                               setIsEditingUsername(false);
@@ -512,7 +512,7 @@ const Navbar = ({
                             Update Password
                           </button>
                           <button
-                            className="btn btn-light btn-xs"
+                            className="btn-secondary"
                             type="button"
                             onClick={() => {
                               resetPasswordFields();
@@ -526,7 +526,7 @@ const Navbar = ({
                       <>
                         <span className="settings-password">********</span>
                         <button
-                          className="btn btn-light btn-xs"
+                          className="btn-primary"
                           onClick={() => setIsChangingPassword(true)}
                         >
                           Change Password
@@ -536,7 +536,7 @@ const Navbar = ({
                   </div>
                 </div>
                 <button
-                  className="btn btn-primary"
+                  className="btn-secondary"
                   style={{ marginTop: "1.5rem" }}
                   onClick={() => setShowSettings(false)}
                 >
