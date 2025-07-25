@@ -46,7 +46,15 @@ function Signin({
     const stored = sessionStorage.getItem("userCredentials");
     if (stored) {
       const creds = JSON.parse(stored) as { email: string; password: string };
-      setCredentials({ email: creds.email, password: creds.password });
+      // Decrypt the password before setting it in state
+      let decryptedPassword = "";
+      try {
+        const bytes = CryptoJS.AES.decrypt(creds.password, SECRET_KEY);
+        decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+      } catch {
+        decryptedPassword = "";
+      }
+      setCredentials({ email: creds.email, password: decryptedPassword });
     }
   }, []);
   //endregion
@@ -90,10 +98,10 @@ function Signin({
         "userCredentials",
         JSON.stringify({
           email: credentials.email,
-          password: credentials.password,
+          password: encryptedPassword, // Store encrypted password
         })
       );
-    } else if (!isChecked) {
+    } else {
       sessionStorage.removeItem("userCredentials");
     }
 

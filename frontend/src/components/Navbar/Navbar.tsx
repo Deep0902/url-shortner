@@ -274,6 +274,9 @@ const Navbar = ({
   //region UI
   return (
     <>
+      <div className={`loader-fade-wrapper${deleteLoading ? " show" : ""}`}>
+        <Loader />
+      </div>
       {alert.show && (
         <Alert
           message={alert.message}
@@ -313,10 +316,7 @@ const Navbar = ({
                   type="button"
                   onClick={() => setShowMenu((prev) => !prev)}
                 >
-                  <img
-                    src={avatarSrc}
-                    alt="User avatar"
-                  />
+                  <img src={avatarSrc} alt="User avatar" />
                 </button>
                 {showMenu && (
                   <div className="navbar-avatar-dropdown">
@@ -382,15 +382,26 @@ const Navbar = ({
                     </button>
                   ))}
                 </div>
-                <button
-                  className="btn btn-primary avatar-update-btn"
-                  onClick={() => {
-                    handleChangeAvatar(selectedAvatar);
-                    setShowChangeAvatar(false);
-                  }}
-                >
-                  Update
-                </button>
+                <div className="edit-buttons-avatar">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setSelectedAvatar(previousAvatar);
+                      setShowChangeAvatar(false);
+                    }}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="btn btn-primary "
+                    onClick={() => {
+                      handleChangeAvatar(selectedAvatar);
+                      setShowChangeAvatar(false);
+                    }}
+                  >
+                    Update
+                  </button>
+                </div>
               </div>
             </Modal>
           )}
@@ -408,6 +419,7 @@ const Navbar = ({
                   <div className="settings-value settings-username-row">
                     {isEditingUsername ? (
                       <form
+                        className="settings-password-form"
                         onSubmit={(e) => {
                           e.preventDefault();
                           handleSaveUsername();
@@ -418,22 +430,24 @@ const Navbar = ({
                           value={editedUsername}
                           onChange={(e) => setEditedUsername(e.target.value)}
                         />
-                        <button
-                          className="btn btn-primary btn-xs"
-                          type="submit"
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="btn btn-light btn-xs"
-                          type="button"
-                          onClick={() => {
-                            setIsEditingUsername(false);
-                            setEditedUsername(currentUsername ?? "");
-                          }}
-                        >
-                          Cancel
-                        </button>
+                        <div className="edit-buttons">
+                          <button
+                            className="btn btn-primary btn-xs"
+                            type="submit"
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="btn btn-light btn-xs"
+                            type="button"
+                            onClick={() => {
+                              setIsEditingUsername(false);
+                              setEditedUsername(currentUsername ?? "");
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </form>
                     ) : (
                       <>
@@ -490,21 +504,23 @@ const Navbar = ({
                             setConfirmNewPassword(e.target.value)
                           }
                         />
-                        <button
-                          className="btn btn-primary btn-xs"
-                          type="submit"
-                        >
-                          Update Password
-                        </button>
-                        <button
-                          className="btn btn-light btn-xs"
-                          type="button"
-                          onClick={() => {
-                            resetPasswordFields();
-                          }}
-                        >
-                          Cancel
-                        </button>
+                        <div className="edit-buttons">
+                          <button
+                            className="btn btn-primary btn-xs"
+                            type="submit"
+                          >
+                            Update Password
+                          </button>
+                          <button
+                            className="btn btn-light btn-xs"
+                            type="button"
+                            onClick={() => {
+                              resetPasswordFields();
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </form>
                     ) : (
                       <>
@@ -536,38 +552,31 @@ const Navbar = ({
             </Modal>
           )}
           {showDeleteConfirm && (
-            <>
-              <div
-                className={`loader-fade-wrapper${deleteLoading ? " show" : ""}`}
-              >
-                <Loader />
-              </div>
-              <Modal
-                open={showDeleteConfirm}
-                onClose={() => setShowDeleteConfirm(false)}
-              >
-                <div className="delete-modal-content">
-                  <h3 className="delete-modal-title">
-                    Are you sure you want to delete the account?
-                  </h3>
-                  <p className="delete-modal-warning">This cannot be undone.</p>
-                  <div className="delete-modal-actions">
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDeleteUser()}
-                    >
-                      Yes
-                    </button>
-                    <button
-                      className="btn btn-light"
-                      onClick={() => setShowDeleteConfirm(false)}
-                    >
-                      No
-                    </button>
-                  </div>
+            <Modal
+              open={showDeleteConfirm}
+              onClose={() => setShowDeleteConfirm(false)}
+            >
+              <div className="delete-modal-content">
+                <h3 className="delete-modal-title">
+                  Are you sure you want to delete the account?
+                </h3>
+                <p className="delete-modal-warning">This cannot be undone.</p>
+                <div className="delete-modal-actions">
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteUser()}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    className="btn btn-light"
+                    onClick={() => setShowDeleteConfirm(false)}
+                  >
+                    No
+                  </button>
                 </div>
-              </Modal>
-            </>
+              </div>
+            </Modal>
           )}
         </div>
       </nav>
