@@ -59,6 +59,14 @@ const Navbar = ({
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  // Touch/swipe state for mobile dropdown
+  const [touchStart, setTouchStart] = useState<{
+    y: number;
+    time: number;
+  } | null>(null);
+  const [touchMove, setTouchMove] = useState<number>(0);
+  const [isDragging, setIsDragging] = useState(false);
   //endregion
 
   //region effects
@@ -231,6 +239,56 @@ const Navbar = ({
       });
     navigate(-1);
   };
+
+  // Touch handlers for mobile swipe-to-dismiss
+  const handleTouchStart = (e: React.TouchEvent) => {
+    // Only enable swipe on mobile (screen width <= 640px)
+    if (window.innerWidth > 640) return;
+
+    const touch = e.touches[0];
+    setTouchStart({
+      y: touch.clientY,
+      time: Date.now(),
+    });
+    setTouchMove(0);
+    setIsDragging(false);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart || window.innerWidth > 640) return;
+
+    const touch = e.touches[0];
+    const moveY = touch.clientY - touchStart.y;
+
+    // Only allow downward swipes
+    if (moveY > 0) {
+      setTouchMove(moveY);
+      setIsDragging(true);
+
+      // Prevent default scrolling when dragging down
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || window.innerWidth > 640) return;
+
+    const swipeDistance = touchMove;
+    const swipeTime = Date.now() - touchStart.time;
+    const swipeVelocity = swipeDistance / swipeTime;
+
+    // Close dropdown if:
+    // 1. Swiped down more than 100px, OR
+    // 2. Fast downward swipe (velocity > 0.5 px/ms) with at least 50px distance
+    if (swipeDistance > 100 || (swipeVelocity > 0.5 && swipeDistance > 50)) {
+      setShowMenu(false);
+    }
+
+    // Reset touch state
+    setTouchStart(null);
+    setTouchMove(0);
+    setIsDragging(false);
+  };
   //endregion
 
   //region derived
@@ -319,7 +377,24 @@ const Navbar = ({
                   <img src={avatarSrc} alt="User avatar" />
                 </button>
                 {showMenu && (
-                  <div className="navbar-avatar-dropdown">
+                  <div
+                    className="navbar-avatar-dropdown"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    style={{
+                      transform: `translateY(${touchMove}px)`,
+                      opacity: Math.max(0.3, 1 - touchMove / 300),
+                      transition: isDragging
+                        ? "none"
+                        : "transform 0.3s ease-out, opacity 0.3s ease-out",
+                    }}
+                  >
+                    {/* Visual indicator for swipe gesture on mobile */}
+                    <div className="mobile-swipe-indicator">
+                      <div className="swipe-handle"></div>
+                    </div>
+
                     <button
                       className="navbar-avatar-item"
                       onClick={() => {
@@ -453,7 +528,7 @@ const Navbar = ({
                       <>
                         <span>{currentUsername}</span>
                         <button
-                          className="btn btn-light btn-xs"
+                          className="btn-primary"
                           style={{ marginLeft: 8 }}
                           onClick={() => setIsEditingUsername(true)}
                         >
