@@ -2,13 +2,13 @@ import Lenis from "lenis";
 import { useEffect, useMemo, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
+import EncryptionManager from "./components/EncryptionManager/EncryptionManager";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import LandingPage from "./components/LandingPage/LandingPage";
 import Login from "./components/Login/Login";
 import UrlShortner from "./components/UrlShortner/UrlShortner";
 import UrlShortnerUser from "./components/UrlShortnerUser/UrlShortnerUser";
 import { ThemeContext, type ThemeType } from "./ThemeContext";
-import EncryptionManager from "./components/EncryptionManager/EncryptionManager";
-import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 
 function App() {
   // Detect system theme on first load

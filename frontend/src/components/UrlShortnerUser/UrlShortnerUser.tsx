@@ -459,7 +459,7 @@ function UrlShortnerUser() {
                       </button>
                       &nbsp;
                       <button
-                        className="btn-primary"
+                        className="btn-secondary close-btn"
                         onClick={() => {
                           setShowHistory(false);
                         }}

@@ -46,7 +46,53 @@ function Signin({
     const stored = sessionStorage.getItem("userCredentials");
     if (stored) {
       const creds = JSON.parse(stored) as { email: string; password: string };
-      setCredentials({ email: creds.email, password: creds.password });
+      // Decrypt the password before setting it in state
+      let decryptedPassword = "";
+      try {
+        const bytes = CryptoJS.AES.decrypt(creds.password, SECRET_KEY);
+        decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+      } catch {
+        decryptedPassword = "";
+      }
+      setCredentials({ email: creds.email, password: decryptedPassword });
+    }
+  }, []);
+  useEffect(() => {
+    const stored = sessionStorage.getItem("userCredentials");
+    if (stored) {
+      const creds = JSON.parse(stored) as { email: string; password: string };
+      // Decrypt the password before using
+      let decryptedPassword = "";
+      try {
+        const bytes = CryptoJS.AES.decrypt(creds.password, SECRET_KEY);
+        decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+      } catch {
+        decryptedPassword = "";
+      }
+      if (creds.email && decryptedPassword) {
+        // setAutoLoginLoading(true);
+        const payload = {
+          email: creds.email,
+          password: creds.password, // Send encrypted password
+        };
+        axios
+          .post(`${API_URL}/api/login`, payload, {
+            headers: { "x-api-key": API_KEY },
+          })
+          .then((response) => {
+            // setAutoLoginLoading(false);
+            if (response.data && response.data.message === "Login successful") {
+              showAlert("Success!", "success", "Login successful!");
+              navigate("/url-user", {
+                state: { loginResponse: response.data },
+              });
+            }
+          })
+          .catch(() => {
+            // setAutoLoginLoading(false);
+            // Do nothing, let user proceed with login
+          });
+      }
     }
   }, []);
   //endregion
@@ -90,10 +136,10 @@ function Signin({
         "userCredentials",
         JSON.stringify({
           email: credentials.email,
-          password: credentials.password,
+          password: encryptedPassword, // Store encrypted password
         })
       );
-    } else if (!isChecked) {
+    } else {
       sessionStorage.removeItem("userCredentials");
     }
 

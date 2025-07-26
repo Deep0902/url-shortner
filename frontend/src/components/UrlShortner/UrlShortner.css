@@ -66,6 +66,7 @@
         font-family: var(--font-family-main);
       }
       .url-input:focus {
+        font-family: var(--font-family-main);
         background-color: var(--color-gray-dark-alpha);
         scale: 1.03;
       }
@@ -257,15 +258,18 @@
   font-size: 1rem;
   outline: none;
   transition: all 0.2s ease;
+  font-family: var(--font-family-main);
 }
 
 .url-input:focus {
   border-color: var(--color-blue);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  font-family: var(--font-family-main);
 }
 
 .url-input::placeholder {
   color: var(--color-text-secondary);
+  font-family: var(--font-family-main);
 }
 
 .btn-primary {
