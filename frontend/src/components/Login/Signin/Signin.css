@@ -32,11 +32,17 @@
 }
 
 .inputBox input {
-  border: 1px solid var(--color-gray);
-  margin-top: 8px;
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg-accent);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  color: var(--color-text-main);
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: var(--font-family-main);
   width: -webkit-fill-available;
-  padding: 10px;
-  border-radius: 4px;
 }
 
 .inputBox input:focus {
@@ -107,14 +113,14 @@
 .toggle-button {
   position: absolute;
   right: 5px;
-  top: 56%;
+  top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
   font-size: 16px;
 }
-.mobile-signup{
+.mobile-signup {
   display: none;
 }
 /* Phone Screen CSS */

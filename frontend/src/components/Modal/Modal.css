@@ -17,7 +17,6 @@
   background: var(--color-bg-secondary);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-  padding: 2rem 1.5rem 1.5rem 1.5rem;
   min-width: 320px;
   min-height: 120px;
   z-index: 21;
