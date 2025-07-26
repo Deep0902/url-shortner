@@ -319,7 +319,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .navbar {
     .navbar-content {
       max-width: 90%;
