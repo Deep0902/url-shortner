@@ -88,37 +88,36 @@
             }
           }
         }
-
-        .navbar-avatar-dropdown {
-          position: absolute;
-          right: 0;
-          top: calc(100% + 8px);
-          background: var(--color-bg);
-          border: 1px solid var(--color-border);
-          border-radius: 8px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          min-width: 120px;
-          z-index: 10;
-          overflow: hidden;
-
-          .navbar-avatar-item {
-            width: 100%;
-            padding: 8px;
-            background: none;
-            border: none;
-            text-align: left;
-            cursor: pointer;
-            color: var(--color-text-main);
-            &:hover {
-              background: var(--color-bg-accent) !important;
-            }
-          }
-        }
       }
     }
   }
 }
+.navbar-avatar-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+  z-index: 10;
+  overflow: hidden;
 
+  .navbar-avatar-item {
+    font-family: var(--font-family-main);
+    width: 100%;
+    padding: 8px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    color: var(--color-text-main);
+    &:hover {
+      background: var(--color-bg-accent) !important;
+    }
+  }
+}
 .modal {
   position: relative;
   z-index: 6;
@@ -131,7 +130,23 @@
 
 .avatar-selection {
   text-align: center;
+  min-width: 40dvw;
   padding: 20px;
+  height: 52dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  .edit-buttons-avatar {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+    gap: 0 12px;
+    padding: 0 10%;
+    button {
+      flex: 1;
+    }
+  }
 
   .avatar-selection-desc {
     margin-bottom: 24px;
@@ -191,17 +206,12 @@
       }
     }
   }
-
-  .avatar-update-btn {
-    margin-top: 1.5rem;
-    width: 100%;
-  }
 }
 
 .settings-modal-content {
   padding: 2rem 1.5rem;
   border-radius: 12px;
-  min-width: 320px;
+  min-width: 30dvw;
   color: var(--color-text-main);
 
   .settings-title {
@@ -214,7 +224,9 @@
 
   .settings-field {
     margin-bottom: 1.2rem;
-
+    .edit-buttons {
+      display: flex;
+    }
     .settings-label {
       display: block;
       font-size: 1rem;
@@ -230,28 +242,28 @@
       border-radius: 6px;
       padding: 0.5rem 0.75rem;
       word-break: break-all;
-
+      .settings-password-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        width: 100%;
+      }
+      .settings-password-input {
+        padding: 12px 16px;
+        background-color: var(--color-gray-dark);
+        color: var(--color-white);
+        border: 1px solid var(--color-gray-light);
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        transition: border 0.2s;
+        transition: all 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
+        font-family: var(--font-family-main);
+      }
       .settings-password-row {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-
-        .settings-password-form {
-          display: flex;
-          flex-direction: column;
-          gap: 0.7rem;
-          width: 100%;
-
-          .settings-password-input {
-            font-size: 1rem;
-            padding: 0.3rem 0.6rem;
-            border-radius: 4px;
-            border: 1px solid var(--color-gray);
-            background: var(--color-bg-secondary);
-            color: var(--color-text-main);
-            min-width: 120px;
-          }
-        }
 
         .settings-password {
           letter-spacing: 0.2em;
@@ -263,16 +275,18 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-
-        .settings-username-input {
-          font-size: 1rem;
-          padding: 0.3rem 0.6rem;
-          border-radius: 4px;
-          border: 1px solid var(--color-gray);
-          background: var(--color-bg-secondary);
-          color: var(--color-text-main);
-          min-width: 120px;
-        }
+      }
+      .settings-username-input {
+        padding: 12px 16px;
+        background-color: var(--color-gray-dark);
+        color: var(--color-white);
+        border: 1px solid var(--color-gray-light);
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        transition: border 0.2s;
+        transition: all 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
+        font-family: var(--font-family-main);
       }
     }
   }
@@ -288,12 +302,12 @@
   .delete-modal-title {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--color-error, #e53e3e);
+    color: var(--color-text-main);
     margin-bottom: 1rem;
   }
 
   .delete-modal-warning {
-    color: var(--color-error, #e53e3e);
+    color: var(--color-text-main);
     margin-bottom: 1.5rem;
     font-weight: 500;
   }
@@ -305,7 +319,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .navbar {
     .navbar-content {
       max-width: 90%;
@@ -315,16 +329,37 @@
       }
     }
   }
+  .navbar .navbar-avatar-dropdown {
+    position: fixed;
+    width: 98vw;
+    top: 105dvh;
+    opacity: 0;
+    right: 1dvw;
+    height: 32dvh;
+    display: flex;
+    flex-direction: column;
+    animation: navbarDropdownDafeIn 0.3s ease-out 0.2s forwards;
+    .navbar-avatar-item {
+      flex: 1;
+      font-size: 20px;
+      text-align: center;
+    }
+  }
   .avatar-selection {
     .avatar-grid {
-      grid-template-columns: repeat(2, 1fr);
       gap: 15px;
       .avatar-option {
         .avatar-img {
-          width: 50px !important;
-          height: 50px !important;
+          width: 40px;
+          height: 40px;
         }
       }
     }
+  }
+}
+@keyframes navbarDropdownDafeIn {
+  to {
+    opacity: 1;
+    top: 69dvh;
   }
 }

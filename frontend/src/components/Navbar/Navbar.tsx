@@ -1,6 +1,6 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_KEY, API_URL } from "../../shared/constants";
 import type { AlertState } from "../../shared/interfaces";
@@ -59,6 +59,14 @@ const Navbar = ({
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  // Touch/swipe state for mobile dropdown
+  const [touchStart, setTouchStart] = useState<{
+    y: number;
+    time: number;
+  } | null>(null);
+  const [touchMove, setTouchMove] = useState<number>(0);
+  const [isDragging, setIsDragging] = useState(false);
   //endregion
 
   //region effects
@@ -231,6 +239,56 @@ const Navbar = ({
       });
     navigate(-1);
   };
+
+  // Touch handlers for mobile swipe-to-dismiss
+  const handleTouchStart = (e: React.TouchEvent) => {
+    // Only enable swipe on mobile (screen width <= 640px)
+    if (window.innerWidth > 640) return;
+
+    const touch = e.touches[0];
+    setTouchStart({
+      y: touch.clientY,
+      time: Date.now(),
+    });
+    setTouchMove(0);
+    setIsDragging(false);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStart || window.innerWidth > 640) return;
+
+    const touch = e.touches[0];
+    const moveY = touch.clientY - touchStart.y;
+
+    // Only allow downward swipes
+    if (moveY > 0) {
+      setTouchMove(moveY);
+      setIsDragging(true);
+
+      // Prevent default scrolling when dragging down
+      e.preventDefault();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || window.innerWidth > 640) return;
+
+    const swipeDistance = touchMove;
+    const swipeTime = Date.now() - touchStart.time;
+    const swipeVelocity = swipeDistance / swipeTime;
+
+    // Close dropdown if:
+    // 1. Swiped down more than 100px, OR
+    // 2. Fast downward swipe (velocity > 0.5 px/ms) with at least 50px distance
+    if (swipeDistance > 100 || (swipeVelocity > 0.5 && swipeDistance > 50)) {
+      setShowMenu(false);
+    }
+
+    // Reset touch state
+    setTouchStart(null);
+    setTouchMove(0);
+    setIsDragging(false);
+  };
   //endregion
 
   //region derived
@@ -242,9 +300,41 @@ const Navbar = ({
       : avatarItems[0];
   //endregion
 
+  //region refs
+  const avatarMenuRef = useRef<HTMLDivElement>(null);
+  //endregion
+
+  //region effects (dropdown close on outside click or escape)
+  useEffect(() => {
+    if (!showMenu) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        avatarMenuRef.current &&
+        !avatarMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    }
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setShowMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showMenu]);
+  //endregion
+
   //region UI
   return (
     <>
+      <div className={`loader-fade-wrapper${deleteLoading ? " show" : ""}`}>
+        <Loader />
+      </div>
       {alert.show && (
         <Alert
           message={alert.message}
@@ -276,7 +366,7 @@ const Navbar = ({
               {theme === "dark" ? "🌙" : "☀️"}
             </button>
             {avatar && avatarSrc && (
-              <div className="navbar-avatar-menu">
+              <div className="navbar-avatar-menu" ref={avatarMenuRef}>
                 <button
                   className="navbar-avatar-btn"
                   aria-label="User menu"
@@ -284,14 +374,27 @@ const Navbar = ({
                   type="button"
                   onClick={() => setShowMenu((prev) => !prev)}
                 >
-                  <img
-                    src={avatarSrc}
-                    alt="User avatar"
-                    style={{ width: 32, height: 32, borderRadius: "50%" }}
-                  />
+                  <img src={avatarSrc} alt="User avatar" />
                 </button>
                 {showMenu && (
-                  <div className="navbar-avatar-dropdown">
+                  <div
+                    className="navbar-avatar-dropdown"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    style={{
+                      transform: `translateY(${touchMove}px)`,
+                      opacity: Math.max(0.3, 1 - touchMove / 300),
+                      transition: isDragging
+                        ? "none"
+                        : "transform 0.3s ease-out, opacity 0.3s ease-out",
+                    }}
+                  >
+                    {/* Visual indicator for swipe gesture on mobile */}
+                    <div className="mobile-swipe-indicator">
+                      <div className="swipe-handle"></div>
+                    </div>
+
                     <button
                       className="navbar-avatar-item"
                       onClick={() => {
@@ -354,15 +457,26 @@ const Navbar = ({
                     </button>
                   ))}
                 </div>
-                <button
-                  className="btn btn-primary avatar-update-btn"
-                  onClick={() => {
-                    handleChangeAvatar(selectedAvatar);
-                    setShowChangeAvatar(false);
-                  }}
-                >
-                  Update
-                </button>
+                <div className="edit-buttons-avatar">
+                  <button
+                    className="btn-secondary"
+                    onClick={() => {
+                      setSelectedAvatar(previousAvatar);
+                      setShowChangeAvatar(false);
+                    }}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="btn btn-primary "
+                    onClick={() => {
+                      handleChangeAvatar(selectedAvatar);
+                      setShowChangeAvatar(false);
+                    }}
+                  >
+                    Update
+                  </button>
+                </div>
               </div>
             </Modal>
           )}
@@ -380,6 +494,7 @@ const Navbar = ({
                   <div className="settings-value settings-username-row">
                     {isEditingUsername ? (
                       <form
+                        className="settings-password-form"
                         onSubmit={(e) => {
                           e.preventDefault();
                           handleSaveUsername();
@@ -390,28 +505,30 @@ const Navbar = ({
                           value={editedUsername}
                           onChange={(e) => setEditedUsername(e.target.value)}
                         />
-                        <button
-                          className="btn btn-primary btn-xs"
-                          type="submit"
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="btn btn-light btn-xs"
-                          type="button"
-                          onClick={() => {
-                            setIsEditingUsername(false);
-                            setEditedUsername(currentUsername ?? "");
-                          }}
-                        >
-                          Cancel
-                        </button>
+                        <div className="edit-buttons">
+                          <button
+                            className="btn btn-primary btn-xs"
+                            type="submit"
+                          >
+                            Save
+                          </button>
+                          <button
+                            className="btn-secondary"
+                            type="button"
+                            onClick={() => {
+                              setIsEditingUsername(false);
+                              setEditedUsername(currentUsername ?? "");
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </form>
                     ) : (
                       <>
                         <span>{currentUsername}</span>
                         <button
-                          className="btn btn-light btn-xs"
+                          className="btn-primary"
                           style={{ marginLeft: 8 }}
                           onClick={() => setIsEditingUsername(true)}
                         >
@@ -462,27 +579,29 @@ const Navbar = ({
                             setConfirmNewPassword(e.target.value)
                           }
                         />
-                        <button
-                          className="btn btn-primary btn-xs"
-                          type="submit"
-                        >
-                          Update Password
-                        </button>
-                        <button
-                          className="btn btn-light btn-xs"
-                          type="button"
-                          onClick={() => {
-                            resetPasswordFields();
-                          }}
-                        >
-                          Cancel
-                        </button>
+                        <div className="edit-buttons">
+                          <button
+                            className="btn btn-primary btn-xs"
+                            type="submit"
+                          >
+                            Update Password
+                          </button>
+                          <button
+                            className="btn-secondary"
+                            type="button"
+                            onClick={() => {
+                              resetPasswordFields();
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </form>
                     ) : (
                       <>
                         <span className="settings-password">********</span>
                         <button
-                          className="btn btn-light btn-xs"
+                          className="btn-primary"
                           onClick={() => setIsChangingPassword(true)}
                         >
                           Change Password
@@ -492,7 +611,7 @@ const Navbar = ({
                   </div>
                 </div>
                 <button
-                  className="btn btn-primary"
+                  className="btn-secondary"
                   style={{ marginTop: "1.5rem" }}
                   onClick={() => setShowSettings(false)}
                 >
@@ -508,38 +627,31 @@ const Navbar = ({
             </Modal>
           )}
           {showDeleteConfirm && (
-            <>
-              <div
-                className={`loader-fade-wrapper${deleteLoading ? " show" : ""}`}
-              >
-                <Loader />
-              </div>
-              <Modal
-                open={showDeleteConfirm}
-                onClose={() => setShowDeleteConfirm(false)}
-              >
-                <div className="delete-modal-content">
-                  <h3 className="delete-modal-title">
-                    Are you sure you want to delete the account?
-                  </h3>
-                  <p className="delete-modal-warning">This cannot be undone.</p>
-                  <div className="delete-modal-actions">
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDeleteUser()}
-                    >
-                      Yes
-                    </button>
-                    <button
-                      className="btn btn-light"
-                      onClick={() => setShowDeleteConfirm(false)}
-                    >
-                      No
-                    </button>
-                  </div>
+            <Modal
+              open={showDeleteConfirm}
+              onClose={() => setShowDeleteConfirm(false)}
+            >
+              <div className="delete-modal-content">
+                <h3 className="delete-modal-title">
+                  Are you sure you want to delete the account?
+                </h3>
+                <p className="delete-modal-warning">This cannot be undone.</p>
+                <div className="delete-modal-actions">
+                  <button
+                    className="btn-secondary"
+                    onClick={() => handleDeleteUser()}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    className="btn-primary"
+                    onClick={() => setShowDeleteConfirm(false)}
+                  >
+                    No
+                  </button>
                 </div>
-              </Modal>
-            </>
+              </div>
+            </Modal>
           )}
         </div>
       </nav>
