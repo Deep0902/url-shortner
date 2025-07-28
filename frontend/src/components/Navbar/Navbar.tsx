@@ -282,12 +282,14 @@ const Navbar = ({
     // 2. Fast downward swipe (velocity > 0.5 px/ms) with at least 50px distance
     if (swipeDistance > 100 || (swipeVelocity > 0.5 && swipeDistance > 50)) {
       setShowMenu(false);
+    } else {
+      // If swipe not enough, animate back to original position
+      setIsDragging(false);
+      setTouchMove(0);
     }
 
     // Reset touch state
     setTouchStart(null);
-    setTouchMove(0);
-    setIsDragging(false);
   };
   //endregion
 
