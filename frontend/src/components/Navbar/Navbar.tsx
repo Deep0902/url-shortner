@@ -655,19 +655,23 @@ const Navbar = ({
                     )}
                   </div>
                 </div>
-                <button
-                  className="btn-secondary"
-                  style={{ marginTop: "1.5rem" }}
-                  onClick={() => setShowSettings(false)}
-                >
-                  Close
-                </button>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setShowDeleteConfirm(true)}
-                >
-                  Delete
-                </button>
+                <div className="action-buttons">
+                  <button
+                    className="btn-secondary"
+                    onClick={() => {
+                      setShowSettings(false);
+                      resetPasswordFields();
+                    }}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setShowDeleteConfirm(true)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </Modal>
           )}

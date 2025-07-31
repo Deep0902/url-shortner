@@ -36,7 +36,7 @@ function Signin({
     email: "",
     password: "",
   });
-  const [showPassword, setShowPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
   //endregion

@@ -242,7 +242,6 @@
 .btn-secondary:hover {
   background: var(--color-blue);
   color: var(--color-white);
-  transform: translateY(-2px);
 }
 
 /* Scroll Prompt */
@@ -521,7 +520,6 @@
     var(--color-blue-dark)
   );
   color: var(--color-white);
-  transform: scale(1.05);
 }
 
 .stat-card-featured .stat-label-large,
