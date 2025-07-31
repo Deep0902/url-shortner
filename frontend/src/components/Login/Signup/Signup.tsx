@@ -131,7 +131,7 @@ function Signup({
   //region UI
   return (
     <div className="credentialsCard">
-      <label className="">Sign Up</label>
+      <span className="label">Sign Up</span>
       <span className=" subtext">Sign Up to enjoy the features!</span>
 
       <form onSubmit={handleSubmit}>
