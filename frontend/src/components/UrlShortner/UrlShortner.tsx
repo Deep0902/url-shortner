@@ -218,10 +218,10 @@ function UrlShortner() {
       <main className="main-content">
         <div className="container">
           <section className="hero-section-url">
-            <h1 className="hero-title">
-              <span className="title-highlight">Shorten</span>{" "}
+            <div className="hero-title">
+              <span className="title-highlight">Shorten</span>
               <span className="title-normal">Your URLs</span>
-            </h1>
+            </div>
             <p className="hero-subtitle">
               {animatedText} <span className="cursor">|</span>
             </p>

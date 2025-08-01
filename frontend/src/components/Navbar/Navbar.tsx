@@ -282,12 +282,14 @@ const Navbar = ({
     // 2. Fast downward swipe (velocity > 0.5 px/ms) with at least 50px distance
     if (swipeDistance > 100 || (swipeVelocity > 0.5 && swipeDistance > 50)) {
       setShowMenu(false);
+    } else {
+      // If swipe not enough, animate back to original position
+      setIsDragging(false);
+      setTouchMove(0);
     }
 
     // Reset touch state
     setTouchStart(null);
-    setTouchMove(0);
-    setIsDragging(false);
   };
   //endregion
 
@@ -328,6 +330,18 @@ const Navbar = ({
     };
   }, [showMenu]);
   //endregion
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const handlePasswordView = () => {
+    setShowOldPassword(!showOldPassword);
+  };
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const handleNewPasswordView = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const handleConfirmPasswordView = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   //region UI
   return (
@@ -553,32 +567,63 @@ const Navbar = ({
                           handleUpdatePassword();
                         }}
                       >
-                        <input
-                          className="settings-password-input"
-                          type="password"
-                          placeholder="Old password"
-                          value={oldPassword}
-                          required
-                          onChange={(e) => setOldPassword(e.target.value)}
-                        />
-                        <input
-                          className="settings-password-input"
-                          type="password"
-                          placeholder="New password"
-                          value={newPassword}
-                          required
-                          onChange={(e) => setNewPassword(e.target.value)}
-                        />
-                        <input
-                          className="settings-password-input"
-                          type="password"
-                          placeholder="Confirm new password"
-                          value={confirmNewPassword}
-                          required
-                          onChange={(e) =>
-                            setConfirmNewPassword(e.target.value)
-                          }
-                        />
+                        <div className="inputBox">
+                          <input
+                            type={showOldPassword ? "text" : "password"}
+                            className="form-control "
+                            name="password"
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                            placeholder="Old Password"
+                            autoComplete="new-password"
+                            required
+                          />
+                          <span
+                            className="toggle-button"
+                            onClick={handlePasswordView}
+                          >
+                            👁️
+                          </span>
+                        </div>
+                        <div className="inputBox">
+                          <input
+                            type={showNewPassword ? "text" : "password"}
+                            className="form-control "
+                            name="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="New Password"
+                            autoComplete="new-password"
+                            required
+                          />
+                          <span
+                            className="toggle-button"
+                            onClick={handleNewPasswordView}
+                          >
+                            👁️
+                          </span>
+                        </div>
+                        <div className="inputBox">
+                          <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            className="form-control "
+                            name="password"
+                            value={confirmNewPassword}
+                            onChange={(e) =>
+                              setConfirmNewPassword(e.target.value)
+                            }
+                            placeholder="New Password"
+                            autoComplete="new-password"
+                            required
+                          />
+                          <span
+                            className="toggle-button"
+                            onClick={handleConfirmPasswordView}
+                          >
+                            👁️
+                          </span>
+                        </div>
+
                         <div className="edit-buttons">
                           <button
                             className="btn btn-primary btn-xs"
@@ -610,19 +655,23 @@ const Navbar = ({
                     )}
                   </div>
                 </div>
-                <button
-                  className="btn-secondary"
-                  style={{ marginTop: "1.5rem" }}
-                  onClick={() => setShowSettings(false)}
-                >
-                  Close
-                </button>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => setShowDeleteConfirm(true)}
-                >
-                  Delete
-                </button>
+                <div className="action-buttons">
+                  <button
+                    className="btn-secondary"
+                    onClick={() => {
+                      setShowSettings(false);
+                      resetPasswordFields();
+                    }}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => setShowDeleteConfirm(true)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </Modal>
           )}

@@ -219,6 +219,10 @@
   font-weight: 700;
   margin-bottom: 1rem;
   line-height: 1.1;
+  .text{
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .title-highlight {
@@ -290,10 +294,6 @@
   background: var(--color-blue-dark);
 }
 
-.btn-primary:active {
-  scale: 1.05;
-}
-
 .btn-secondary {
   font-family: var(--font-family-main);
   background: var(--color-bg-accent);
@@ -345,12 +345,13 @@
 }
 
 .result-url {
+  a {
+    color: var(--color-blue-dark);
+    font-size: 4vw;
+  }
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
   padding: 0.75rem;
 }
 
