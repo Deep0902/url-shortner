@@ -385,6 +385,7 @@ function UrlShortnerUser() {
                         <thead>
                           <tr>
                             <th>Shortened Link</th>
+                            <th>Original Link</th>
                             <th>Created On</th>
                             <th>Expires On</th>
                             <th>Clicks</th>
@@ -401,14 +402,14 @@ function UrlShortnerUser() {
                                 >
                                   {`sho-rty.vercel.app/${row.shortUrl}`}
                                 </LinkPreview>
-                                {/* <a
-                            href={`${API_URL}/${row.shortUrl}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={`Go to original URL: ${row.originalUrl}`}
-                          >
-                            {row.shortUrl}
-                          </a> */}
+                              </td>
+                              <td>
+                                <LinkPreview
+                                  url={`${row.originalUrl}`}
+                                  className="font-bold remove-decorations"
+                                >
+                                  {`${row.originalUrl}`}
+                                </LinkPreview>
                               </td>
 
                               <td>

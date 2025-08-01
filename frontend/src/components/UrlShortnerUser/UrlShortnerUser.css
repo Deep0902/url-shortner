@@ -41,6 +41,7 @@
     overflow: visible;
     cursor: pointer;
     transition: all 0.3s ease;
+    height: 2em;
   }
 
   .delete-icon-border {
