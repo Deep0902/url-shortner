@@ -15,6 +15,9 @@
 .credentialsCard > .label {
   color: var(--color-text-main);
   margin-bottom: 5px;
+  font-size: 49px;
+  font-weight: 600;
+  text-align: left;
 }
 .customTopNavbar .topNavbar {
   position: fixed;
@@ -24,6 +27,7 @@
 }
 
 .subtext {
+  text-align: left;
   color: var(--color-text-main);
 }
 .inputBox {
