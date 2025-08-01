@@ -296,7 +296,7 @@ function UrlShortnerUser() {
               <p>Hello {username}!</p>
               <div className="text">
                 <span className="title-highlight">Shorten</span>{" "}
-                <span className="title-normal">Your URLs User</span>
+                <span className="title-normal">Your URLs</span>
               </div>
             </h1>
             <p className="hero-subtitle">

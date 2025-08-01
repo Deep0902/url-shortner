@@ -4,7 +4,7 @@
     background-color: var(--color-bg-secondary);
   }
   margin-top: 2rem;
-  background: var(--color-bg-accent);
+  background: var(--color-bg-secondary);
   border-radius: 12px;
   box-shadow: 0 2px 12px var(--color-shadow);
   padding: 1.5rem;
@@ -27,7 +27,7 @@
 }
 
 .history-table th {
-  background: var(--color-bg-accent);
+  background: var(--color-bg-secondary);
   color: var(--color-blue);
   font-weight: 600;
   border-bottom: 2px solid var(--color-border);
