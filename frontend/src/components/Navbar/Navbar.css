@@ -226,6 +226,9 @@
     margin-bottom: 1.2rem;
     .edit-buttons {
       display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
     }
     .settings-label {
       display: block;
@@ -290,6 +293,12 @@
       }
     }
   }
+}
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .delete-modal-content {
