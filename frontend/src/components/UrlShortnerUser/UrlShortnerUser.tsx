@@ -251,6 +251,17 @@ function UrlShortnerUser() {
     }
   }, []);
 
+  const getDaysRemaining = (expiresAt: string): number => {
+    const today = new Date();
+    const expiry = new Date(expiresAt);
+    const diffTime = expiry.getTime() - today.getTime();
+    return Math.max(Math.ceil(diffTime / (1000 * 60 * 60 * 24)), 0);
+  };
+  const getExpiryProgressPercent = (expiresAt: string): number => {
+    const daysRemaining = getDaysRemaining(expiresAt);
+    return (daysRemaining / 90) * 100;
+  };
+
   //endregion
 
   //region UI
@@ -538,12 +549,14 @@ function UrlShortnerUser() {
                             </div>
                             <div className="progress">
                               <span className="day-countdown">
-                                20 Days Remaining
+                                {getDaysRemaining(row.expiresAt)} Days Remaining
                               </span>
                               <div
                                 className="progress-bar"
                                 style={{
-                                  width: `30%`,
+                                  width: `${getExpiryProgressPercent(
+                                    row.expiresAt
+                                  )}%`,
                                 }}
                               ></div>
                             </div>
