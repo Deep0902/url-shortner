@@ -39,6 +39,7 @@ function UrlShortnerUser() {
   const [username, setUsername] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  const [showAllLinks, setShowAllLinks] = useState(false);
   // Avatar index state
   const [avatar, setAvatar] = useState<number | null>(null);
   //endregion
@@ -128,6 +129,7 @@ function UrlShortnerUser() {
 
   // region History
   const handleViewHistory = async () => {
+    setShowAllLinks(false);
     setHistoryLoading(true);
     // Simulate loading for 1 second
 
@@ -209,7 +211,37 @@ function UrlShortnerUser() {
         console.error("Error checking user:", error);
       });
   };
+  const shareUrl = async (shortUrl: string, originalUrl: string) => {
+    const fullUrl = `${API_URL}/${shortUrl}`;
+    const shareText = `Check out this shortened link: ${fullUrl}`;
 
+    // Check if Web Share API is supported (mainly on mobile)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Shortened URL",
+          text: shareText,
+          url: fullUrl,
+        });
+      } catch (error) {
+        // User cancelled or error occurred, fallback to copy
+        navigator.clipboard.writeText(`${shareText}\nOriginal: ${originalUrl}`);
+        showAlert(
+          "Copied to clipboard!",
+          "success",
+          "Share menu not available, copied instead"
+        );
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      navigator.clipboard.writeText(`${shareText}\nOriginal: ${originalUrl}`);
+      showAlert(
+        "Copied to clipboard!",
+        "success",
+        "Share functionality copied to clipboard"
+      );
+    }
+  };
   //region Effects
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -343,15 +375,20 @@ function UrlShortnerUser() {
                   <div className="result-content">
                     <div>
                       <span className="result-label">Your shortened URL</span>
-                      <button
+                      <img
+                        src="./Copy.svg"
+                        alt=""
                         onClick={() =>
                           copyToClipboard(`${API_URL}/${shortenedUrl}`)
                         }
-                        className="copy-btn"
-                        title="Copy to clipboard"
-                      >
-                        {copied ? "✔️" : "🔗"}
-                      </button>
+                      />
+                      <img
+                        src="./Share.svg"
+                        alt=""
+                        onClick={() =>
+                          shareUrl(`${API_URL}/${shortenedUrl}`, originalUrl)
+                        }
+                      />
                     </div>
                     <div className="result-url">
                       <LinkPreview
@@ -396,12 +433,17 @@ function UrlShortnerUser() {
                   {historyData?.urls && historyData.urls.length > 0 ? (
                     <div>
                       <div className="cards-container">
-                        {historyData?.urls.map((row, idx) => (
+                        {(showAllLinks
+                          ? historyData?.urls
+                          : historyData?.urls.slice(0, 3)
+                        )?.map((row, idx) => (
                           <div key={idx} className="card">
                             <div className="card-info">
                               <div className="clicks-info">
                                 <img src="./click.svg" alt="" />
-                                <span className="number">{row.clicks}</span>
+                                <span className="number">
+                                  {row.clicks > 10 ? "10+" : row.clicks}
+                                </span>
                                 <span className="">Clicks</span>
                               </div>
                               <div className="url-info">
@@ -423,7 +465,13 @@ function UrlShortnerUser() {
                                       )
                                     }
                                   />
-                                  <img src="./Share.svg" alt="" />
+                                  <img
+                                    src="./Share.svg"
+                                    alt=""
+                                    onClick={() =>
+                                      shareUrl(row.shortUrl, row.originalUrl)
+                                    }
+                                  />
                                 </div>
                                 <span>{row.originalUrl}</span>
                               </div>
@@ -460,14 +508,16 @@ function UrlShortnerUser() {
                         Refresh
                       </button>
                       &nbsp;
-                      <button
-                        className="btn-secondary close-btn"
-                        onClick={() => {
-                          setShowHistory(false);
-                        }}
-                      >
-                        Close
-                      </button>
+                      {historyData?.urls && historyData.urls.length > 3 && (
+                        <button
+                          className="btn-secondary close-btn"
+                          onClick={() => setShowAllLinks(!showAllLinks)}
+                        >
+                          {showAllLinks
+                            ? "Show Less"
+                            : `View All (${historyData.urls.length})`}
+                        </button>
+                      )}
                     </div>
                   ) : (
                     <div className="no-data-found">
