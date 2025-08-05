@@ -468,12 +468,13 @@ function UrlShortnerUser() {
                                   <img
                                     src="./Share.svg"
                                     alt=""
+                                   
                                     onClick={() =>
                                       shareUrl(row.shortUrl, row.originalUrl)
                                     }
                                   />
                                 </div>
-                                <span>{row.originalUrl}</span>
+                                <span className="original-url">{row.originalUrl}</span>
                               </div>
                               <div
                                 className="delete-icon"
