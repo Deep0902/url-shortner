@@ -89,13 +89,15 @@ function UrlShortnerUser() {
     }
     const payload = {
       originalUrl: urlToShorten,
-      userId: location.state.loginResponse.userId,
     };
 
     setLoading(true);
     axios
       .post(`${API_URL}/api/users/shorten`, payload, {
-        headers: { "x-api-key": API_KEY },
+        headers: {
+          "x-api-key": API_KEY,
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Add JWT token here
+        },
       })
       .then((response) => {
         setLoading(false);
@@ -153,6 +155,12 @@ function UrlShortnerUser() {
       });
   };
 
+  const handleJWTTokenError = () => {
+    localStorage.removeItem("jwtToken");
+    sessionStorage.removeItem("userCredentials");
+    navigate("/");
+  };
+
   const copyToClipboard = (link: string) => {
     navigator.clipboard.writeText(link);
     setCopied(true);
@@ -168,7 +176,10 @@ function UrlShortnerUser() {
 
     axios
       .post(`${API_URL}/api/user`, payload, {
-        headers: { "x-api-key": API_KEY },
+        headers: {
+          "x-api-key": API_KEY,
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Send JWT token
+        },
       })
       .then((response) => {
         // Set avatar index from response
@@ -468,13 +479,14 @@ function UrlShortnerUser() {
                                   <img
                                     src="./Share.svg"
                                     alt=""
-                                   
                                     onClick={() =>
                                       shareUrl(row.shortUrl, row.originalUrl)
                                     }
                                   />
                                 </div>
-                                <span className="original-url">{row.originalUrl}</span>
+                                <span className="original-url">
+                                  {row.originalUrl}
+                                </span>
                               </div>
                               <div
                                 className="delete-icon"

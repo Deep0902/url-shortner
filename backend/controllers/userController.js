@@ -188,10 +188,8 @@ export const getAllUsers = async (req, res) => {
 // region Get user by ID
 export const getUserById = async (req, res) => {
   try {
-    const { userId } = req.body;
-    if (!userId) {
-      return res.status(400).json({ error: "UserID is required" });
-    }
+    // Use userId from JWT payload
+    const userId = req.user.userId;
     const user = await User.findById(userId).lean();
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -209,11 +207,13 @@ export const getUserById = async (req, res) => {
 // region Short URL user
 export const createShortUrlUser = async (req, res) => {
   try {
-    const { userId, originalUrl } = req.body;
-    if (!userId || !originalUrl) {
+    // Use userId from JWT payload
+    const userId = req.user.userId;
+    const { originalUrl } = req.body;
+    if (!originalUrl) {
       return res
         .status(400)
-        .json({ error: "User ID and Original URL are required" });
+        .json({ error: "Original URL is required" });
     }
 
     // Find the user
