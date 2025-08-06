@@ -128,6 +128,7 @@ const Navbar = ({
 
   const handleLogout = () => {
     sessionStorage.clear();
+    localStorage.clear();
     navigate("/sign", { replace: true });
   };
 
@@ -144,7 +145,10 @@ const Navbar = ({
     const payload = { userId, avatar };
     await axios
       .put(`${API_URL}/api/users/avatar`, payload, {
-        headers: { "x-api-key": API_KEY },
+        headers: {
+          "x-api-key": API_KEY,
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
       })
       .then((response) => {
         console.log("Avatar updated successfully:", response.data);
@@ -163,7 +167,12 @@ const Navbar = ({
       .put(
         `${API_URL}/api/username`,
         { userId, username: editedUsername },
-        { headers: { "x-api-key": API_KEY } }
+        {
+          headers: {
+            "x-api-key": API_KEY,
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
+        }
       )
       .then((response) => {
         setDeleteLoading(false);
@@ -201,7 +210,12 @@ const Navbar = ({
           oldPassword: encryptOldPassword,
           newPassword: encryptNewPassword,
         },
-        { headers: { "x-api-key": API_KEY } }
+        {
+          headers: {
+            "x-api-key": API_KEY,
+            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          },
+        }
       )
       .then(() => {
         showAlert("Password updated successfully", "success");
@@ -226,7 +240,10 @@ const Navbar = ({
     await axios
       .delete(`${API_URL}/api/users`, {
         data: { userId },
-        headers: { "x-api-key": API_KEY },
+        headers: {
+          "x-api-key": API_KEY,
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
       })
       .then((response) => {
         setDeleteLoading(false);
@@ -234,8 +251,8 @@ const Navbar = ({
       })
       .catch((error) => {
         setDeleteLoading(false);
-        console.error("Error updating avatar:", error);
-        showAlert("Error updating avatar", "error");
+        console.error("Error deleting user:", error);
+        showAlert("Error deleting user", "error");
       });
     navigate(-1);
   };
