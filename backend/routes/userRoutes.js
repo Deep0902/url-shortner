@@ -29,7 +29,7 @@ router.post("/user", authenticateToken, getUserById);
 
 router.post("/users/shorten", authenticateToken, createShortUrlUser);
 
-router.post("/users/stats", getUserStats);
+router.post("/users/stats", authenticateToken,getUserStats);
 
 router.delete("/users/delete-url", authenticateToken, deleteUserUrl);
 

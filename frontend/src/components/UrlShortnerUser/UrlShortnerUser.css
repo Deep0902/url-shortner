@@ -246,4 +246,14 @@
     font-size: 12px;
     word-break: keep-all;
   }
+  .clicks-info {
+    margin: 0 0.5em;
+  }
+  .url-info {
+    & .shorty {
+      img {
+        height: 20px;
+      }
+    }
+  }
 }

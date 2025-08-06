@@ -140,7 +140,10 @@ function UrlShortnerUser() {
     };
     axios
       .post(`${API_URL}/api/users/stats`, payload, {
-        headers: { "x-api-key": API_KEY },
+        headers: {
+          "x-api-key": API_KEY,
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
       })
       .then((response) => {
         setHistoryLoading(false);
