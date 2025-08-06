@@ -189,7 +189,16 @@ function UrlShortnerUser() {
         setUsername(response.data.username);
       })
       .catch((error) => {
-        navigate(-1);
+        if (
+          (error.response && error.response.status === 401) ||
+          (error.response &&
+            error.response.data &&
+            error.response.data.error === "Invalid token")
+        ) {
+          handleJWTTokenError();
+          return;
+        }
+        // navigate(-1);
         setAvatar(null);
         console.error("Error checking user:", error);
       });
