@@ -1,6 +1,7 @@
 import User from "../models/users.model.js";
 import CryptoJS from "crypto-js";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken"; // Add this import
 dotenv.config();
 
 // Add your secret key here (should be the same as in frontend)
@@ -48,7 +49,10 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    res.status(200).json({ message: "Login successful", userId: user._id });
+    // Generate JWT token
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    res.status(200).json({ message: "Login successful", userId: user._id, token }); // Send token in response
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ error: "Internal Server Error" });

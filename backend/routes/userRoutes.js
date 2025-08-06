@@ -11,27 +11,28 @@ import {
   changeAvatar,
   editUserPassword,
 } from "../controllers/userController.js";
+import { authenticateToken } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 router.post("/users", createUser);
 
-router.delete("/users", deleteUser);
+router.delete("/users", authenticateToken, deleteUser);
 
-router.put("/username", editUserName);
+router.put("/username", authenticateToken, editUserName);
 
-router.put("/users/userpassword", editUserPassword);
+router.put("/users/userpassword", authenticateToken, editUserPassword);
 
 router.get("/users", getAllUsers);
 
-router.post("/user", getUserById);
+router.post("/user", authenticateToken, getUserById);
 
-router.post("/users/shorten", createShortUrlUser);
+router.post("/users/shorten", authenticateToken, createShortUrlUser);
 
-router.post("/users/stats", getUserStats);
+router.post("/users/stats", authenticateToken,getUserStats);
 
-router.delete("/users/delete-url", deleteUserUrl);
+router.delete("/users/delete-url", authenticateToken, deleteUserUrl);
 
-router.put("/users/avatar", changeAvatar);
+router.put("/users/avatar", authenticateToken, changeAvatar);
 
 export default router;
