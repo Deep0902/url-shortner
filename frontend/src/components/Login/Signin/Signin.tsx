@@ -205,7 +205,7 @@ function Signin({
             &nbsp;Remember me
           </label>
         </div>
-        <button className="btn" type="submit">
+        <button className="btn-primary" type="submit">
           Sign In
         </button>
       </form>

@@ -25,7 +25,9 @@
   --loader-circle: #374151;
   --loader-inner: #3b82f6;
   --loader-text: #f1f3f6;
-   --font-family-main: "Outfit", sans-serif;
+  --color-text-black: #FFFFFF;
+  --color-card-bg: ##1a1d23;
+  --font-family-main: "Outfit", sans-serif;
 }
 
 body {
@@ -56,6 +58,8 @@ body {
   --color-shadow: rgba(0, 0, 0, 0.1);
   --color-success: #059669;
   --color-error: #dc2626;
+  --color-text-black: #000000;
+  --color-card-bg: ##ffffff;
   /* Loader specific */
   --loader-bg: #f4f4f5c7;
   --loader-circle: #e4e4e7;
