@@ -188,6 +188,9 @@
     justify-content: center;
     align-items: center;
   }
+  .clicks-text {
+    font-size: 16px;
+  }
 }
 .url-info {
   display: flex;
@@ -248,12 +251,36 @@
   }
   .clicks-info {
     margin: 0 0.5em;
+    .number {
+      font-size: 14px;
+    }
+    .clicks-text {
+      font-size: 12px;
+    }
+    img{
+      top: -3px;
+      right: -3px;
+    }
   }
   .url-info {
     & .shorty {
+      gap: 4px;
       img {
         height: 20px;
       }
+    }
+    span{
+      display: flex;
+      align-items: flex-start;
+      white-space: nowrap;
+    }
+    .original-url {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 50dvw;
+      display: block;
+      font-size: 12px;
     }
   }
 }

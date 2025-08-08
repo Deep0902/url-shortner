@@ -467,7 +467,7 @@ function UrlShortnerUser() {
                                 <span className="number">
                                   {row.clicks > 10 ? "10+" : row.clicks}
                                 </span>
-                                <span className="">Clicks</span>
+                                <span className="clicks-text">Clicks</span>
                               </div>
                               <div className="url-info">
                                 <div className="shorty">
