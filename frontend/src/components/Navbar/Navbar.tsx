@@ -129,7 +129,7 @@ const Navbar = ({
   const handleLogout = () => {
     sessionStorage.clear();
     localStorage.clear();
-    navigate("/sign", { replace: true });
+    navigate("/sign?mode=signin", { replace: true });
   };
 
   const handleAvatarSelect = (avatarIndex: number) => {

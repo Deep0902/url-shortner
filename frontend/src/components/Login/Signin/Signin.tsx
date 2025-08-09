@@ -92,17 +92,13 @@ function Signin({
     };
 
     // Save credentials to session storage if 'Keep Me Logged In' is checked
-    if (isChecked) {
-      sessionStorage.setItem(
-        "userCredentials",
-        JSON.stringify({
-          email: credentials.email,
-          password: encryptedPassword, // Store encrypted password
-        })
-      );
-    } else {
-      sessionStorage.removeItem("userCredentials");
-    }
+    sessionStorage.setItem(
+      "userCredentials",
+      JSON.stringify({
+        email: credentials.email,
+        password: encryptedPassword, // Store encrypted password
+      })
+    );
 
     axios
       .post(`${API_URL}/api/login`, payload, {

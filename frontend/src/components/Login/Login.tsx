@@ -9,13 +9,17 @@ import Signin from "./Signin/Signin";
 import Signup from "./Signup/Signup";
 import axios from "axios";
 import { API_URL, API_KEY } from "../../shared/constants";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import CryptoJS from "crypto-js";
 const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
 
 function Login() {
   //region State
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [searchParams] = useSearchParams();
+  const [isSignUp, setIsSignUp] = useState(() => {
+    const mode = searchParams.get("mode");
+    return mode === "signin" ? false : true; // Default to signup, but signin if explicitly requested
+  });
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState<{
     show: boolean;
