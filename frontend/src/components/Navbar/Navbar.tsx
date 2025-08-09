@@ -127,7 +127,20 @@ const Navbar = ({
   };
 
   const handleLogout = () => {
-    sessionStorage.clear();
+    // Clear autoLogin flag but keep credentials if remember me was checked
+    const stored = sessionStorage.getItem("userCredentials");
+    if (stored) {
+      const creds = JSON.parse(stored);
+      if (creds.rememberMe) {
+        sessionStorage.setItem("userCredentials", JSON.stringify({
+          ...creds,
+          autoLogin: false // Disable auto-login after logout
+        }));
+      } else {
+        sessionStorage.removeItem("userCredentials");
+      }
+    }
+    
     localStorage.clear();
     navigate("/sign?mode=signin", { replace: true });
   };

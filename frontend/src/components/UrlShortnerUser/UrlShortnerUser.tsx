@@ -161,7 +161,6 @@ function UrlShortnerUser() {
   const handleJWTTokenError = () => {
     localStorage.removeItem("jwtToken");
     sessionStorage.removeItem("userCredentials");
-    navigate("/");
   };
 
   const copyToClipboard = (link: string) => {
