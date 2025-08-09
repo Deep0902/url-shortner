@@ -132,16 +132,19 @@ const Navbar = ({
     if (stored) {
       const creds = JSON.parse(stored);
       if (creds.rememberMe) {
-        sessionStorage.setItem("userCredentials", JSON.stringify({
-          ...creds,
-          autoLogin: false // Disable auto-login after logout
-        }));
+        sessionStorage.setItem(
+          "userCredentials",
+          JSON.stringify({
+            ...creds,
+            autoLogin: false, // Disable auto-login after logout
+          })
+        );
       } else {
         sessionStorage.removeItem("userCredentials");
       }
     }
-    
-    localStorage.clear();
+
+    localStorage.removeItem("jwtToken");
     navigate("/sign?mode=signin", { replace: true });
   };
 

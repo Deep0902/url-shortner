@@ -46,6 +46,9 @@ function Signin({
 
   //region Auto-login from session storage
   useEffect(() => {
+    if (!localStorage.getItem("jwtToken")) {
+      return;
+    }
     const stored = sessionStorage.getItem("userCredentials");
     if (stored) {
       const creds = JSON.parse(stored) as { 
