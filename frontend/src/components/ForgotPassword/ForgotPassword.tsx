@@ -114,6 +114,7 @@ function ForgotPassword() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200 && response.data.message) {
+          // Store JWT token after password update
           localStorage.setItem("jwtToken", response.data.token);
           showAlert("Success", "success", "Password successfully updated!");
           navigate("/url-user", {
