@@ -188,7 +188,7 @@ function Signup({
           </span>
         </div>
 
-        <button className="btn" type="submit">
+        <button className="btn-primary" type="submit">
           Sign Up
         </button>
         <div className="or-section ">

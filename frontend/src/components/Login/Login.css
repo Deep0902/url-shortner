@@ -15,6 +15,7 @@ p {
 
 /* Updated animated layout for 3D flip effect */
 .animated-layout {
+  animation: fadeInUp 0.6s ease-out;
   min-height: 90dvh;
   flex-direction: column;
   position: relative;

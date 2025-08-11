@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Particles from "../../Reactbits/Particles";
 import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
@@ -7,15 +8,14 @@ import Navbar from "../Navbar/Navbar";
 import "./Login.css";
 import Signin from "./Signin/Signin";
 import Signup from "./Signup/Signup";
-import axios from "axios";
-import { API_URL, API_KEY } from "../../shared/constants";
-import { useNavigate } from "react-router-dom";
-import CryptoJS from "crypto-js";
-const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
 
 function Login() {
   //region State
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [searchParams] = useSearchParams();
+  const [isSignUp, setIsSignUp] = useState(() => {
+    const mode = searchParams.get("mode");
+    return mode === "signin" ? false : true; // Default to signup, but signin if explicitly requested
+  });
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState<{
     show: boolean;
@@ -28,52 +28,12 @@ function Login() {
     type: "success",
     subMessage: "",
   });
-    const navigate = useNavigate();
   //endregion
 
   //region Handlers
   const handleToggle = () => {
     setIsSignUp(!isSignUp);
   };
-  useEffect(() => {
-    if (!isSignUp) {
-      const stored = sessionStorage.getItem("userCredentials");
-      if (stored) {
-        setLoading(true)
-        const creds = JSON.parse(stored) as { email: string; password: string };
-        // Decrypt the password before using
-        let decryptedPassword = "";
-        try {
-          const bytes = CryptoJS.AES.decrypt(creds.password, SECRET_KEY);
-          decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
-        } catch {
-          decryptedPassword = "";
-        }
-        if (creds.email && decryptedPassword) {
-          const payload = {
-            email: creds.email,
-            password: creds.password, // Send encrypted password
-          };
-          axios
-            .post(`${API_URL}/api/login`, payload, {
-              headers: { "x-api-key": API_KEY },
-            })
-            .then((response) => {
-              setLoading(false);
-              if (response.data && response.data.message === "Login successful") {
-                navigate("/url-user", {
-                  state: { loginResponse: response.data },
-                });
-              }
-            })
-            .catch(() => {
-              setLoading(false);
-              // Do nothing, let user proceed with login
-            });
-        }
-      }
-    }
-  }, [isSignUp]);
   //endregion
 
   //region UI
