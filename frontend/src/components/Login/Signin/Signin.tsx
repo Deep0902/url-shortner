@@ -46,18 +46,46 @@ function Signin({
 
   //region Auto-login from session storage
   useEffect(() => {
+    const stored = sessionStorage.getItem("userCredentials");
+    if (stored) {
+      const creds = JSON.parse(stored) as {
+        email: string;
+        password: string;
+        rememberMe?: boolean;
+        autoLogin?: boolean;
+      };
+
+      let decryptedPassword = "";
+      try {
+        const bytes = CryptoJS.AES.decrypt(creds.password, SECRET_KEY);
+        decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+      } catch {
+        decryptedPassword = "";
+      }
+      setCredentials({ email: creds.email, password: decryptedPassword });
+      setIsChecked(creds.rememberMe || false);
+
+      // Only auto-login if autoLogin flag is true and jwtToken exists
+      if (creds.rememberMe && localStorage.getItem("jwtToken")) {
+        setLoading(true);
+        const payload = {
+          email: creds.email,
+          password: creds.password, // Use encrypted password
+        };
+        performLogin(payload, true);
+      }
+    }
     if (!localStorage.getItem("jwtToken")) {
       return;
     }
-    const stored = sessionStorage.getItem("userCredentials");
     if (stored) {
-      const creds = JSON.parse(stored) as { 
-        email: string; 
-        password: string; 
+      const creds = JSON.parse(stored) as {
+        email: string;
+        password: string;
         rememberMe?: boolean;
-        autoLogin?: boolean; 
+        autoLogin?: boolean;
       };
-      
+
       // Always fill the form fields
       let decryptedPassword = "";
       try {
@@ -68,7 +96,7 @@ function Signin({
       }
       setCredentials({ email: creds.email, password: decryptedPassword });
       setIsChecked(creds.rememberMe || false);
-      
+
       // Only auto-login if autoLogin flag is true
       if (creds.autoLogin) {
         setLoading(true);
@@ -76,7 +104,7 @@ function Signin({
           email: creds.email,
           password: creds.password, // Use encrypted password
         };
-        
+
         performLogin(payload, true);
       }
     }
@@ -103,22 +131,27 @@ function Signin({
   };
 
   //region Login API Helper
-  const performLogin = async (loginPayload: { email: string; password: string }, isAutoLogin = false) => {
+  const performLogin = async (
+    loginPayload: { email: string; password: string },
+    isAutoLogin = false
+  ) => {
     try {
       const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
         headers: { "x-api-key": API_KEY },
       });
-      
+
       setLoading(false);
       if (response.data && response.data.message === "Login successful") {
         localStorage.setItem("jwtToken", response.data.token);
         navigate("/url-user", { state: { loginResponse: response.data } });
-        
+
         if (!isAutoLogin) {
           showAlert("Success!", "success", "Login successful!");
         }
       } else {
-        handleLoginError(response.data?.error || "Unknown error. Please try again.");
+        handleLoginError(
+          response.data?.error || "Unknown error. Please try again."
+        );
       }
     } catch (error: any) {
       setLoading(false);
@@ -138,10 +171,13 @@ function Signin({
     const stored = sessionStorage.getItem("userCredentials");
     if (stored) {
       const creds = JSON.parse(stored);
-      sessionStorage.setItem("userCredentials", JSON.stringify({
-        ...creds,
-        autoLogin: false
-      }));
+      sessionStorage.setItem(
+        "userCredentials",
+        JSON.stringify({
+          ...creds,
+          autoLogin: false,
+        })
+      );
     }
     showAlert("Error", "error", errorMessage);
   };
@@ -158,18 +194,16 @@ function Signin({
       password: encryptedPassword,
     };
 
-    // Save credentials with remember me and auto-login flags
-    if (isChecked) {
-      sessionStorage.setItem("userCredentials", JSON.stringify({
+    sessionStorage.setItem(
+      "userCredentials",
+      JSON.stringify({
         email: credentials.email,
         password: encryptedPassword,
-        rememberMe: true,
-        autoLogin: true // Set to true for successful login
-      }));
-    } else {
-      sessionStorage.removeItem("userCredentials");
-    }
-    
+        rememberMe: isChecked,
+        autoLogin: true, // Set to true for successful login
+      })
+    );
+
     await performLogin(payload);
   };
 
