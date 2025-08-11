@@ -161,7 +161,6 @@ function UrlShortnerUser() {
   const handleJWTTokenError = () => {
     localStorage.removeItem("jwtToken");
     sessionStorage.removeItem("userCredentials");
-    navigate("/");
   };
 
   const copyToClipboard = (link: string) => {
@@ -266,12 +265,6 @@ function UrlShortnerUser() {
     }
   };
   //region Effects
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    axios
-      .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -294,6 +287,10 @@ function UrlShortnerUser() {
   }, [currentIndex, isDeleting, fullText]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    axios
+      .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
+      .catch(() => {});
     try {
       if (location.state.loginResponse) {
         checkUser();
@@ -467,7 +464,7 @@ function UrlShortnerUser() {
                                 <span className="number">
                                   {row.clicks > 10 ? "10+" : row.clicks}
                                 </span>
-                                <span className="">Clicks</span>
+                                <span className="clicks-text">Clicks</span>
                               </div>
                               <div className="url-info">
                                 <div className="shorty">

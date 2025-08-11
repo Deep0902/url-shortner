@@ -97,7 +97,15 @@ export const updateForgotPassword = async (req, res) => {
     // Update user details
     user.password = encryptData(decryptedPassword); // Store encrypted password
     await user.save();
-    return res.status(200).json({ message: "Password updated successfully", userId: user._id });
+
+    // Generate JWT token after password update
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    return res.status(200).json({ 
+      message: "Password updated successfully", 
+      userId: user._id, 
+      token  // Add JWT token to response
+    });
   } catch (error) {
     console.error("Error in updating password", error);
     res.status(500).json({ error: "Internal server error" });

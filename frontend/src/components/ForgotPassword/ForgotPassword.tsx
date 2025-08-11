@@ -45,7 +45,7 @@ function ForgotPassword() {
   const steps = [
     { label: "Email", description: "Enter your email" },
     { label: "OTP", description: "Enter OTP" },
-    { label: "Password", description: "Set new password" },
+    { label: "Update Password", description: "Set new password" },
   ];
   //endregion
 
@@ -106,7 +106,6 @@ function ForgotPassword() {
       email: email,
       encryptedPassword: encrypted,
     };
-    console.log("Payload: ", payload);
     axios
       .post(`${API_URL}/api/forgot-password`, payload, {
         headers: { "x-api-key": API_KEY },
@@ -114,6 +113,18 @@ function ForgotPassword() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200 && response.data.message) {
+          // Store JWT token after password update
+          localStorage.setItem("jwtToken", response.data.token);
+          // Store userCredentials in sessionStorage with rememberMe: false, autoLogin: true
+          sessionStorage.setItem(
+            "userCredentials",
+            JSON.stringify({
+              email: email,
+              password: encrypted,
+              rememberMe: false,
+              autoLogin: true,
+            })
+          );
           showAlert("Success", "success", "Password successfully updated!");
           navigate("/url-user", {
             state: { loginResponse: response.data },
@@ -126,7 +137,7 @@ function ForgotPassword() {
           showAlert("Error", "error", "Invalid password format");
         }
         showAlert("Error", "error", "Failed to update Password");
-        console.error("Error shortening URL", error.data.message);
+        console.error("Error shortening URL", error.data?.message);
       });
   };
 
@@ -215,10 +226,13 @@ function ForgotPassword() {
         <div className="credentialsCard">
           {step === 1 && (
             <form onSubmit={handleForgotEmail}>
-              <span className="label">Forgot Password</span>
+              <span className="label">Let's Get Started</span>
+              <br />
               <span className="subtext">
-                Enter your email to receive an OTP.
+                We'll have you back in your account in just a few steps!
               </span>
+              <br />
+              <br />
               <div className="inputBox">
                 <input
                   type="email"
@@ -230,24 +244,17 @@ function ForgotPassword() {
                 />
               </div>
 
-              <button className="btn" type="submit">
+              <button className="btn-primary" type="submit">
                 Send OTP
               </button>
             </form>
           )}
           {step === 2 && (
             <form onSubmit={handleOtpSubmit}>
-              <span className="label">Enter OTP</span>
-              <span className="subtext">Check your email for the OTP.</span>
-              <div
-                className="otp-container"
-                style={{
-                  display: "flex",
-                  gap: "8px",
-                  justifyContent: "center",
-                  margin: "20px 0",
-                }}
-              >
+              <span className="label">A Quick Check-In</span>
+              <br />
+              <span className="subtext">Check your email for the OTP</span>
+              <div className="otp-container">
                 {[0, 1, 2, 3, 4, 5].map((index) => (
                   <input
                     key={index}
@@ -257,28 +264,22 @@ function ForgotPassword() {
                     value={otp[index] || ""}
                     onChange={(e) => handleOtpChange(e.target.value, index)}
                     onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      textAlign: "center",
-                      fontSize: "18px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      outline: "none",
-                    }}
+                    className="otp-input"
                     autoFocus={index === 0}
                   />
                 ))}
               </div>
-              <button className="btn" type="submit">
+              <button className="btn-primary" type="submit">
                 Verify OTP
               </button>
             </form>
           )}
           {step === 3 && (
             <form onSubmit={handlePasswordSubmit}>
-              <span className="label">Set New Password</span>
-              <span className="subtext">Enter your new password.</span>
+              <span className="label">Regain Access</span>
+              <br />
+              <span className="subtext">Enter your new password</span>
+              <br /><br />
               <div className="inputBox">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -290,27 +291,16 @@ function ForgotPassword() {
                   autoComplete="new-password"
                   autoFocus
                 />
-                <button
-                  type="button"
+                <span
                   className="toggle-button"
                   onClick={handlePasswordView}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   tabIndex={0}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    position: "absolute",
-                    right: 5,
-                    top: "56%",
-                    transform: "translateY(-50%)",
-                    fontSize: 16,
-                    cursor: "pointer",
-                  }}
                 >
                   👁️
-                </button>
+                </span>
               </div>
-              <button className="btn" type="submit">
+              <button className="btn-primary" type="submit">
                 Update Password
               </button>
             </form>
