@@ -161,7 +161,11 @@ function ForgotPassword() {
       })
       .catch((error) => {
         setLoading(false);
-        showAlert("Error", "error", "Failed to fetch email");
+        if (error.response && error.response.status === 404) {
+          showAlert("Error", "error", "Email id not found");
+        } else {
+          showAlert("Error", "error", "Failed to fetch email");
+        }
         console.error("Error shortening URL:", error);
       });
   };
