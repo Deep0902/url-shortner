@@ -84,9 +84,7 @@ function Signup({
           response.data.message === "User created successfully"
         ) {
           showAlert("Success!", "success", "User successfully Created!");
-          navigate("/url-user", {
-            state: { loginResponse: { userId: response.data.userId } },
-          });
+          performLogin(payload);
         } else {
           showAlert(
             "Error",
@@ -111,7 +109,55 @@ function Signup({
         console.error("Error creating user:", error);
       });
   };
+  const performLogin = async (
+    loginPayload: { email: string; password: string },
+    isAutoLogin = false
+  ) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
+        headers: { "x-api-key": API_KEY },
+        withCredentials: true,
+      });
 
+      setLoading(false);
+      if (response.data && response.data.message === "Login successful") {
+        navigate("/url-user", { state: { loginResponse: response.data } });
+
+        if (!isAutoLogin) {
+          showAlert("Success!", "success", "Login successful!");
+        }
+      } else {
+        handleLoginError(
+          response.data?.error || "Unknown error. Please try again."
+        );
+      }
+    } catch (error: any) {
+      setLoading(false);
+      if (error.response?.status === 401) {
+        handleLoginError("Incorrect Credentials. Please try again.");
+      } else if (error.response?.status === 404) {
+        handleLoginError("User not found");
+      } else {
+        handleLoginError("Network error. Please try again.");
+      }
+      console.error("Error logging in:", error);
+    }
+  };
+  const handleLoginError = (errorMessage: string) => {
+    localStorage.removeItem("jwtToken");
+    const stored = sessionStorage.getItem("userCredentials");
+    if (stored) {
+      const creds = JSON.parse(stored);
+      sessionStorage.setItem(
+        "userCredentials",
+        JSON.stringify({
+          ...creds,
+          autoLogin: false,
+        })
+      );
+    }
+    showAlert("Error", "error", errorMessage);
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserDetails({
       ...userDetails,
