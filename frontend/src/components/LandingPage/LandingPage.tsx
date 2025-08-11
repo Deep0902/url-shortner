@@ -190,7 +190,7 @@ function LandingPage() {
                 <button
                   onClick={() => {
                     window.scrollTo(0, 0);
-                    navigate("/sign");
+                    navigate("/sign?mode=signin");
                   }}
                   className="btn-secondary"
                 >
@@ -388,7 +388,7 @@ function LandingPage() {
             <button
               onClick={() => {
                 window.scrollTo(0, 0);
-                navigate("/sign");
+                navigate("/sign?mode=signup");
               }}
               className="btn-primary"
             >

@@ -37,7 +37,10 @@ function Signin({
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(() => {
+    const stored = sessionStorage.getItem("userCredentials");
+    return stored ? JSON.parse(stored).rememberMe || false : false;
+  });
   const navigate = useNavigate();
   //endregion
 
@@ -45,8 +48,13 @@ function Signin({
   useEffect(() => {
     const stored = sessionStorage.getItem("userCredentials");
     if (stored) {
-      const creds = JSON.parse(stored) as { email: string; password: string };
-      // Decrypt the password before setting it in state
+      const creds = JSON.parse(stored) as {
+        email: string;
+        password: string;
+        rememberMe?: boolean;
+        autoLogin?: boolean;
+      };
+
       let decryptedPassword = "";
       try {
         const bytes = CryptoJS.AES.decrypt(creds.password, SECRET_KEY);
@@ -55,6 +63,50 @@ function Signin({
         decryptedPassword = "";
       }
       setCredentials({ email: creds.email, password: decryptedPassword });
+      setIsChecked(creds.rememberMe || false);
+
+      // Only auto-login if autoLogin flag is true and jwtToken exists
+      if (creds.rememberMe && localStorage.getItem("jwtToken")) {
+        setLoading(true);
+        const payload = {
+          email: creds.email,
+          password: creds.password, // Use encrypted password
+        };
+        performLogin(payload, true);
+      }
+    }
+    if (!localStorage.getItem("jwtToken")) {
+      return;
+    }
+    if (stored) {
+      const creds = JSON.parse(stored) as {
+        email: string;
+        password: string;
+        rememberMe?: boolean;
+        autoLogin?: boolean;
+      };
+
+      // Always fill the form fields
+      let decryptedPassword = "";
+      try {
+        const bytes = CryptoJS.AES.decrypt(creds.password, SECRET_KEY);
+        decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+      } catch {
+        decryptedPassword = "";
+      }
+      setCredentials({ email: creds.email, password: decryptedPassword });
+      setIsChecked(creds.rememberMe || false);
+
+      // Only auto-login if autoLogin flag is true
+      if (creds.autoLogin) {
+        setLoading(true);
+        const payload = {
+          email: creds.email,
+          password: creds.password, // Use encrypted password
+        };
+
+        performLogin(payload, true);
+      }
     }
   }, []);
 
@@ -78,71 +130,81 @@ function Signin({
     });
   };
 
+  //region Login API Helper
+  const performLogin = async (
+    loginPayload: { email: string; password: string },
+    isAutoLogin = false
+  ) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
+        headers: { "x-api-key": API_KEY },
+      });
+
+      setLoading(false);
+      if (response.data && response.data.message === "Login successful") {
+        localStorage.setItem("jwtToken", response.data.token);
+        navigate("/url-user", { state: { loginResponse: response.data } });
+
+        if (!isAutoLogin) {
+          showAlert("Success!", "success", "Login successful!");
+        }
+      } else {
+        handleLoginError(
+          response.data?.error || "Unknown error. Please try again."
+        );
+      }
+    } catch (error: any) {
+      setLoading(false);
+      if (error.response?.status === 401) {
+        handleLoginError("Incorrect Credentials. Please try again.");
+      } else if (error.response?.status === 404) {
+        handleLoginError("User not found");
+      } else {
+        handleLoginError("Network error. Please try again.");
+      }
+      console.error("Error logging in:", error);
+    }
+  };
+
+  const handleLoginError = (errorMessage: string) => {
+    localStorage.removeItem("jwtToken");
+    const stored = sessionStorage.getItem("userCredentials");
+    if (stored) {
+      const creds = JSON.parse(stored);
+      sessionStorage.setItem(
+        "userCredentials",
+        JSON.stringify({
+          ...creds,
+          autoLogin: false,
+        })
+      );
+    }
+    showAlert("Error", "error", errorMessage);
+  };
+  //endregion
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setShowPassword(false);
     setLoading(true);
 
-    // Encrypt the password before sending
     const encryptedPassword = encryptData(credentials.password);
-
     const payload = {
       email: credentials.email,
-      password: encryptedPassword, // Send encrypted password
+      password: encryptedPassword,
     };
 
-    // Save credentials to session storage if 'Keep Me Logged In' is checked
-    if (isChecked) {
-      sessionStorage.setItem(
-        "userCredentials",
-        JSON.stringify({
-          email: credentials.email,
-          password: encryptedPassword, // Store encrypted password
-        })
-      );
-    } else {
-      sessionStorage.removeItem("userCredentials");
-    }
-
-    axios
-      .post(`${API_URL}/api/login`, payload, {
-        headers: { "x-api-key": API_KEY },
+    sessionStorage.setItem(
+      "userCredentials",
+      JSON.stringify({
+        email: credentials.email,
+        password: encryptedPassword,
+        rememberMe: isChecked,
+        autoLogin: true, // Set to true for successful login
       })
-      .then((response) => {
-        setLoading(false);
-        if (response.data && response.data.message === "Login successful") {
-          // Store JWT token in localStorage
-          localStorage.setItem("jwtToken", response.data.token);
+    );
 
-          showAlert("Success!", "success", "Login successful!");
-          navigate("/url-user", { state: { loginResponse: response.data } });
-        } else {
-          localStorage.removeItem("jwtToken");
-          sessionStorage.removeItem("userCredentials");
-          showAlert(
-            "Error",
-            "error",
-            response.data?.error || "Unknown error. Please try again."
-          );
-        }
-      })
-      .catch((error) => {
-        localStorage.removeItem("jwtToken");
-        sessionStorage.removeItem("userCredentials");
-        setLoading(false);
-        if (error.response && error.response.status === 401) {
-          showAlert(
-            "Error",
-            "error",
-            "Incorrect Credentials. Please try again."
-          );
-        } else if (error.response && error.response.status === 404) {
-          showAlert("Error", "error", "User not found");
-        } else {
-          showAlert("Error", "error", error.resp);
-        }
-        console.error("Error logging in:", error);
-      });
+    await performLogin(payload);
   };
 
   const handlePasswordView = () => {
@@ -205,7 +267,7 @@ function Signin({
             &nbsp;Remember me
           </label>
         </div>
-        <button className="btn" type="submit">
+        <button className="btn-primary" type="submit">
           Sign In
         </button>
       </form>
