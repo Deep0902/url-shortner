@@ -106,7 +106,6 @@ function ForgotPassword() {
       email: email,
       encryptedPassword: encrypted,
     };
-    console.log("Payload: ", payload);
     axios
       .post(`${API_URL}/api/forgot-password`, payload, {
         headers: { "x-api-key": API_KEY },
@@ -116,6 +115,16 @@ function ForgotPassword() {
         if (response.status == 200 && response.data.message) {
           // Store JWT token after password update
           localStorage.setItem("jwtToken", response.data.token);
+          // Store userCredentials in sessionStorage with rememberMe: false, autoLogin: true
+          sessionStorage.setItem(
+            "userCredentials",
+            JSON.stringify({
+              email: email,
+              password: encrypted,
+              rememberMe: false,
+              autoLogin: true,
+            })
+          );
           showAlert("Success", "success", "Password successfully updated!");
           navigate("/url-user", {
             state: { loginResponse: response.data },
@@ -128,7 +137,7 @@ function ForgotPassword() {
           showAlert("Error", "error", "Invalid password format");
         }
         showAlert("Error", "error", "Failed to update Password");
-        console.error("Error shortening URL", error.data.message);
+        console.error("Error shortening URL", error.data?.message);
       });
   };
 
