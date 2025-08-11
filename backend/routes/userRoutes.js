@@ -1,15 +1,15 @@
 import express from "express";
 import {
+  changeAvatar,
+  createShortUrlUser,
   createUser,
   deleteUser,
+  deleteUserUrl,
   editUserName,
+  editUserPassword,
   getAllUsers,
-  createShortUrlUser,
   getUserById,
   getUserStats,
-  deleteUserUrl,
-  changeAvatar,
-  editUserPassword,
 } from "../controllers/userController.js";
 import { authenticateToken } from "../middlewares/auth.js";
 
@@ -25,11 +25,11 @@ router.put("/users/userpassword", authenticateToken, editUserPassword);
 
 router.get("/users", getAllUsers);
 
-router.post("/user", authenticateToken, getUserById);
+router.post("/api/user", authenticateToken, getUserById);
 
 router.post("/users/shorten", authenticateToken, createShortUrlUser);
 
-router.post("/users/stats", authenticateToken,getUserStats);
+router.post("/users/stats", authenticateToken, getUserStats);
 
 router.delete("/users/delete-url", authenticateToken, deleteUserUrl);
 

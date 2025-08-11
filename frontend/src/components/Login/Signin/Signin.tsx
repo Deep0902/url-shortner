@@ -138,6 +138,7 @@ function Signin({
     try {
       const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
         headers: { "x-api-key": API_KEY },
+        withCredentials: true,
       });
 
       setLoading(false);

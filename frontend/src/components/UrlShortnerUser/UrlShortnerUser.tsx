@@ -96,7 +96,7 @@ function UrlShortnerUser() {
       .post(`${API_URL}/api/users/shorten`, payload, {
         headers: {
           "x-api-key": API_KEY,
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Add JWT token here
+          withCredentials: true,
         },
       })
       .then((response) => {
@@ -142,7 +142,7 @@ function UrlShortnerUser() {
       .post(`${API_URL}/api/users/stats`, payload, {
         headers: {
           "x-api-key": API_KEY,
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+          withCredentials: true,
         },
       })
       .then((response) => {
@@ -180,7 +180,7 @@ function UrlShortnerUser() {
       .post(`${API_URL}/api/user`, payload, {
         headers: {
           "x-api-key": API_KEY,
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`, // Send JWT token
+          withCredentials: true,
         },
       })
       .then((response) => {
