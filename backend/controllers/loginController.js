@@ -50,9 +50,18 @@ export const loginUser = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      // sameSite: "strict", ff
+      maxAge: 3600000, // 1 hour expiration
+    });
 
-    res.status(200).json({ message: "Login successful", userId: user._id, token }); // Send token in response
+    res
+      .status(200)
+      .json({ message: "Login successful", userId: user._id }); // Send token in response
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -99,12 +108,14 @@ export const updateForgotPassword = async (req, res) => {
     await user.save();
 
     // Generate JWT token after password update
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
 
-    return res.status(200).json({ 
-      message: "Password updated successfully", 
-      userId: user._id, 
-      token  // Add JWT token to response
+    return res.status(200).json({
+      message: "Password updated successfully",
+      userId: user._id,
+      token, // Add JWT token to response
     });
   } catch (error) {
     console.error("Error in updating password", error);

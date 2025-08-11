@@ -1,19 +1,26 @@
 import compression from "compression";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import { authenticateApiKey } from "./middlewares/auth.js";
 import apiRoutes from "./routes/apiRoutes.js";
+import loginRoutes from "./routes/loginRoutes.js";
 import redirectRoutes from "./routes/redirectRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import loginRoutes from "./routes/loginRoutes.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // or your frontend URL
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(compression());
+app.use(cookieParser());
 
 // MongoDB connection
 const dbName = "url-short"; // Set your desired database name here

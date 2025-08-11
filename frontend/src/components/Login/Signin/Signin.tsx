@@ -138,11 +138,11 @@ function Signin({
     try {
       const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
         headers: { "x-api-key": API_KEY },
+        withCredentials: true,
       });
 
       setLoading(false);
       if (response.data && response.data.message === "Login successful") {
-        localStorage.setItem("jwtToken", response.data.token);
         navigate("/url-user", { state: { loginResponse: response.data } });
 
         if (!isAutoLogin) {
