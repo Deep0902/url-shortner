@@ -143,7 +143,6 @@ function Signin({
 
       setLoading(false);
       if (response.data && response.data.message === "Login successful") {
-        localStorage.setItem("jwtToken", response.data.token);
         navigate("/url-user", { state: { loginResponse: response.data } });
 
         if (!isAutoLogin) {

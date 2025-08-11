@@ -96,8 +96,8 @@ function UrlShortnerUser() {
       .post(`${API_URL}/api/users/shorten`, payload, {
         headers: {
           "x-api-key": API_KEY,
-          withCredentials: true,
         },
+        withCredentials: true,
       })
       .then((response) => {
         setLoading(false);
@@ -142,8 +142,8 @@ function UrlShortnerUser() {
       .post(`${API_URL}/api/users/stats`, payload, {
         headers: {
           "x-api-key": API_KEY,
-          withCredentials: true,
         },
+        withCredentials: true,
       })
       .then((response) => {
         setHistoryLoading(false);
@@ -180,13 +180,13 @@ function UrlShortnerUser() {
       .post(`${API_URL}/api/user`, payload, {
         headers: {
           "x-api-key": API_KEY,
-          withCredentials: true,
         },
+        withCredentials: true,
       })
       .then((response) => {
-        // Set avatar index from response
+        // Set avatar index from response, default to 0 if missing
         setAvatar(
-          typeof response.data.avatar === "number" ? response.data.avatar : null
+          typeof response.data.avatar === "number" ? response.data.avatar : 0
         );
         setUsername(response.data.username);
       })
@@ -219,6 +219,7 @@ function UrlShortnerUser() {
       .delete(`${API_URL}/api/users/delete-url`, {
         data: payload,
         headers: { "x-api-key": API_KEY },
+        withCredentials: true,
       })
       .then((response) => {
         if (response.status == 200) {

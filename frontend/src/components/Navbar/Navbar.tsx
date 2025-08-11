@@ -157,14 +157,14 @@ const Navbar = ({
   };
 
   const handleChangeAvatar = async (avatar: number) => {
-    if (avatar === selectedAvatar) return;
+    // if (avatar === selectedAvatar) return;
     const payload = { userId, avatar };
     await axios
       .put(`${API_URL}/api/users/avatar`, payload, {
         headers: {
           "x-api-key": API_KEY,
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
+        withCredentials: true,
       })
       .then((response) => {
         console.log("Avatar updated successfully:", response.data);
@@ -186,8 +186,8 @@ const Navbar = ({
         {
           headers: {
             "x-api-key": API_KEY,
-            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
           },
+          withCredentials: true,
         }
       )
       .then((response) => {
@@ -229,8 +229,8 @@ const Navbar = ({
         {
           headers: {
             "x-api-key": API_KEY,
-            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
           },
+          withCredentials: true,
         }
       )
       .then(() => {
@@ -258,8 +258,8 @@ const Navbar = ({
         data: { userId },
         headers: {
           "x-api-key": API_KEY,
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
+        withCredentials: true,
       })
       .then((response) => {
         setDeleteLoading(false);

@@ -25,7 +25,7 @@ router.put("/users/userpassword", authenticateToken, editUserPassword);
 
 router.get("/users", getAllUsers);
 
-router.post("/api/user", authenticateToken, getUserById);
+router.post("/user", authenticateToken, getUserById);
 
 router.post("/users/shorten", authenticateToken, createShortUrlUser);
 
