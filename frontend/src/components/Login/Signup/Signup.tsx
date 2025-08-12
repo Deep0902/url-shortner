@@ -121,6 +121,15 @@ function Signup({
 
       setLoading(false);
       if (response.data && response.data.message === "Login successful") {
+        sessionStorage.setItem(
+          "userCredentials",
+          JSON.stringify({
+            email: loginPayload.email,
+            password: loginPayload.password,
+            rememberMe: false,
+            autoLogin: true,
+          })
+        );
         navigate("/url-user", { state: { loginResponse: response.data } });
 
         if (!isAutoLogin) {

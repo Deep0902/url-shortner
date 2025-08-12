@@ -41,43 +41,13 @@ function Signin({
     const stored = sessionStorage.getItem("userCredentials");
     return stored ? JSON.parse(stored).rememberMe || false : false;
   });
+
   const navigate = useNavigate();
   //endregion
 
   //region Auto-login from session storage
   useEffect(() => {
     const stored = sessionStorage.getItem("userCredentials");
-    if (stored) {
-      const creds = JSON.parse(stored) as {
-        email: string;
-        password: string;
-        rememberMe?: boolean;
-        autoLogin?: boolean;
-      };
-
-      let decryptedPassword = "";
-      try {
-        const bytes = CryptoJS.AES.decrypt(creds.password, SECRET_KEY);
-        decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
-      } catch {
-        decryptedPassword = "";
-      }
-      setCredentials({ email: creds.email, password: decryptedPassword });
-      setIsChecked(creds.rememberMe || false);
-
-      // Only auto-login if autoLogin flag is true and jwtToken exists
-      if (creds.rememberMe && localStorage.getItem("jwtToken")) {
-        setLoading(true);
-        const payload = {
-          email: creds.email,
-          password: creds.password, // Use encrypted password
-        };
-        performLogin(payload, true);
-      }
-    }
-    if (!localStorage.getItem("jwtToken")) {
-      return;
-    }
     if (stored) {
       const creds = JSON.parse(stored) as {
         email: string;
@@ -104,7 +74,6 @@ function Signin({
           email: creds.email,
           password: creds.password, // Use encrypted password
         };
-
         performLogin(payload, true);
       }
     }
@@ -143,8 +112,16 @@ function Signin({
 
       setLoading(false);
       if (response.data && response.data.message === "Login successful") {
+        sessionStorage.setItem(
+          "userCredentials",
+          JSON.stringify({
+            email: loginPayload.email,
+            password: loginPayload.password,
+            rememberMe: isChecked,
+            autoLogin: true,
+          })
+        );
         navigate("/url-user", { state: { loginResponse: response.data } });
-
         if (!isAutoLogin) {
           showAlert("Success!", "success", "Login successful!");
         }
@@ -193,17 +170,6 @@ function Signin({
       email: credentials.email,
       password: encryptedPassword,
     };
-
-    sessionStorage.setItem(
-      "userCredentials",
-      JSON.stringify({
-        email: credentials.email,
-        password: encryptedPassword,
-        rememberMe: isChecked,
-        autoLogin: true, // Set to true for successful login
-      })
-    );
-
     await performLogin(payload);
   };
 
