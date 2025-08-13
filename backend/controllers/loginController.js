@@ -55,6 +55,8 @@ export const loginUser = async (req, res) => {
     });
     res.cookie("jwt", token, {
       httpOnly: true,
+      secure: true,
+      sameSite: "none",
       // sameSite: "strict", ff
       maxAge: 3600000, // 1 hour expiration
     });
@@ -70,7 +72,8 @@ export const loginUser = async (req, res) => {
 export const logout = async (req, res) => {
   res.clearCookie("jwt", {
     httpOnly: true,
-    sameSite: "lax", // or "strict" if you used that
+    secure: true,
+    sameSite: "none", // or "strict" if you used that
     path: "/", // must match the path used when setting the cookie
     // secure: true, // if you used secure cookies
   });
