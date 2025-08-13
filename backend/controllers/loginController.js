@@ -59,13 +59,22 @@ export const loginUser = async (req, res) => {
       maxAge: 3600000, // 1 hour expiration
     });
 
-    res
-      .status(200)
-      .json({ message: "Login successful", userId: user._id }); // Send token in response
+    res.status(200).json({ message: "Login successful", userId: user._id }); // Send token in response
   } catch (error) {
     console.error("Error logging in user:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+//region Logout
+export const logout = async (req, res) => {
+  res.clearCookie("jwt", {
+    httpOnly: true,
+    sameSite: "lax", // or "strict" if you used that
+    path: "/", // must match the path used when setting the cookie
+    // secure: true, // if you used secure cookies
+  });
+  res.status(200).json({ message: "Logged out" });
 };
 
 //region Forgot - Email

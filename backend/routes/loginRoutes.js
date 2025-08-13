@@ -1,9 +1,16 @@
 import express from "express";
-import { loginUser, forgotEmail, updateForgotPassword } from "../controllers/loginController.js";
+import {
+  loginUser,
+  forgotEmail,
+  updateForgotPassword,
+  logout,
+} from "../controllers/loginController.js";
 const router = express.Router();
 
 // Login user
 router.post("/login", loginUser);
+
+router.post("/logout", logout);
 
 router.post("/forgot-email", forgotEmail);
 

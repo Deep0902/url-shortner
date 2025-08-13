@@ -143,8 +143,15 @@ const Navbar = ({
         sessionStorage.removeItem("userCredentials");
       }
     }
-
-    localStorage.removeItem("jwtToken");
+    axios.post(
+      `${API_URL}/api/logout`,
+      {},
+      {
+        withCredentials: true,
+        headers: { "x-api-key": API_KEY },
+      }
+    );
+    // document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     navigate("/sign?mode=signin", { replace: true });
   };
 
