@@ -9,6 +9,7 @@ import Login from "./components/Login/Login";
 import UrlShortner from "./components/UrlShortner/UrlShortner";
 import UrlShortnerUser from "./components/UrlShortnerUser/UrlShortnerUser";
 import { ThemeContext, type ThemeType } from "./ThemeContext";
+import Logout from "./components/Logout";
 
 function App() {
   // Detect system theme on first load
@@ -88,6 +89,7 @@ function App() {
           <Route path="/url-user" element={<UrlShortnerUser />} />
           <Route path="/encrypt" element={<EncryptionManager />} />
           <Route path="/forgot" element={<ForgotPassword />} />
+          <Route path="/logout" element={<Logout />} />
         </Routes>
       </Router>
     </ThemeContext.Provider>
