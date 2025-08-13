@@ -14,19 +14,20 @@ interface AlertState {
   subMessage?: string;
   type: "success" | "error" | "warning";
 }
-
 interface SigninProps {
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   alert: AlertState;
   setAlert: React.Dispatch<React.SetStateAction<AlertState>>;
   onMobileSignup?: () => void;
+  isSignUp?: boolean; // <-- add this line
 }
 
 function Signin({
   setLoading,
   setAlert,
   onMobileSignup,
+  isSignUp, // <-- receive isSignUp prop
 }: Readonly<SigninProps>) {
   //region State
   const [credentials, setCredentials] = useState<{
@@ -47,6 +48,7 @@ function Signin({
 
   //region Auto-login from session storage
   useEffect(() => {
+    if (isSignUp) return; // <-- only run auto-login if not in sign up mode
     const stored = sessionStorage.getItem("userCredentials");
     if (stored) {
       const creds = JSON.parse(stored) as {
@@ -77,7 +79,7 @@ function Signin({
         performLogin(payload, true);
       }
     }
-  }, []);
+  }, [isSignUp]);
 
   //region Encryption Helper
   const encryptData = (data: string): string => {
