@@ -189,7 +189,7 @@ export const getAllUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     // Use userId from JWT payload
-    const userId = req.user.userId;
+    const userId = req.body.userId;
     const user = await User.findById(userId).lean();
     if (!user) {
       return res.status(404).json({ error: "User not found" });
