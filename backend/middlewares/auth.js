@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"; // Add this import
-
 // region Authentication middleware
 export function authenticateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"];
@@ -12,8 +11,9 @@ export function authenticateApiKey(req, res, next) {
 }
 
 export function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  // Read the token from the cookie
+  const token = req.cookies.jwt;
+
   if (!token) return res.status(401).json({ error: "No token provided" });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {

@@ -129,6 +129,7 @@ function Login() {
                   alert={alert}
                   setAlert={setAlert}
                   onMobileSignup={() => setIsSignUp(true)}
+                  isSignUp={isSignUp} // <-- add this line
                 />
               </div>
             </div>
