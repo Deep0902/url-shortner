@@ -148,7 +148,6 @@ function UrlShortnerUser() {
       .then((response) => {
         setHistoryLoading(false);
         setShowHistory(true);
-        console.log(response);
         setHistoryData(response.data);
       })
       .catch((error) => {
@@ -297,7 +296,6 @@ function UrlShortnerUser() {
         checkUser();
       } else {
         navigate(-1);
-        console.log("No login response found in location state");
       }
     } catch (error) {
       console.error("Error accessing location.state.loginResponse:", error);
