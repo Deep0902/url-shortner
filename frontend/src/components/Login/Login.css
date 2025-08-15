@@ -167,6 +167,8 @@ p {
 @media (max-width: 768px) {
   .animated-layout {
     padding: 1rem;
+    gap: 5em;
+    justify-content: flex-start;
   }
 
   .flip-container {
@@ -176,11 +178,12 @@ p {
   .toggle-container {
     top: 1rem;
     right: 1rem;
+    z-index: 1;
   }
 
   .toggle-labels {
     gap: 1.5rem;
-    font-size: 0.9rem;
+    font-size: 1.2em;
   }
 
   .toggle-switch {

@@ -122,6 +122,7 @@
   position: relative;
   z-index: 6;
   h2 {
+    font-size: 3em;
     color: var(--color-text-main);
     margin-bottom: 8px;
     text-align: center;
@@ -130,9 +131,8 @@
 
 .avatar-selection {
   text-align: center;
-  min-width: 40dvw;
   padding: 20px;
-  height: 52dvh;
+  padding: 2em;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -143,12 +143,14 @@
     margin-top: 12px;
     gap: 0 12px;
     padding: 0 10%;
+    justify-content: center;
     button {
       flex: 1;
     }
   }
 
   .avatar-selection-desc {
+    font-size: 1.5em;
     margin-bottom: 24px;
     color: var(--color-text-secondary);
   }
@@ -209,21 +211,27 @@
 }
 
 .settings-modal-content {
-  padding: 2rem 1.5rem;
+  padding: 2rem;
   border-radius: 12px;
-  min-width: 30dvw;
+  min-width: 35dvw;
   color: var(--color-text-main);
 
   .settings-title {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: var(--color-blue-dark);
     margin-bottom: 1.5rem;
     text-align: center;
   }
-
+  .btn-danger {
+    background: var(--color-error) !important;
+  }
   .settings-field {
     margin-bottom: 1.2rem;
+    .form-row {
+      flex-direction: row !important;
+    }
+
     .edit-buttons {
       display: flex;
       justify-content: center;
@@ -233,18 +241,28 @@
     .settings-label {
       display: block;
       font-size: 1rem;
-      color: var(--color-text-secondary);
       margin-bottom: 0.2rem;
       font-weight: 500;
+      color: var(--color-text-secondary);
     }
-
+    .edit-svg {
+      height: 1.3em;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
+      &:hover {
+        scale: 1.1;
+      }
+    }
     .settings-value {
-      font-size: 1.1rem;
+      font-size: 2rem;
       color: var(--color-text-main);
       background: var(--color-bg-secondary);
       border-radius: 6px;
-      padding: 0.5rem 0.75rem;
+      padding: 0.5rem 0.75rem 0.5em 0;
       word-break: break-all;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
       .settings-password-form {
         display: flex;
         flex-direction: column;
@@ -282,7 +300,7 @@
       .settings-username-input {
         padding: 12px 16px;
         background-color: var(--color-gray-dark);
-        color: var(--color-white);
+        color: var(--color-text-main);
         border: 1px solid var(--color-gray-light);
         border-radius: 8px;
         font-size: 1rem;
@@ -290,6 +308,7 @@
         transition: border 0.2s;
         transition: all 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
         font-family: var(--font-family-main);
+        flex: 1;
       }
     }
   }
@@ -329,12 +348,32 @@
 }
 
 @media (max-width: 768px) {
+  .modal {
+    h2 {
+      font-size: 2em;
+    }
+  }
   .navbar {
     .navbar-content {
       max-width: 90%;
       gap: 0.75rem;
       .navbar-links {
         gap: 1rem;
+      }
+    }
+  }
+  .settings-modal-content {
+    .settings-field {
+      .settings-value {
+        font-size: 1.5em;
+      }
+    }
+    .settings-title {
+      font-size: 2em;
+    }
+    & .settings-field {
+      .edit-svg {
+        height: 1em;
       }
     }
   }
@@ -355,12 +394,17 @@
     }
   }
   .avatar-selection {
-    .avatar-grid {
+    padding: 2em;
+    .avatar-selection-desc {
+      font-size: 1em;
+    }
+    
+    & .avatar-grid {
       gap: 15px;
       .avatar-option {
         .avatar-img {
-          width: 40px;
-          height: 40px;
+          width: 5em;
+          height: 5em;
         }
       }
     }

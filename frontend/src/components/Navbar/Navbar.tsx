@@ -548,7 +548,7 @@ const Navbar = ({
                   <div className="settings-value settings-username-row">
                     {isEditingUsername ? (
                       <form
-                        className="settings-password-form"
+                        className="settings-password-form form-row"
                         onSubmit={(e) => {
                           e.preventDefault();
                           handleSaveUsername();
@@ -560,34 +560,54 @@ const Navbar = ({
                           onChange={(e) => setEditedUsername(e.target.value)}
                         />
                         <div className="edit-buttons">
-                          <button
+                          <img
+                            src="/tick-blue.svg"
+                            className="edit-svg"
+                            alt=""
+                            onClick={() => {
+                              handleSaveUsername();
+                            }}
+                          />
+                          {/* <button
                             className="btn btn-primary btn-xs"
-                            type="submit"
+                           
                           >
                             Save
-                          </button>
-                          <button
-                            className="btn-secondary"
-                            type="button"
+                          </button> */}
+                          <img
+                            src="/cancel-blue.svg"
+                            alt=""
+                            className="edit-svg"
                             onClick={() => {
                               setIsEditingUsername(false);
                               setEditedUsername(currentUsername ?? "");
                             }}
+                          />
+                          {/* <button
+                            className="btn-secondary"
+                            type="button"
+                           
                           >
                             Cancel
-                          </button>
+                          </button> */}
                         </div>
                       </form>
                     ) : (
                       <>
                         <span>{currentUsername}</span>
-                        <button
+                        <img
+                          src="/edit.svg"
+                          alt=""
+                          className="edit-svg"
+                          onClick={() => setIsEditingUsername(true)}
+                        />
+                        {/* <button
                           className="btn-primary"
                           style={{ marginLeft: 8 }}
-                          onClick={() => setIsEditingUsername(true)}
+                         
                         >
                           Edit
-                        </button>
+                        </button> */}
                       </>
                     )}
                   </div>
@@ -685,17 +705,29 @@ const Navbar = ({
                     ) : (
                       <>
                         <span className="settings-password">********</span>
-                        <button
+                        <img
+                          src="/edit.svg"
+                          alt=""
+                          className="edit-svg"
+                          onClick={() => setIsChangingPassword(true)}
+                        />
+                        {/* <button
                           className="btn-primary"
                           onClick={() => setIsChangingPassword(true)}
                         >
                           Change Password
-                        </button>
+                        </button> */}
                       </>
                     )}
                   </div>
                 </div>
                 <div className="action-buttons">
+                  <button
+                    className="btn btn-primary btn-danger"
+                    onClick={() => setShowDeleteConfirm(true)}
+                  >
+                    Delete my Account
+                  </button>
                   <button
                     className="btn-secondary"
                     onClick={() => {
@@ -704,12 +736,6 @@ const Navbar = ({
                     }}
                   >
                     Close
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => setShowDeleteConfirm(true)}
-                  >
-                    Delete
                   </button>
                 </div>
               </div>
