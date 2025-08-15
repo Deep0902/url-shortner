@@ -82,7 +82,6 @@ function LandingPage() {
 
   //region Handlers
   const handleRedirect = () => {
-    console.log("Redirecting to /url");
     navigate("/url");
   };
   //endregion
@@ -172,6 +171,7 @@ function LandingPage() {
                     className="svg-rect-inner"
                   />
                 </svg>
+                {/* <img src="/url-short.svg" alt="ChopURL logo" />{" "} */}
               </div>
             </div>
             <div className="hero-right">
