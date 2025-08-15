@@ -173,8 +173,7 @@ const Navbar = ({
         },
         withCredentials: true,
       })
-      .then((response) => {
-        console.log("Avatar updated successfully:", response.data);
+      .then(() => {
         showAlert("Avatar successfully updated", "success");
       })
       .catch((error) => {
@@ -197,9 +196,8 @@ const Navbar = ({
           withCredentials: true,
         }
       )
-      .then((response) => {
+      .then(() => {
         setDeleteLoading(false);
-        console.log(response);
         setCurrentUsername(editedUsername);
         showAlert("Username successfully updated", "success");
         setIsEditingUsername(false);
@@ -268,9 +266,9 @@ const Navbar = ({
         },
         withCredentials: true,
       })
-      .then((response) => {
+      .then(() => {
         setDeleteLoading(false);
-        console.log(response);
+        sessionStorage.removeItem("userCredentials");
       })
       .catch((error) => {
         setDeleteLoading(false);

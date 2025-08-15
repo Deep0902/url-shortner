@@ -176,7 +176,6 @@ function ForgotPassword() {
 
   const handleForgotEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log();
 
     setLoading(true);
     axios
