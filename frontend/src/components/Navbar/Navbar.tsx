@@ -721,7 +721,7 @@ const Navbar = ({
                     )}
                   </div>
                 </div>
-                <div className="action-buttons">
+                {!isChangingPassword && (<div className="action-buttons">
                   <button
                     className="btn btn-primary btn-danger"
                     onClick={() => setShowDeleteConfirm(true)}
@@ -737,7 +737,7 @@ const Navbar = ({
                   >
                     Close
                   </button>
-                </div>
+                </div>)}
               </div>
             </Modal>
           )}
