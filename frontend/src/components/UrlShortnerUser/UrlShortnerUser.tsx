@@ -237,15 +237,14 @@ function UrlShortnerUser() {
   };
   const shareUrl = async (shortUrl: string, originalUrl: string) => {
     const fullUrl = `${API_URL}/${shortUrl}`;
-    const shareText = `Check out this shortened link: ${fullUrl}`;
+    const shareText = `Check out this link I snipped! ${fullUrl} \nMade using https://url-shortner-amber-pi.vercel.app/`;
 
     // Check if Web Share API is supported (mainly on mobile)
     if (navigator.share) {
       try {
         await navigator.share({
           title: "Shortened URL",
-          text: shareText,
-          url: fullUrl,
+          text: `${shareText}`,
         });
       } catch (error) {
         // User cancelled or error occurred, fallback to copy
