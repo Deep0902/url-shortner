@@ -114,17 +114,17 @@ function ForgotPassword() {
         setLoading(false);
         if (response.status == 200 && response.data.message) {
           // Store JWT token after password update
-          localStorage.setItem("jwtToken", response.data.token);
-          // Store userCredentials in sessionStorage with rememberMe: false, autoLogin: true
-          sessionStorage.setItem(
-            "userCredentials",
-            JSON.stringify({
-              email: email,
-              password: encrypted,
-              rememberMe: false,
-              autoLogin: true,
-            })
-          );
+          // localStorage.setItem("jwtToken", response.data.token);
+          // sessionStorage.setItem(
+          //   "userCredentials",
+          //   JSON.stringify({
+          //     email: email,
+          //     password: encrypted,
+          //     rememberMe: false,
+          //     autoLogin: true,
+          //   })
+          // );
+          performLogin({ email: email, password: encrypted });
           showAlert("Success", "success", "Password successfully updated!");
           navigate("/url-user", {
             state: { loginResponse: response.data },
@@ -139,6 +139,39 @@ function ForgotPassword() {
         showAlert("Error", "error", "Failed to update Password");
         console.error("Error shortening URL", error.data?.message);
       });
+  };
+  const performLogin = async (loginPayload: {
+    email: string;
+    password: string;
+  }) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
+        headers: { "x-api-key": API_KEY },
+        withCredentials: true,
+      });
+
+      if (response.data && response.data.message === "Login successful") {
+        sessionStorage.setItem(
+          "userCredentials",
+          JSON.stringify({
+            email: loginPayload.email,
+            password: loginPayload.password,
+            rememberMe: false,
+            autoLogin: true,
+          })
+        );
+        navigate("/url-user", { state: { loginResponse: response.data } });
+      } else {
+        showAlert("Error", "error", "Login failed after password update");
+      }
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        showAlert("Error", "error", "Authentication failed");
+      } else {
+        showAlert("Error", "error", "Network error. Please try again.");
+      }
+      console.error("Error logging in:", error);
+    }
   };
 
   const handleForgotEmail = async (e: React.FormEvent) => {
@@ -283,7 +316,8 @@ function ForgotPassword() {
               <span className="label">Regain Access</span>
               <br />
               <span className="subtext">Enter your new password</span>
-              <br /><br />
+              <br />
+              <br />
               <div className="inputBox">
                 <input
                   type={showPassword ? "text" : "password"}
