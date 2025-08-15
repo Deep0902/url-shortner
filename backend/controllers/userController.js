@@ -197,6 +197,7 @@ export const getUserById = async (req, res) => {
     res.status(200).json({
       username: user.username,
       avatar: user.avatar,
+      email: user.email,
     });
   } catch (error) {
     console.error("Error fetching user:", error);

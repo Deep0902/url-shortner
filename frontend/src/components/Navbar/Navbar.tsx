@@ -23,6 +23,7 @@ const avatarItems = [
 interface NavbarProps {
   avatar?: number | null;
   userId?: string | null;
+  email?: string | null;
   username?: string | null;
   onAvatarChange?: (avatarIndex: number) => void; // Add callback prop
   onUsernameChange?: (newUsername: string) => void; // <-- Add username change callback
@@ -30,6 +31,7 @@ interface NavbarProps {
 
 const Navbar = ({
   avatar,
+  email,
   userId,
   username,
   onAvatarChange,
@@ -592,7 +594,7 @@ const Navbar = ({
                 </div>
                 <div className="settings-field">
                   <span className="settings-label">Email</span>
-                  <div className="settings-value">qwe@email.com</div>
+                  <div className="settings-value">{email}</div>
                 </div>
                 <div className="settings-field">
                   <span className="settings-label">Password</span>
