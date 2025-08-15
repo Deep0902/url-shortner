@@ -37,6 +37,7 @@ function UrlShortnerUser() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const [showAllLinks, setShowAllLinks] = useState(false);
@@ -187,6 +188,7 @@ function UrlShortnerUser() {
         setAvatar(
           typeof response.data.avatar === "number" ? response.data.avatar : 0
         );
+        setEmail(response.data.email);
         setUsername(response.data.username);
       })
       .catch((error) => {
@@ -334,6 +336,7 @@ function UrlShortnerUser() {
       </div>
       {/* Navbar */}
       <Navbar
+        email={email}
         avatar={avatar}
         userId={location.state.loginResponse.userId}
         username={username}
