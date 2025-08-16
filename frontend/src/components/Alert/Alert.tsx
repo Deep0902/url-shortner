@@ -14,8 +14,6 @@ interface AlertProps {
 //region Constants
 const STATIC_UI_IMAGES = {
   ALERT: {
-    CLOSE: "/close.svg",
-    CLOSE_RED: "/close-red.svg",
     TICK: "/tick.svg",
     ERROR: "/error-toast.svg",
     WARNING: "/warning-toast.svg",
@@ -32,11 +30,11 @@ function Alert({
 }: Readonly<AlertProps>) {
   //region State
   const [show, setShow] = useState<boolean>(true);
+  const [progress, setProgress] = useState<number>(100);
+  //endregion
   //endregion
 
   //region Icons
-  const iconCloseWhite = STATIC_UI_IMAGES.ALERT.CLOSE;
-  const iconCloseRed = STATIC_UI_IMAGES.ALERT.CLOSE_RED;
   const iconTick = STATIC_UI_IMAGES.ALERT.TICK;
   const iconError = STATIC_UI_IMAGES.ALERT.ERROR;
   const iconWarning = STATIC_UI_IMAGES.ALERT.WARNING;
@@ -44,20 +42,34 @@ function Alert({
 
   //region Effects
   useEffect(() => {
-    setShow(true); // Always reset show when props change
+    setShow(true);
+    setProgress(100); // Reset progress when props change
   }, [message, subMessage, type]);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
+    let intervalId: ReturnType<typeof setInterval>;
+
     if (timeout && timeout > 0) {
+      // Update progress every 50ms for smooth animation
+      const updateInterval = 50;
+      const steps = timeout / updateInterval;
+      let currentStep = 0;
+
+      intervalId = setInterval(() => {
+        currentStep++;
+        const newProgress = ((steps - currentStep) / steps) * 100;
+        setProgress(Math.max(0, newProgress));
+      }, updateInterval);
+
       timeoutId = setTimeout(() => {
-        handleClose(); // Call handleClose instead of setShow(false)
+        handleClose();
       }, timeout);
     }
+
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      if (timeoutId) clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
     };
   }, [timeout]);
   //endregion
@@ -68,10 +80,6 @@ function Alert({
     if (onClose) {
       onClose();
     }
-  };
-
-  const handleKeyUp = () => {
-    // Placeholder for keyup handler
   };
   //endregion
 
@@ -87,9 +95,6 @@ function Alert({
     return "";
   };
 
-  const getCloseIcon = () => {
-    return type === "success" ? iconCloseWhite : iconCloseRed;
-  };
   //endregion
 
   //region UI
@@ -100,30 +105,22 @@ function Alert({
   return (
     <div className="parent-toast">
       <div className={`toast ${type}`}>
-        <img src={getAlertIcon()} alt="" />
-        <div>
-          <span>{message}</span>
+        <img src={getAlertIcon()} alt="" className="alert-icon" />
+        <div className="message-content">
+          {/* <span>{message}</span> */}
           {subMessage && subMessage.length > 0 && (
             <small>{ellipsis(subMessage, 100)}</small>
           )}
         </div>
-        <button
-          type="button"
-          className="close-img"
-          onClick={handleClose}
-          onKeyUp={handleKeyUp}
-          style={{
-            background: "none",
-            border: "none",
-            padding: 0,
-            cursor: "pointer",
-          }}
-        >
-          <img src={getCloseIcon()} alt="Close" />
-        </button>
+        {timeout && timeout > 0 && (
+          <div className="progress-container">
+            <div className="progress-line" style={{ width: `${progress}%` }} />
+          </div>
+        )}
       </div>
     </div>
   );
+  //endregion
   //endregion
 }
 

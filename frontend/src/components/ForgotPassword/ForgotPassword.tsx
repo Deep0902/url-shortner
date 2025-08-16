@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Particles from "../../Reactbits/Particles";
 import Footer from "../Footer/Footer";
@@ -6,11 +6,17 @@ import Navbar from "../Navbar/Navbar";
 import "./ForgotPassword.css";
 import Loader from "../Loader/Loader";
 import Alert from "../Alert/Alert";
-import type { AlertState } from "../../shared/interfaces";
 import { API_KEY, API_URL } from "../../shared/constants";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
+export interface AlertState {
+  show: boolean;
+  message: string;
+  subMessage?: string;
+  type: "success" | "error" | "warning";
+  timeout: number;
+}
 const SECRET_KEY = API_KEY; // Use API_KEY from constants.ts
 
 function ForgotPassword() {
@@ -18,25 +24,31 @@ function ForgotPassword() {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [generatedOtp, setGeneratedOtp] = useState("");
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState<AlertState>({
     show: false,
     message: "",
     type: "success",
+    timeout: 5000,
   });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
+  const [canResend, setCanResend] = useState(false);
   const showAlert = (
     message: string,
     type: "success" | "error" | "warning",
-    subMessage?: string
+    subMessage?: string,
+    timeout: number = 5000
   ) => {
     setAlert({
       show: true,
       message,
       type,
       subMessage,
+      timeout,
     });
   };
   //endregion
@@ -47,18 +59,43 @@ function ForgotPassword() {
     { label: "OTP", description: "Enter OTP" },
     { label: "Update Password", description: "Set new password" },
   ];
+  const generateOtp = () => {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    setGeneratedOtp(otp);
+    showAlert("OTP", "warning", `OTP is ${otp}`, 10000);
+    setResendTimer(60);
+    setCanResend(false);
+  };
   //endregion
 
-  //region Form
-  // No form hook needed for simple HTML forms
-  //endregion
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [resendTimer]);
 
   //region Handlers
 
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp !== "123456") {
-      showAlert("Invalid OTP", "error", "Please enter the correct OTP");
+    if (otp !== generatedOtp) {
+      showAlert("Invalid OTP", "error", "Incorrect OTP");
       return;
     }
     setStep(3);
@@ -162,6 +199,10 @@ function ForgotPassword() {
 
   const handleForgotEmail = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (email == "") {
+      showAlert("Error", "error", "Email is required");
+      return;
+    }
 
     setLoading(true);
     axios
@@ -173,8 +214,9 @@ function ForgotPassword() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200 && response.data.message) {
-          showAlert("OTP", "warning", "OTP is 123456");
+          generateOtp();
           setStep(2);
+          setCanResend(false);
         }
       })
       .catch((error) => {
@@ -193,6 +235,7 @@ function ForgotPassword() {
       show: false,
       message: "",
       type: "success",
+      timeout: 5000,
     });
   };
   //endregion
@@ -205,7 +248,7 @@ function ForgotPassword() {
           message={alert.message}
           subMessage={alert.subMessage}
           type={alert.type}
-          timeout={5000}
+          timeout={alert.timeout || 5000}
           onClose={hideAlert}
         />
       )}
@@ -220,12 +263,12 @@ function ForgotPassword() {
             {steps.map((s, idx) => (
               <div key={s.label} className="step-item">
                 <div
-                  className={`step-circle${step === idx + 1 ? " active" : ""}`}
+                  className={`step-circle${step >= idx + 1 ? " active" : ""}`}
                 >
                   {idx + 1}
                 </div>
                 <div
-                  className={`step-label${step === idx + 1 ? " active" : ""}`}
+                  className={`step-label${step >= idx + 1 ? " active" : ""}`}
                 >
                   {s.label}
                 </div>
@@ -288,7 +331,20 @@ function ForgotPassword() {
                 ))}
               </div>
               <button className="btn-primary" type="submit">
-                Verify OTP
+                Verify
+              </button>
+              <button
+                type="button"
+                className={`btn-secondary ${!canResend ? "disabled" : ""}`}
+                onClick={generateOtp}
+                disabled={!canResend}
+                style={{
+                  marginTop: "10px",
+                  opacity: canResend ? 1 : 0.6,
+                  cursor: canResend ? "pointer" : "not-allowed",
+                }}
+              >
+                {canResend ? "Resend OTP" : `Resend OTP (${resendTimer}s)`}
               </button>
             </form>
           )}

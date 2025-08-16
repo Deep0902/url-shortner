@@ -50,7 +50,7 @@ function Login() {
           message={alert.message}
           subMessage={alert.subMessage}
           type={alert.type}
-          timeout={5000}
+          timeout={4000}
           onClose={() =>
             setAlert({
               show: false,
@@ -128,7 +128,6 @@ function Login() {
                   setLoading={setLoading}
                   alert={alert}
                   setAlert={setAlert}
-                  onMobileSignup={() => setIsSignUp(true)}
                   isSignUp={isSignUp} // <-- add this line
                 />
               </div>

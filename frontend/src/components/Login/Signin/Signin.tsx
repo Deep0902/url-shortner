@@ -19,14 +19,12 @@ interface SigninProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   alert: AlertState;
   setAlert: React.Dispatch<React.SetStateAction<AlertState>>;
-  onMobileSignup?: () => void;
   isSignUp?: boolean; // <-- add this line
 }
 
 function Signin({
   setLoading,
   setAlert,
-  onMobileSignup,
   isSignUp, // <-- receive isSignUp prop
 }: Readonly<SigninProps>) {
   //region State

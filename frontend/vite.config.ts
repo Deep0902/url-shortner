@@ -31,24 +31,6 @@ export default defineConfig({
             purpose: "any maskable",
           },
           {
-            src: "url-short.svg",
-            sizes: "any",
-            type: "image/svg+xml",
-            purpose: "any maskable",
-          },
-          {
-            src: "close-red.svg",
-            sizes: "any",
-            type: "image/svg+xml",
-            purpose: "any maskable",
-          },
-          {
-            src: "close.svg",
-            sizes: "any",
-            type: "image/svg+xml",
-            purpose: "any maskable",
-          },
-          {
             src: "error-toast.svg",
             sizes: "any",
             type: "image/svg+xml",
@@ -56,6 +38,42 @@ export default defineConfig({
           },
           {
             src: "tick.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+          {
+            src: "tick-blue.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+          {
+            src: "click.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+          {
+            src: "Copy.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+          {
+            src: "delete.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+          {
+            src: "edit.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+          {
+            src: "cancel-blue.svg",
             sizes: "any",
             type: "image/svg+xml",
             purpose: "any maskable",
@@ -110,6 +128,12 @@ export default defineConfig({
           },
           {
             src: "avatars/avatar-girl-4.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+          {
+            src: "url-short.svg",
             sizes: "any",
             type: "image/svg+xml",
             purpose: "any maskable",
