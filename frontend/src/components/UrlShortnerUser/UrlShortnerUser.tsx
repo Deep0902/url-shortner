@@ -153,7 +153,7 @@ function UrlShortnerUser() {
   const copyToClipboard = (link: string) => {
     navigator.clipboard.writeText(link);
     setCopied(true);
-    showAlert("Copied to clipboard!", "success", "");
+    showAlert("", "success", "Copied to clipboard!");
     setTimeout(() => setCopied(false), 3000);
   };
 

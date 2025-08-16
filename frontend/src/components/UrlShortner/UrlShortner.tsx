@@ -82,8 +82,8 @@ function UrlShortner() {
     if (canShorten !== null && canShorten === "false") {
       showAlert(
         "Sign In Required",
-        "error",
-        "You need to sign in to shorten more links."
+        "warning",
+        "Sign in to shorten more links!"
       );
       return;
     }

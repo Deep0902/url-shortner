@@ -176,7 +176,7 @@ const Navbar = ({
         withCredentials: true,
       })
       .then(() => {
-        showAlert("Avatar successfully updated", "success");
+        showAlert("", "success","Avatar successfully updated");
       })
       .catch((error) => {
         showAlert("Error", "error", error.response.data.error);
@@ -200,7 +200,7 @@ const Navbar = ({
       .then(() => {
         setDeleteLoading(false);
         setCurrentUsername(editedUsername);
-        showAlert("Username successfully updated", "success");
+        showAlert("", "success", "Username successfully updated");
         setIsEditingUsername(false);
         if (typeof onUsernameChange === "function") {
           onUsernameChange(editedUsername);
@@ -215,11 +215,11 @@ const Navbar = ({
 
   const handleUpdatePassword = async () => {
     if (!oldPassword || !newPassword || !confirmNewPassword) {
-      showAlert("Please fill all fields", "error");
+      showAlert("", "error", "Please fill all fields");
       return;
     }
     if (newPassword !== confirmNewPassword) {
-      showAlert("New passwords do not match", "error");
+      showAlert("", "error", "New passwords do not match");
       return;
     }
     const encryptOldPassword = encryptData(oldPassword);
@@ -240,7 +240,7 @@ const Navbar = ({
         }
       )
       .then(() => {
-        showAlert("Password updated successfully", "success");
+        showAlert("", "success", "Password updated successfully");
         resetPasswordFields();
       })
       .catch((error: any) => {
@@ -424,7 +424,7 @@ const Navbar = ({
                   type="button"
                   onClick={() => setShowMenu((prev) => !prev)}
                 >
-                  <img src={avatarSrc} alt="User avatar" />
+                  <img src={avatarItems[avatar]} alt="User avatar" />
                 </button>
                 {showMenu && (
                   <div
