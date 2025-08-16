@@ -179,8 +179,7 @@ const Navbar = ({
         showAlert("Avatar successfully updated", "success");
       })
       .catch((error) => {
-        console.error("Error updating avatar:", error);
-        showAlert("Error updating avatar", "error");
+        showAlert("Error", "error", error.response.data.error);
         setSelectedAvatar(avatar);
       });
   };
@@ -207,9 +206,9 @@ const Navbar = ({
           onUsernameChange(editedUsername);
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setDeleteLoading(false);
-        showAlert("Error updating username", "error");
+        showAlert("Error", "error", error.response.data.error);
         console.error(error);
       });
   };
@@ -244,10 +243,8 @@ const Navbar = ({
         showAlert("Password updated successfully", "success");
         resetPasswordFields();
       })
-      .catch((error) => {
-        const errorMsg =
-          error?.response?.data?.error || "Error updating password";
-        showAlert(errorMsg, "error");
+      .catch((error: any) => {
+        showAlert("Error", "error", error.response.data.error);
       });
   };
 
@@ -272,10 +269,9 @@ const Navbar = ({
         setDeleteLoading(false);
         sessionStorage.removeItem("userCredentials");
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setDeleteLoading(false);
-        console.error("Error deleting user:", error);
-        showAlert("Error deleting user", "error");
+        showAlert("Error", "error", error.response.data.error);
       });
     navigate(-1);
   };
@@ -539,6 +535,9 @@ const Navbar = ({
               open={showSettings}
               onClose={() => {
                 setShowSettings(false);
+                setIsEditingUsername(false);
+                setEditedUsername(currentUsername ?? "");
+                resetPasswordFields();
               }}
             >
               <div className="settings-modal-content">
@@ -721,23 +720,25 @@ const Navbar = ({
                     )}
                   </div>
                 </div>
-                {!isChangingPassword && (<div className="action-buttons">
-                  <button
-                    className="btn btn-primary btn-danger"
-                    onClick={() => setShowDeleteConfirm(true)}
-                  >
-                    Delete my Account
-                  </button>
-                  <button
-                    className="btn-secondary"
-                    onClick={() => {
-                      setShowSettings(false);
-                      resetPasswordFields();
-                    }}
-                  >
-                    Close
-                  </button>
-                </div>)}
+                {!isChangingPassword && (
+                  <div className="action-buttons">
+                    <button
+                      className="btn btn-primary btn-danger"
+                      onClick={() => setShowDeleteConfirm(true)}
+                    >
+                      Delete my Account
+                    </button>
+                    <button
+                      className="btn-secondary"
+                      onClick={() => {
+                        setShowSettings(false);
+                        resetPasswordFields();
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                )}
               </div>
             </Modal>
           )}
@@ -750,7 +751,7 @@ const Navbar = ({
                 <h3 className="delete-modal-title">
                   Are you sure you want to delete the account?
                 </h3>
-                <p className="delete-modal-warning">This cannot be undone.</p>
+                <p className="delete-modal-warning">This cannot be undone!</p>
                 <div className="delete-modal-actions">
                   <button
                     className="btn-secondary"
