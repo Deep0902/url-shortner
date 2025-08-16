@@ -134,13 +134,7 @@ function Signin({
       }
     } catch (error: any) {
       setLoading(false);
-      if (error.response?.status === 401) {
-        handleLoginError("Incorrect Credentials. Please try again.");
-      } else if (error.response?.status === 404) {
-        handleLoginError("User not found");
-      } else {
-        handleLoginError("Network error. Please try again.");
-      }
+      showAlert("Error", "error", error.response.data.error);
       console.error("Error logging in:", error);
     }
   };
@@ -197,7 +191,7 @@ function Signin({
     <div className="credentialsCard">
       <span className="label">Sign In</span>
       <span className=" subtext">
-        Please login to continue to your account.
+        Login to continue to your account!
       </span>
       <form onSubmit={handleSubmit}>
         <div className="inputBox">
@@ -247,9 +241,6 @@ function Signin({
       <div className="bottomSection">
         <p className="underlineText" onClick={() => navigate("/forgot")}>
           Forgot Password
-        </p>
-        <p className="underlineText mobile-signup" onClick={onMobileSignup}>
-          Sign Up
         </p>
       </div>
     </div>

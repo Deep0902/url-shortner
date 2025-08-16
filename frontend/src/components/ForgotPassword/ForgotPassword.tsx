@@ -113,17 +113,6 @@ function ForgotPassword() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200 && response.data.message) {
-          // Store JWT token after password update
-          // localStorage.setItem("jwtToken", response.data.token);
-          // sessionStorage.setItem(
-          //   "userCredentials",
-          //   JSON.stringify({
-          //     email: email,
-          //     password: encrypted,
-          //     rememberMe: false,
-          //     autoLogin: true,
-          //   })
-          // );
           performLogin({ email: email, password: encrypted });
           showAlert("Success", "success", "Password successfully updated!");
           navigate("/url-user", {
@@ -131,12 +120,9 @@ function ForgotPassword() {
           });
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setLoading(false);
-        if (error.status == 400) {
-          showAlert("Error", "error", "Invalid password format");
-        }
-        showAlert("Error", "error", "Failed to update Password");
+        showAlert("Error", "error", error.response.data.error);
         console.error("Error shortening URL", error.data?.message);
       });
   };
@@ -168,7 +154,7 @@ function ForgotPassword() {
       if (error.response?.status === 401) {
         showAlert("Error", "error", "Authentication failed");
       } else {
-        showAlert("Error", "error", "Network error. Please try again.");
+        showAlert("Error", "error", error.response.data.message);
       }
       console.error("Error logging in:", error);
     }
@@ -193,11 +179,7 @@ function ForgotPassword() {
       })
       .catch((error) => {
         setLoading(false);
-        if (error.response && error.response.status === 404) {
-          showAlert("Error", "error", "Email id not found");
-        } else {
-          showAlert("Error", "error", "Failed to fetch email");
-        }
+        showAlert("Error", "error", error.response.data.error);
         console.error("Error shortening URL:", error);
       });
   };

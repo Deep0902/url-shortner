@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken"; // Add this import
+import rateLimit from "express-rate-limit";
+
 // region Authentication middleware
 export function authenticateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"];
@@ -22,3 +24,19 @@ export function authenticateToken(req, res, next) {
     next();
   });
 }
+
+// For NON-authenticated users (stricter)
+export const publicLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 60, // Only 50 requests per 15 mins
+  message: {
+    error: "Too many requests. Retry after a minute.",
+  },
+});
+
+// For logged-in users (more generous)
+export const authLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 100, // Allow 200 requests
+  error: { message: "Request limit reached. Retry after a minute." },
+});
