@@ -424,7 +424,7 @@ const Navbar = ({
                   type="button"
                   onClick={() => setShowMenu((prev) => !prev)}
                 >
-                  <img src={avatarItems[avatar]} alt="User avatar" />
+                  <img src={avatarSrc} alt="User avatar" />
                 </button>
                 {showMenu && (
                   <div
