@@ -31,21 +31,21 @@
 }
 
 .toast.success {
-  color: #ffffff;
-  background: #027a48;
-  border: 1px solid #6ce9a6;
+  color: #065f46;
+  background: #d1fae5;
+  border: 1px solid #34d399;
 }
 
 .toast.error {
-  color: #b42318;
-  background: #fffbfa;
-  border: 1px solid #fda29b;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #f87171;
 }
 
 .toast.warning {
-  color: #b54708;
-  background: #fffcf5;
-  border: 1px solid #fec84b;
+  color: #92400e;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
 }
 
 .toast span {
@@ -79,15 +79,15 @@
 }
 
 .toast.success .progress-line {
-  background: #6ce9a6;
+  background: #34d399;
 }
 
 .toast.error .progress-line {
-  background: #fda29b;
+  background: #f87171;
 }
 
 .toast.warning .progress-line {
-  background: #fec84b;
+  background: #f59e0b;
 }
 
 @keyframes toast-appear {
