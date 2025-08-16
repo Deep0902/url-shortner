@@ -691,7 +691,7 @@ const Navbar = ({
                             Update Password
                           </button>
                           <button
-                            className="btn-secondary"
+                            className="btn btn-secondary"
                             type="button"
                             onClick={() => {
                               resetPasswordFields();
@@ -729,7 +729,7 @@ const Navbar = ({
                       Delete my Account
                     </button>
                     <button
-                      className="btn-secondary"
+                      className="btn btn-secondary"
                       onClick={() => {
                         setShowSettings(false);
                         resetPasswordFields();
