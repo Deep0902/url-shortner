@@ -18,6 +18,7 @@ function ForgotPassword() {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
+  const [generatedOtp, setGeneratedOtp] = useState("");
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState<AlertState>({
     show: false,
@@ -47,6 +48,9 @@ function ForgotPassword() {
     { label: "OTP", description: "Enter OTP" },
     { label: "Update Password", description: "Set new password" },
   ];
+  const generateOtp = (): string => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
   //endregion
 
   //region Form
@@ -57,7 +61,7 @@ function ForgotPassword() {
 
   const handleOtpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp !== "123456") {
+    if (otp !== generatedOtp) {
       showAlert("Invalid OTP", "error", "Please enter the correct OTP");
       return;
     }
@@ -162,6 +166,10 @@ function ForgotPassword() {
 
   const handleForgotEmail = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (email == "") {
+      showAlert("Error", "error", "Email is required");
+      return;
+    }
 
     setLoading(true);
     axios
@@ -173,7 +181,9 @@ function ForgotPassword() {
       .then((response) => {
         setLoading(false);
         if (response.status == 200 && response.data.message) {
-          showAlert("OTP", "warning", "OTP is 123456");
+          const newOtp = generateOtp();
+          setGeneratedOtp(newOtp);
+          showAlert("OTP", "warning", `OTP is ${newOtp}`);
           setStep(2);
         }
       })
@@ -220,12 +230,12 @@ function ForgotPassword() {
             {steps.map((s, idx) => (
               <div key={s.label} className="step-item">
                 <div
-                  className={`step-circle${step === idx + 1 ? " active" : ""}`}
+                  className={`step-circle${step >= idx + 1 ? " active" : ""}`}
                 >
                   {idx + 1}
                 </div>
                 <div
-                  className={`step-label${step === idx + 1 ? " active" : ""}`}
+                  className={`step-label${step >= idx + 1 ? " active" : ""}`}
                 >
                   {s.label}
                 </div>

@@ -1,11 +1,10 @@
 .parent-toast {
   position: fixed;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  top: 2%;
+  top: 8%;
+  left: 50%;
   z-index: 101;
   animation: toast-appear 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
+  animation-fill-mode: forwards;
 }
 .toast {
   box-sizing: border-box;
@@ -49,25 +48,25 @@
 }
 .toast span {
   font-weight: 500;
-  font-size: 14px;
+  font-size: 1em;
 }
 .toast small {
   font-weight: 200;
   display: block;
-  font-size: 12px;
+  font-size: 1em;
 }
 
 @keyframes toast-appear {
   0% {
     opacity: 0;
-    transform: translateY(-40px) scale(0.95);
+    transform: translate(-50%, -50%) translateY(-40px) scale(0.95);
   }
   80% {
     opacity: 1;
-    transform: translateY(4px) scale(1.03);
+    transform: translate(-50%, -50%) translateY(4px) scale(1.03);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(-50%, -50%) translateY(0) scale(1);
   }
 }
