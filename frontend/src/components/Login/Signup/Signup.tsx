@@ -93,19 +93,9 @@ function Signup({
           );
         }
       })
-      .catch((error) => {
+      .catch((error:any) => {
         setLoading(false);
-        if (error.response && error.response.status === 409) {
-          showAlert("Oops", "warning", "User Already Exists!");
-        } else if (error.response && error.response.status === 401) {
-          showAlert(
-            "Error",
-            "error",
-            "Incorrect Credentials. Please try again."
-          );
-        } else {
-          showAlert("Error", "error", "Server error");
-        }
+        showAlert("Error", "error", error.response.data.error);
         console.error("Error creating user:", error);
       });
   };
@@ -253,7 +243,7 @@ function Signup({
         </div>
         <div className="bottomSection">
           <span>
-            Already Have an account?&nbsp;
+            Do you an account?&nbsp;
             <span
               className="underlineText"
               onClick={() => onMobileSignIn && onMobileSignIn()}

@@ -11,28 +11,31 @@ import {
   getUserById,
   getUserStats,
 } from "../controllers/userController.js";
-import { authenticateToken } from "../middlewares/auth.js";
+import { authenticateToken, authLimiter, publicLimiter } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.post("/users", createUser);
+//region Authenticaied
 
-router.delete("/users", authenticateToken, deleteUser);
+router.delete("/users", authenticateToken, authLimiter, deleteUser);
 
-router.put("/username", authenticateToken, editUserName);
+router.put("/username", authenticateToken, authLimiter, editUserName);
 
-router.put("/users/userpassword", authenticateToken, editUserPassword);
+router.put("/users/userpassword", authenticateToken, authLimiter, editUserPassword);
 
-router.get("/users", getAllUsers);
+router.post("/user", authenticateToken, authLimiter, getUserById);
 
-router.post("/user", authenticateToken, getUserById);
+router.post("/users/shorten", authenticateToken, authLimiter, createShortUrlUser);
 
-router.post("/users/shorten", authenticateToken, createShortUrlUser);
+router.post("/users/stats", authenticateToken, authLimiter ,getUserStats);
 
-router.post("/users/stats", authenticateToken, getUserStats);
+router.delete("/users/delete-url", authenticateToken, authLimiter, deleteUserUrl);
 
-router.delete("/users/delete-url", authenticateToken, deleteUserUrl);
+router.put("/users/avatar", authenticateToken, authLimiter, changeAvatar);
 
-router.put("/users/avatar", authenticateToken, changeAvatar);
+//region Unauthenticaied
+router.post("/users", publicLimiter, createUser);
+
+router.get("/users",publicLimiter, getAllUsers);
 
 export default router;
