@@ -254,7 +254,7 @@
       }
     }
     .settings-value {
-      font-size: 2rem;
+      font-size: 1.5rem;
       color: var(--color-text-main);
       background: var(--color-bg-secondary);
       border-radius: 6px;
@@ -328,13 +328,14 @@
   text-align: center;
 
   .delete-modal-title {
-    font-size: 1.2rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--color-text-main);
     margin-bottom: 1rem;
   }
 
   .delete-modal-warning {
+    font-size: 1.5rem;
     color: var(--color-text-main);
     margin-bottom: 1.5rem;
     font-weight: 500;
@@ -398,7 +399,7 @@
     .avatar-selection-desc {
       font-size: 1em;
     }
-    
+
     & .avatar-grid {
       gap: 15px;
       .avatar-option {
@@ -407,6 +408,16 @@
           height: 5em;
         }
       }
+    }
+  }
+  .delete-modal-content {
+    padding: 1em;
+    .delete-modal-title {
+      font-size: 1.5em;
+      max-width: 84dvw;
+    }
+    .delete-modal-warning {
+      font-size: 1em;
     }
   }
 }

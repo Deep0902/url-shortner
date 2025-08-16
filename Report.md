@@ -168,6 +168,7 @@ Routing is handled via React Router. The main flow is:
 - 📝 `POST /api/users/getuser` – Get user by ID
 - 📝 `POST /api/shorten` – Shorten a long URL (global, not user-specific)
 - 📝 `POST /api/login` – User login (returns user info)
+- 📝 `POST /api/logout` – Logs out user and clears JWT cookie
 - 📝 `POST /api/forgot-email` – Forgot password (email check)
 - ✏️ `PUT /api/users/avatar` – Change user avatar
 - ✏️ `PUT /api/username` – Edit username

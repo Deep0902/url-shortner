@@ -102,22 +102,9 @@ function UrlShortner() {
           localStorage.setItem("canShorten", "false"); // Set boolean to false
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setLoading(false);
-        if (error.response && error.response.status === 429) {
-          showAlert(
-            "Service Unavailable",
-            "error",
-            "Storage limit reached. Contact admin."
-          );
-        } else {
-          showAlert(
-            "Error",
-            "error",
-            "Failed to shorten URL. Please try again."
-          );
-          console.error("Error shortening URL:", error);
-        }
+        showAlert("Error", "error", error.response.data.error);
       });
   };
 

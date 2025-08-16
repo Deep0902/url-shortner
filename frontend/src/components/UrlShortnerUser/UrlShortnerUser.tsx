@@ -111,22 +111,9 @@ function UrlShortnerUser() {
           }
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setLoading(false);
-        if (error.response && error.response.status === 429) {
-          showAlert(
-            "Storage Limit Reached",
-            "error",
-            "Delete existing URLs to free up space."
-          );
-        } else {
-          showAlert(
-            "Error",
-            "error",
-            "Failed to shorten URL. Please try again."
-          );
-          console.error("Error shortening URL:", error);
-        }
+        showAlert("Error", "error", error.response.data.error);
       });
   };
 
@@ -151,9 +138,9 @@ function UrlShortnerUser() {
         setShowHistory(true);
         setHistoryData(response.data);
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setHistoryLoading(false);
-        showAlert("Error", "error", "error");
+        showAlert("Error", "error", error.response.data);
         console.error("Error in fetching history data", error);
       });
   };
@@ -175,7 +162,7 @@ function UrlShortnerUser() {
     const payload = {
       userId: location.state.loginResponse.userId,
     };
-
+    setLoading(true);
     axios
       .post(`${API_URL}/api/user`, payload, {
         headers: {
@@ -184,26 +171,23 @@ function UrlShortnerUser() {
         withCredentials: true,
       })
       .then((response) => {
-        // Set avatar index from response, default to 0 if missing
+        setLoading(false);
         setAvatar(
           typeof response.data.avatar === "number" ? response.data.avatar : 0
         );
         setEmail(response.data.email);
         setUsername(response.data.username);
       })
-      .catch((error) => {
-        if (
-          (error.response && error.response.status === 401) ||
-          (error.response &&
-            error.response.data &&
-            error.response.data.error === "Invalid token")
-        ) {
-          handleJWTTokenError();
+      .catch((error: any) => {
+        setLoading(false);
+        if (error.status == 429) {
+          showAlert("Error", "error", error.response.data);
           return;
         }
-        // navigate(-1);
-        setAvatar(null);
-        console.error("Error checking user:", error);
+        showAlert("Error", "error", error.response.data.message);
+        navigate(-1);
+        handleJWTTokenError();
+        return;
       });
   };
 
@@ -229,10 +213,10 @@ function UrlShortnerUser() {
           handleViewHistory();
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setLoading(false);
         setAvatar(null);
-        console.error("Error checking user:", error);
+        showAlert("Error", "error", error.response.data.error);
       });
   };
   const shareUrl = async (shortUrl: string, originalUrl: string) => {
@@ -298,8 +282,8 @@ function UrlShortnerUser() {
       } else {
         navigate(-1);
       }
-    } catch (error) {
-      console.error("Error accessing location.state.loginResponse:", error);
+    } catch (error: any) {
+      showAlert("Error", "error", error.response.data.error);
       navigate(-1);
     }
   }, []);

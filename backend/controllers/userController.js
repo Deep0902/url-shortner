@@ -120,7 +120,7 @@ export const editUserName = async (req, res) => {
   }
 };
 
-//region Edit User Password
+//region Edit Password
 export const editUserPassword = async (req, res) => {
   try {
     const { userId, oldPassword, newPassword } = req.body;
@@ -271,7 +271,7 @@ export const createShortUrlUser = async (req, res) => {
   }
 };
 
-// region Get user statistics
+// region Get Stats
 export const getUserStats = async (req, res) => {
   try {
     const { userId } = req.body;
