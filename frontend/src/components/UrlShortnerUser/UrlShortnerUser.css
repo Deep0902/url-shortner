@@ -1,12 +1,8 @@
-/* History Table Styles */
 .history-table-wrapper {
   .close-btn {
     background-color: var(--color-bg-secondary);
   }
   margin-top: 2rem;
-  /* background: var(--color-bg-secondary); */
-  /* box-shadow: 0 2px 12px var(--color-shadow); */
-  /* padding: 1.5rem; */
   overflow-x: auto;
   animation: fadeIn 0.4s ease-out;
 }
@@ -123,17 +119,11 @@
   flex-direction: column;
   border: 1px solid var(--color-border);
   box-shadow: 0 4px 24px var(--color-shadow);
-  /* background-color: var(--color-card-bg); */
   background: var(--color-bg-secondary);
   border-radius: 1em;
-  /* transition: all 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
-  &:hover {
-    scale: 1.01;
-  } */
 }
 .result-content {
   img {
-    /* transition: all 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85); */
     transition: transform 0.2s ease;
     will-change: transform;
     &:hover {
@@ -146,7 +136,6 @@
   margin-left: auto;
   img {
     transition: all 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
-    /* transition: transform 0.2s ease; */
     will-change: transform;
     &:hover {
       scale: 1.1;
@@ -205,7 +194,6 @@
   .shorty {
     img {
       transition: all 0.4s cubic-bezier(0.68, -0.85, 0.27, 1.85);
-      /* transition: transform 0.2s ease; */
       will-change: transform;
       &:hover {
         scale: 1.1;
@@ -288,7 +276,7 @@
       text-overflow: ellipsis;
       width: 50dvw;
       display: block;
-      font-size: 12px;
+      font-size: 14px;
     }
   }
 }

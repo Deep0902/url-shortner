@@ -14,8 +14,6 @@ interface AlertProps {
 //region Constants
 const STATIC_UI_IMAGES = {
   ALERT: {
-    CLOSE: "/close.svg",
-    CLOSE_RED: "/close-red.svg",
     TICK: "/tick.svg",
     ERROR: "/error-toast.svg",
     WARNING: "/warning-toast.svg",
@@ -37,8 +35,6 @@ function Alert({
   //endregion
 
   //region Icons
-  const iconCloseWhite = STATIC_UI_IMAGES.ALERT.CLOSE;
-  const iconCloseRed = STATIC_UI_IMAGES.ALERT.CLOSE_RED;
   const iconTick = STATIC_UI_IMAGES.ALERT.TICK;
   const iconError = STATIC_UI_IMAGES.ALERT.ERROR;
   const iconWarning = STATIC_UI_IMAGES.ALERT.WARNING;

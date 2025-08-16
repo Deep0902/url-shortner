@@ -219,7 +219,7 @@
   font-weight: 700;
   margin-bottom: 1rem;
   line-height: 1.1;
-  .text{
+  .text {
     display: flex;
     justify-content: center;
   }
@@ -532,6 +532,18 @@
 
   .footer-divider {
     display: none;
+  }
+  .result-label {
+    font-size: 1em;
+    flex: 1;
+  }
+  .result-url {
+    padding: 1em 0;
+    a {
+      white-space: nowrap;
+      font-weight: 600;
+      font-size: 1.2em;
+    }
   }
 }
 
