@@ -58,12 +58,11 @@ function Signup({
     e.preventDefault();
     setShowPassword(false);
     setShowConfirmPassword(false);
-    setLoading(true);
     if (userDetails.password != userDetails.confirm_pass) {
       showAlert("Try Again", "error", "Passwords don't match!");
       return;
     }
-
+    setLoading(true);
     // Encrypt the password before sending
     const encryptedPassword = encryptData(userDetails.password);
 
