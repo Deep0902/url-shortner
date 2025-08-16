@@ -21,7 +21,7 @@ const avatarItems = [
 ];
 
 interface NavbarProps {
-  avatar?: number | null;
+  avatar?: any;
   userId?: string | null;
   email?: string | null;
   username?: string | null;
@@ -73,6 +73,7 @@ const Navbar = ({
 
   //region effects
   useEffect(() => {
+    setSelectedAvatar(avatar);
     setCurrentUsername(username);
   }, [username]);
 
@@ -86,12 +87,6 @@ const Navbar = ({
       root.classList.add("dark-theme");
     }
   }, [theme]);
-
-  useEffect(() => {
-    if (typeof avatar === "number") {
-      setSelectedAvatar(avatar);
-    }
-  }, [avatar]);
 
   useEffect(() => {
     if (showSettings) {
@@ -176,7 +171,8 @@ const Navbar = ({
         withCredentials: true,
       })
       .then(() => {
-        showAlert("", "success","Avatar successfully updated");
+        showAlert("", "success", "Avatar successfully updated");
+        setSelectedAvatar(avatar);
       })
       .catch((error) => {
         showAlert("Error", "error", error.response.data.error);
@@ -329,15 +325,6 @@ const Navbar = ({
   };
   //endregion
 
-  //region derived
-  const avatarSrc =
-    typeof selectedAvatar === "number" &&
-    selectedAvatar >= 0 &&
-    selectedAvatar < avatarItems.length
-      ? avatarItems[selectedAvatar]
-      : avatarItems[0];
-  //endregion
-
   //region refs
   const avatarMenuRef = useRef<HTMLDivElement>(null);
   //endregion
@@ -415,7 +402,7 @@ const Navbar = ({
             >
               {theme === "dark" ? "🌙" : "☀️"}
             </button>
-            {avatar && avatarSrc && (
+            {avatar && (
               <div className="navbar-avatar-menu" ref={avatarMenuRef}>
                 <button
                   className="navbar-avatar-btn"
@@ -424,7 +411,7 @@ const Navbar = ({
                   type="button"
                   onClick={() => setShowMenu((prev) => !prev)}
                 >
-                  <img src={avatarSrc} alt="User avatar" />
+                  <img src={avatarItems[selectedAvatar]} alt="User avatar" />
                 </button>
                 {showMenu && (
                   <div

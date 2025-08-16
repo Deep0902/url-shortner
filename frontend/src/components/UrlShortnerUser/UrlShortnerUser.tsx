@@ -175,6 +175,7 @@ function UrlShortnerUser() {
         setAvatar(
           typeof response.data.avatar === "number" ? response.data.avatar : 0
         );
+        // console.log(response.data.avatar);
         setEmail(response.data.email);
         setUsername(response.data.username);
       })
