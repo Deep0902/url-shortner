@@ -46,7 +46,7 @@ export const loginUser = async (req, res) => {
     const storedPassword = decryptData(user.password);
 
     if (storedPassword !== decryptedPassword) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(406).json({ error: "Invalid credentials" });
     }
 
     // Generate JWT token
