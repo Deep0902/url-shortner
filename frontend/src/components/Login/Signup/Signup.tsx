@@ -93,9 +93,13 @@ function Signup({
           );
         }
       })
-      .catch((error:any) => {
+      .catch((error: any) => {
         setLoading(false);
-        showAlert("Error", "error", error.response.data.error);
+        if (error.status == 409) {
+          showAlert("Error", "warning", error.response.data.error);
+        } else {
+          showAlert("Error", "error", error.response.data.error);
+        }
         console.error("Error creating user:", error);
       });
   };
