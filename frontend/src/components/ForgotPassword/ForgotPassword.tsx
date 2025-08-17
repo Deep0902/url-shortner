@@ -144,7 +144,7 @@ function ForgotPassword() {
       encryptedPassword: encrypted,
     };
     axios
-      .post(`${API_URL}/api/forgot-password`, payload, {
+      .post(`/api/forgot-password`, payload, {
         headers: { "x-api-key": API_KEY },
       })
       .then((response) => {
@@ -168,7 +168,7 @@ function ForgotPassword() {
     password: string;
   }) => {
     try {
-      const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
+      const response = await axios.post(`/api/login`, loginPayload, {
         headers: { "x-api-key": API_KEY },
         withCredentials: true,
       });
@@ -207,7 +207,7 @@ function ForgotPassword() {
     setLoading(true);
     axios
       .post(
-        `${API_URL}/api/forgot-email`,
+        `/api/forgot-email`,
         { email: email },
         { headers: { "x-api-key": API_KEY } }
       )

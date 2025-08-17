@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -149,7 +150,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://sho-rty.vercel.app",
+        target: "https://sho-rty.vercel.app/",
         changeOrigin: true,
         secure: false,
       },

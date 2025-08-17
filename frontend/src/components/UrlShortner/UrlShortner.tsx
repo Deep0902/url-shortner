@@ -90,7 +90,7 @@ function UrlShortner() {
     setLoading(true);
     axios
       .post(
-        `${API_URL}/api/shorten`,
+        `/api/shorten`,
         { originalUrl: urlToShorten },
         { headers: { "x-api-key": API_KEY } }
       )
@@ -111,7 +111,7 @@ function UrlShortner() {
   const handleGetStatus = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/api/stats`, {
+      const response = await axios.get(`/api/stats`, {
         headers: { "x-api-key": API_KEY },
       });
       setStats(response.data);
@@ -138,7 +138,7 @@ function UrlShortner() {
   useEffect(() => {
     window.scrollTo(0, 0);
     axios
-      .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
+      .get(`/api/ping`, { headers: { "x-api-key": API_KEY } })
       .catch(() => {});
     if (canShorten !== null && canShorten === "false") {
       showAlert(

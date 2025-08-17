@@ -141,7 +141,7 @@ const Navbar = ({
       }
     }
     axios.post(
-      `${API_URL}/api/logout`,
+      `/api/logout`,
       {},
       {
         withCredentials: true,
@@ -164,7 +164,7 @@ const Navbar = ({
     // if (avatar === selectedAvatar) return;
     const payload = { userId, avatar };
     await axios
-      .put(`${API_URL}/api/users/avatar`, payload, {
+      .put(`/api/users/avatar`, payload, {
         headers: {
           "x-api-key": API_KEY,
         },
@@ -184,7 +184,7 @@ const Navbar = ({
     setDeleteLoading(true);
     await axios
       .put(
-        `${API_URL}/api/username`,
+        `/api/username`,
         { userId, username: editedUsername },
         {
           headers: {
@@ -222,7 +222,7 @@ const Navbar = ({
     const encryptNewPassword = encryptData(newPassword);
     await axios
       .put(
-        `${API_URL}/api/users/userpassword`,
+        `/api/users/userpassword`,
         {
           userId,
           oldPassword: encryptOldPassword,
@@ -254,7 +254,7 @@ const Navbar = ({
   const handleDeleteUser = async () => {
     setDeleteLoading(true);
     await axios
-      .delete(`${API_URL}/api/users`, {
+      .delete(`/api/users`, {
         data: { userId },
         headers: {
           "x-api-key": API_KEY,

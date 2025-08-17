@@ -11,7 +11,7 @@ function Logout() {
     sessionStorage.removeItem("userCredentials");
     await axios
       .post(
-        `${API_URL}/api/logout`,
+        `/api/logout`,
         {},
         {
           withCredentials: true,

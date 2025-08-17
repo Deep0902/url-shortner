@@ -73,7 +73,7 @@ function Signup({
     };
 
     axios
-      .post(`${API_URL}/api/users`, payload, {
+      .post(`/api/users`, payload, {
         headers: { "x-api-key": API_KEY },
       })
       .then((response) => {
@@ -107,7 +107,7 @@ function Signup({
     isAutoLogin = false
   ) => {
     try {
-      const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
+      const response = await axios.post(`/api/login`, loginPayload, {
         headers: { "x-api-key": API_KEY },
         withCredentials: true,
       });
