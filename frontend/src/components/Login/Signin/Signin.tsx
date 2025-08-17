@@ -105,7 +105,7 @@ function Signin({
     isAutoLogin = false
   ) => {
     try {
-      const response = await axios.post(`${API_URL}/api/login`, loginPayload, {
+      const response = await axios.post(`/api/login`, loginPayload, {
         headers: { "x-api-key": API_KEY },
         withCredentials: true,
       });

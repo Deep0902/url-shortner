@@ -1,6 +1,9 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
+    {
+      "source": "/api/(.*)",
+      "destination": "http://localhost:3000/api/$1"
+    }
   ],
   "git": {
     "deploymentEnabled": {
