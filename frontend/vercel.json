@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "http://localhost:3000/api/$1"
+      "destination": "https://sho-rty.vercel.app/api/$1"
     }
   ],
   "git": {
