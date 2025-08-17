@@ -152,7 +152,7 @@ export default defineConfig({
       "/api": {
         target: "https://sho-rty.vercel.app/",
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },
