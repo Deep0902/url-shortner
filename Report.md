@@ -103,7 +103,6 @@ ChopURL is a modern, full-stack URL shortener application designed to provide fa
 
 ---
 
-
 ## 6. Tech Stack 🧰
 
 - **Frontend:** ⚛️ React, TypeScript, Vite, Axios, Framer Motion, QRCode.react, React Hook Form
@@ -112,7 +111,6 @@ ChopURL is a modern, full-stack URL shortener application designed to provide fa
 - **Testing:** 🧪 Jest, Supertest
 
 ---
-
 
 ## 7. Frontend Components & Routing 🧩
 
@@ -159,7 +157,6 @@ Routing is handled via React Router. The main flow is:
 3. All navigation is handled via the 🧭 **Navbar** and React Router.
 
 ---
-
 
 ## 8. API Endpoints 🔗
 
