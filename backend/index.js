@@ -12,6 +12,7 @@ import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(
   cors({
     origin: true, // Allow all origins
