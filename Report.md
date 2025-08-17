@@ -99,6 +99,7 @@ ChopURL is a modern, full-stack URL shortener application designed to provide fa
 - ⚙️ **Environment Configuration:** Easy setup for development, staging, and production.
 - 🗝️ **JWT Authentication:** Secure token issuance and validation for user sessions.
 - 🛑 **Error Handling & Logging:** Centralized error responses and logging for maintainability.
+- 🔀 **Reverse Proxy:** Reverse proxy to handle requests form the same url to backend.
 
 ---
 

@@ -74,17 +74,20 @@ frontend/
    ```
    DATABASE_URL=mongodb://localhost:27017/
    API_SECRET_KEY=your_jwt_secret
+   JWT_SECRET=your_super_secret_jwt_key
    ```
 3. `npm start`
 
 ### Frontend
 1. `cd frontend && npm install`
-2. Create `.env` with:
+2. Change the endpoints for reverse proxy in `vite.config.ts` and `.vercel.json`
+3. Create `.env` with:
    ```
    VITE_API_SECRET_KEY=your_api_key
    VITE_API_URL=http://localhost:3000
+   JWT_SECRET=your_super_secret_jwt_key
    ```
-3. `npm run dev`
+4. `npm run dev`
 
 ---
 
