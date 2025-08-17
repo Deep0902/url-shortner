@@ -14,7 +14,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: true, // Allow all origins
+    origin: "https://url-shortner-amber-pi.vercel.app/", // Allow all origins
     credentials: true,
   })
 );
