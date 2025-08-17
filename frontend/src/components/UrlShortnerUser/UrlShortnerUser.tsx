@@ -94,7 +94,7 @@ function UrlShortnerUser() {
 
     setLoading(true);
     axios
-      .post(`${API_URL}/api/users/shorten`, payload, {
+      .post(`/api/users/shorten`, payload, {
         headers: {
           "x-api-key": API_KEY,
         },
@@ -127,7 +127,7 @@ function UrlShortnerUser() {
       userId: location.state.loginResponse.userId,
     };
     axios
-      .post(`${API_URL}/api/users/stats`, payload, {
+      .post(`/api/users/stats`, payload, {
         headers: {
           "x-api-key": API_KEY,
         },
@@ -164,7 +164,7 @@ function UrlShortnerUser() {
     };
     setLoading(true);
     axios
-      .post(`${API_URL}/api/user`, payload, {
+      .post(`/api/user`, payload, {
         headers: {
           "x-api-key": API_KEY,
         },
@@ -202,7 +202,7 @@ function UrlShortnerUser() {
     };
 
     axios
-      .delete(`${API_URL}/api/users/delete-url`, {
+      .delete(`/api/users/delete-url`, {
         data: payload,
         headers: { "x-api-key": API_KEY },
         withCredentials: true,
@@ -275,7 +275,7 @@ function UrlShortnerUser() {
   useEffect(() => {
     window.scrollTo(0, 0);
     axios
-      .get(`${API_URL}/api/ping`, { headers: { "x-api-key": API_KEY } })
+      .get(`/api/ping`, { headers: { "x-api-key": API_KEY } })
       .catch(() => {});
     try {
       if (location.state.loginResponse) {
