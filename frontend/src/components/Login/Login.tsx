@@ -128,7 +128,7 @@ function Login() {
                   setLoading={setLoading}
                   alert={alert}
                   setAlert={setAlert}
-                  isSignUp={isSignUp} // <-- add this line
+                  isSignUp={isSignUp}
                 />
               </div>
             </div>

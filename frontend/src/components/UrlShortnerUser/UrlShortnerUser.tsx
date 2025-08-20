@@ -32,7 +32,7 @@ function UrlShortnerUser() {
   const [loading, setLoading] = useState(false);
   const [swipe] = useState(false);
   const qrcodeRef = useRef<HTMLDivElement>(null);
-  const fullText = "Transform long URLs into clean, shareable links in seconds";
+  const fullText = "Chop long links into short, shareable ones!";
   const [animatedText, setAnimatedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -113,7 +113,11 @@ function UrlShortnerUser() {
       })
       .catch((error: any) => {
         setLoading(false);
-        showAlert("Error", "error", error.response.data.error);
+        if (error.status == 429) {
+          showAlert("Error", "warning", error.response.data.error);
+        } else {
+          showAlert("Error", "error", error.response.data.error);
+        }
       });
   };
 
@@ -234,11 +238,6 @@ function UrlShortnerUser() {
       } catch (error) {
         // User cancelled or error occurred, fallback to copy
         navigator.clipboard.writeText(`${shareText}\nOriginal: ${originalUrl}`);
-        showAlert(
-          "Copied to clipboard!",
-          "success",
-          "Share menu not available, copied instead"
-        );
       }
     } else {
       // Fallback: Copy to clipboard
@@ -435,6 +434,7 @@ function UrlShortnerUser() {
             )}
             {showHistory && !historyLoading && (
               <div>
+                <h1 className="history-title">My Links</h1>
                 <div className="history-table-wrapper">
                   {historyData?.urls && historyData.urls.length > 0 ? (
                     <div>
@@ -478,13 +478,21 @@ function UrlShortnerUser() {
                                       shareUrl(row.shortUrl, row.originalUrl)
                                     }
                                   />
+                                  <img
+                                    src="./delete.svg"
+                                    alt=""
+                                    className="mobile-only"
+                                   onClick={() =>
+                                  handleDeleteShortUrl(row.shortUrl)
+                                }
+                                  />
                                 </div>
                                 <span className="original-url">
                                   {row.originalUrl}
                                 </span>
                               </div>
                               <div
-                                className="delete-icon"
+                                className="delete-icon pc-only"
                                 onClick={() =>
                                   handleDeleteShortUrl(row.shortUrl)
                                 }
