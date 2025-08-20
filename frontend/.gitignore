@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 .env
 Report.md
+vercel.json
+vite.config.json

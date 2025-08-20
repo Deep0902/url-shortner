@@ -167,7 +167,7 @@ p {
 @media (max-width: 768px) {
   .animated-layout {
     padding: 1rem;
-    gap: 3em;
+    gap: 0em;
     justify-content: flex-start;
   }
 

@@ -7,6 +7,7 @@ A modern, full-stack URL shortener built with React (frontend) and Node.js/Expre
 ## ✨ Features
 
 ### Frontend
+
 - **Reactive Forms** for robust and type-safe input handling.
 - **Instant URL shortening** with real-time feedback.
 - **QR code generation** for every short URL.
@@ -17,6 +18,7 @@ A modern, full-stack URL shortener built with React (frontend) and Node.js/Expre
 - **Copy-to-clipboard** and easy sharing.
 
 ### Backend
+
 - **RESTful API** built with Express.
 - **MongoDB Atlas** for scalable data storage.
 - **API key authentication** for secure endpoints.
@@ -69,22 +71,27 @@ frontend/
 ## 🚀 Getting Started
 
 ### Backend
+
 1. `cd backend && npm install`
 2. Create `.env` with:
    ```
    DATABASE_URL=mongodb://localhost:27017/
    API_SECRET_KEY=your_jwt_secret
+   JWT_SECRET=your_super_secret_jwt_key
    ```
 3. `npm start`
 
 ### Frontend
+
 1. `cd frontend && npm install`
-2. Create `.env` with:
+2. Change the endpoints for reverse proxy in `vite.config.ts` and `.vercel.json`
+3. Create `.env` with:
    ```
    VITE_API_SECRET_KEY=your_api_key
    VITE_API_URL=http://localhost:3000
+   JWT_SECRET=your_super_secret_jwt_key
    ```
-3. `npm run dev`
+4. `npm run dev`
 
 ---
 
@@ -115,6 +122,4 @@ frontend/
 
 ## 📄 License
 
-This project is not licensed and is developed from scratch.
-You are free to use, modify, and distribute this code for personal or educational purposes.  
-Commercial use is not intended by the author.  
+This project is not licensed and is developed from scratch. You are free to use, modify, and distribute this code for personal or educational purposes. Commercial use is not intended by the author.
