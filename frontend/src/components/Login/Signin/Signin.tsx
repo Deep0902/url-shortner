@@ -2,7 +2,7 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_KEY, API_URL } from "../../../shared/constants";
+import { API_KEY } from "../../../shared/constants";
 import "./Signin.css";
 
 // Add your secret key here (should be the same in backend)
@@ -104,6 +104,11 @@ function Signin({
     loginPayload: { email: string; password: string },
     isAutoLogin = false
   ) => {
+    if(!sessionStorage.getItem("userCredentials") && (credentials.password == "" || credentials.email == "")){
+      setLoading(false)
+      showAlert("Success!", "warning", "Please enter your credentials");
+      return;
+    }
     try {
       const response = await axios.post(`/api/login`, loginPayload, {
         headers: { "x-api-key": API_KEY },

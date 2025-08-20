@@ -227,7 +227,7 @@ export const createShortUrlUser = async (req, res) => {
     if (user.urls.length >= 20) {
       return res
         .status(429)
-        .json({ error: "Memory is full, please try again later" });
+        .json({ error: "Storage Full! Clear your history to shorten more" });
     }
 
     // Check if the originalUrl already exists in user's urls

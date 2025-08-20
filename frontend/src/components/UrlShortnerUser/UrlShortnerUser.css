@@ -62,6 +62,7 @@
 
 .progressbar-bg {
   width: 100%;
+  border-radius: 10px;
   height: 16px;
   background: var(--color-bg-accent);
   overflow: hidden;
@@ -75,6 +76,10 @@
 .no-data-found {
   color: var(--color-text-main);
   font-size: 2em;
+}
+.history-title {
+  color: var(--color-text-main);
+  font-size: 3em;
 }
 .urlshortner-root .shorten-form {
   display: flex;
@@ -205,6 +210,7 @@
       font-size: 24px;
       margin-right: 12px;
       a {
+        text-decoration: none;
         color: var(--color-text-black);
       }
     }
@@ -240,9 +246,21 @@
     columns: var(--color-gray-dark);
   }
 }
+.mobile-only {
+  display: none;
+}
+.pc-only {
+  display: block;
+}
 @media (max-width: 640px) {
+  .mobile-only {
+    display: block;
+  }
+  .pc-only {
+    display: none;
+  }
   .shorty a {
-    font-size: 12px;
+    font-size: 14px;
     word-break: keep-all;
   }
   .clicks-info {
@@ -257,6 +275,9 @@
       top: -3px;
       right: -3px;
     }
+  }
+  .card-info {
+    padding: 1em 0.5em 1em 0.2em;
   }
   .url-info {
     & .shorty {
