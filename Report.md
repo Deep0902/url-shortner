@@ -99,9 +99,9 @@ ChopURL is a modern, full-stack URL shortener application designed to provide fa
 - ⚙️ **Environment Configuration:** Easy setup for development, staging, and production.
 - 🗝️ **JWT Authentication:** Secure token issuance and validation for user sessions.
 - 🛑 **Error Handling & Logging:** Centralized error responses and logging for maintainability.
+- 🔀 **Reverse Proxy:** Reverse proxy to handle requests form the same url to backend.
 
 ---
-
 
 ## 6. Tech Stack 🧰
 
@@ -111,7 +111,6 @@ ChopURL is a modern, full-stack URL shortener application designed to provide fa
 - **Testing:** 🧪 Jest, Supertest
 
 ---
-
 
 ## 7. Frontend Components & Routing 🧩
 
@@ -158,7 +157,6 @@ Routing is handled via React Router. The main flow is:
 3. All navigation is handled via the 🧭 **Navbar** and React Router.
 
 ---
-
 
 ## 8. API Endpoints 🔗
 
