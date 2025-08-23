@@ -91,7 +91,7 @@
 /* Redesigned Hero Section */
 .hero-section-redesigned {
   padding: 4rem 1.5rem 2rem;
-  min-height: 80vh;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -101,9 +101,21 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  max-width: 1200px;
-  margin: 0 auto;
   align-items: center;
+  & > div {
+    width: 100%;
+  }
+  .logo-class {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .url-logo {
+    -webkit-animation: breathing 4s ease-out infinite normal;
+    animation: breathing 4s ease-out infinite normal;
+
+    height: 10dvw;
+  }
 }
 
 .hero-left {
@@ -247,7 +259,7 @@
 /* Scroll Prompt */
 .scroll-prompt {
   text-align: center;
-  margin-top: 3rem;
+  margin-top: 6rem;
   animation: fadeInUp 1s ease-out 2s both;
 }
 
@@ -369,7 +381,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 8rem;
 }
 
 .feature-row {
@@ -510,7 +522,6 @@
 
 .stat-card:hover {
   transform: translateY(-10px);
-  border-color: var(--color-blue);
 }
 
 .stat-card-featured {
@@ -702,6 +713,12 @@
   .mini-feature {
     min-width: 120px;
   }
+  .hero-container {
+    .url-logo {
+      margin-top: 4em;
+      height: 30dvw;
+    }
+  }
 }
 
 @media (max-width: 640px) {
@@ -790,4 +807,56 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+@-webkit-keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9) translateY(0px);
+    transform: scale(0.9) translateY(0px);
+  }
+
+  25% {
+    -webkit-transform: scale(1) translateY(-10px);
+    transform: scale(1) translateY(-10px);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9) translateY(0px);
+    transform: scale(0.9) translateY(0px);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9) translateY(0px);
+    transform: scale(0.9) translateY(0px);
+  }
+}
+
+@keyframes breathing {
+  0% {
+    -webkit-transform: scale(0.9) translateY(0px);
+    -ms-transform: scale(0.9) translateY(0px);
+    transform: scale(0.9) translateY(0px);
+  }
+
+  25% {
+    -webkit-transform: scale(1) translateY(-10px);
+    -ms-transform: scale(1) translateY(-10px);
+    transform: scale(1) translateY(-10px);
+  }
+
+  60% {
+    -webkit-transform: scale(0.9) translateY(0px);
+    -ms-transform: scale(0.9) translateY(0px);
+    transform: scale(0.9) translateY(0px);
+  }
+
+  100% {
+    -webkit-transform: scale(0.9) translateY(0px);
+    -ms-transform: scale(0.9) translateY(0px);
+    transform: scale(0.9) translateY(0px);
+  }
+}
+
+/* Example usage */
+.breathing-element {
+  animation: breathing 3s ease-in-out infinite;
 }

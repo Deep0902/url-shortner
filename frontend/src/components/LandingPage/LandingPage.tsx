@@ -105,9 +105,8 @@ function LandingPage() {
         {/* Hero Section - Redesigned */}
         <main className="hero-section-redesigned fade-on-scroll">
           <div className="hero-container">
-            <div className="hero-left">
-              <div className="hero-svg-container">
-                <svg
+            <div className="logo-class">
+              {/* <svg
                   className="hero-svg"
                   viewBox="0 0 200 200"
                   xmlns="http://www.w3.org/2000/svg"
@@ -170,9 +169,12 @@ function LandingPage() {
                     fill="var(--color-blue)"
                     className="svg-rect-inner"
                   />
-                </svg>
-                {/* <img src="/url-short.svg" alt="ChopURL logo" />{" "} */}
-              </div>
+                </svg> */}
+              <img
+                src="/url-short.svg"
+                className="url-logo"
+                alt="ChopURL logo"
+              />{" "}
             </div>
             <div className="hero-right">
               <div className="hero-title-compact">
@@ -218,17 +220,16 @@ function LandingPage() {
                 ChopURL is a powerful, free URL shortening service designed for
                 the modern web. Transform long, unwieldy links into clean,
                 shareable URLs that look professional and track beautifully.
-                Whether you're a marketer, developer, or content creator,
-                ChopURL makes link management effortless.
+                ChopURL makes link management effortless!
               </p>
               <div className="what-is-features">
                 <div className="mini-feature">
-                  <span className="mini-feature-icon">⚡</span>
-                  <span>Lightning Fast</span>
-                </div>
-                <div className="mini-feature">
                   <span className="mini-feature-icon">🔒</span>
                   <span>Secure & Reliable</span>
+                </div>
+                <div className="mini-feature">
+                  <span className="mini-feature-icon">⚡</span>
+                  <span>Lightning Fast</span>
                 </div>
                 <div className="mini-feature">
                   <span className="mini-feature-icon">📊</span>
@@ -254,7 +255,7 @@ function LandingPage() {
                   style={{ animationDelay: `${0.2 * index}s` }}
                 >
                   <div className="feature-content">
-                    <div className="feature-number">
+                    <div className="feature-number pc-only">
                       {String(index + 1).padStart(2, "0")}
                     </div>
                     <div className="feature-text">
@@ -323,12 +324,12 @@ function LandingPage() {
                 <div className="stat-number-large">
                   <CountUp
                     from={0}
-                    to={10}
+                    to={100}
                     separator=","
                     direction="up"
                     duration={2}
                     className="count-up-text-large"
-                  />
+                  />+
                 </div>
                 <div className="stat-label-large">Links Shortened</div>
                 <div className="stat-description">
