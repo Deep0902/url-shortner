@@ -49,25 +49,6 @@ frontend/
 
 ---
 
-## 🔗 API Endpoints
-
-- `POST /api/login` - User login
-- `POST /api/register` - User registration
-- `POST /api/shorten` - Shorten a long URL
-- `GET /:shortUrl` - Redirect to original URL
-- `GET /api/stats` - Get usage statistics
-- All endpoints require an **API key** (see `.env` setup).
-
----
-
-## 🔒 Authentication & Security
-
-- JWT-based user authentication.
-- API key required for all backend routes.
-- Rate limiting and input validation.
-
----
-
 ## 🚀 Getting Started
 
 ### Backend
@@ -92,6 +73,25 @@ frontend/
    JWT_SECRET=your_super_secret_jwt_key
    ```
 4. `npm run dev`
+
+---
+
+## 🔗 API Endpoints
+
+- `POST /api/login` - User login
+- `POST /api/register` - User registration
+- `POST /api/shorten` - Shorten a long URL
+- `GET /:shortUrl` - Redirect to original URL
+- `GET /api/stats` - Get usage statistics
+- All endpoints require an **API key** (see `.env` setup).
+
+---
+
+## 🔒 Authentication & Security
+
+- JWT-based user authentication.
+- API key required for all backend routes.
+- Rate limiting and input validation.
 
 ---
 
