@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_KEY, API_URL } from "../shared/constants";
 import { useNavigate } from "react-router-dom";
+import { API_KEY } from "../shared/constants";
 import Loader from "./Loader/Loader";
 function Logout() {
   const navigate = useNavigate();

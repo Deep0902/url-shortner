@@ -1,14 +1,14 @@
+import axios from "axios";
+import CryptoJS from "crypto-js";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Particles from "../../Reactbits/Particles";
+import { API_KEY } from "../../shared/constants";
+import Alert from "../Alert/Alert";
 import Footer from "../Footer/Footer";
+import Loader from "../Loader/Loader";
 import Navbar from "../Navbar/Navbar";
 import "./ForgotPassword.css";
-import Loader from "../Loader/Loader";
-import Alert from "../Alert/Alert";
-import { API_KEY, API_URL } from "../../shared/constants";
-import axios from "axios";
-import CryptoJS from "crypto-js";
 
 export interface AlertState {
   show: boolean;
