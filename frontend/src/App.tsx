@@ -1,15 +1,14 @@
 import Lenis from "lenis";
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
-import EncryptionManager from "./components/EncryptionManager/EncryptionManager";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import LandingPage from "./components/LandingPage/LandingPage";
+import Loader from "./components/Loader/Loader";
 import Login from "./components/Login/Login";
-import UrlShortner from "./components/UrlShortner/UrlShortner";
-import UrlShortnerUser from "./components/UrlShortnerUser/UrlShortnerUser";
-import { ThemeContext, type ThemeType } from "./ThemeContext";
 import Logout from "./components/Logout";
+import UrlShortner from "./components/UrlShortner/UrlShortner";
+import { ThemeContext, type ThemeType } from "./ThemeContext";
 
 function App() {
   // Detect system theme on first load
@@ -22,6 +21,9 @@ function App() {
     }
     return "dark";
   };
+  const UrlShortnerUser = lazy(
+    () => import("./components/UrlShortnerUser/UrlShortnerUser")
+  );
 
   const [theme, setTheme] = useState<ThemeType>(() => getSystemTheme());
 
@@ -80,19 +82,20 @@ function App() {
   }, []);
 
   return (
-    <ThemeContext.Provider value={themeContextValue}>
-      <Router>
-        <Routes>
-          <Route path="/url" element={<UrlShortner />} />
-          <Route path="/" index element={<LandingPage />} />
-          <Route path="/sign" element={<Login />} />
-          <Route path="/url-user" element={<UrlShortnerUser />} />
-          <Route path="/encrypt" element={<EncryptionManager />} />
-          <Route path="/forgot" element={<ForgotPassword />} />
-          <Route path="/logout" element={<Logout />} />
-        </Routes>
-      </Router>
-    </ThemeContext.Provider>
+    <Suspense fallback={<Loader />}>
+      <ThemeContext.Provider value={themeContextValue}>
+        <Router>
+          <Routes>
+            <Route path="/url" element={<UrlShortner />} />
+            <Route path="/" index element={<LandingPage />} />
+            <Route path="/sign" element={<Login />} />
+            <Route path="/url-user" element={<UrlShortnerUser />} />
+            <Route path="/forgot" element={<ForgotPassword />} />
+            <Route path="/logout" element={<Logout />} />
+          </Routes>
+        </Router>
+      </ThemeContext.Provider>
+    </Suspense>
   );
 }
 
