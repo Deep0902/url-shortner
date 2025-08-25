@@ -539,6 +539,7 @@
   display: flex;
   justify-content: space-between;
   gap: 2rem;
+  margin-top: 5em;
 }
 
 .stat-card {
@@ -549,7 +550,8 @@
   position: relative;
   overflow: hidden;
 }
-.stat-card::before {
+.stat-card::before,
+.stat-card::after {
   content: "";
   position: absolute;
   left: 0;
