@@ -539,7 +539,6 @@
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  margin-top: 5em;
 }
 
 .stat-card {
