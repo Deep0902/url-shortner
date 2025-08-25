@@ -347,7 +347,7 @@
 .result-url {
   a {
     color: var(--color-blue-dark);
-    font-size: 4vw;
+    font-size: 4em;
   }
   display: flex;
   align-items: center;
@@ -506,6 +506,13 @@
   .hero-title {
     font-size: 2.5rem;
   }
+  .urlshortner-root {
+    .container {
+      flex-direction: column;
+      display: flex;
+      align-items: center;
+    }
+  }
 
   .hero-subtitle {
     font-size: 1rem;
@@ -553,7 +560,7 @@
   }
 
   .shortener-card {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   .result-card {
