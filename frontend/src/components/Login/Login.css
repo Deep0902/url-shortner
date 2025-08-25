@@ -171,10 +171,6 @@ p {
     justify-content: flex-start;
   }
 
-  .flip-container {
-    height: 500px;
-  }
-
   .toggle-container {
     margin-top: 1em;
     top: 1rem;
