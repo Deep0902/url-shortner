@@ -347,7 +347,7 @@
 .result-url {
   a {
     color: var(--color-blue-dark);
-    font-size: 4vw;
+    font-size: 4em;
   }
   display: flex;
   align-items: center;

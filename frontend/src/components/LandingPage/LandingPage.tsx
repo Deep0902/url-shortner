@@ -186,9 +186,6 @@ function LandingPage() {
                 <span className="cursor">|</span>
               </p>
               <div className="hero-buttons-compact">
-                <button onClick={handleRedirect} className="btn-primary">
-                  Try Demo
-                </button>
                 <button
                   onClick={() => {
                     window.scrollTo(0, 0);
@@ -197,6 +194,9 @@ function LandingPage() {
                   className="btn-secondary"
                 >
                   Sign In
+                </button>
+                <button onClick={handleRedirect} className="btn-primary">
+                  Try Demo
                 </button>
               </div>
             </div>
@@ -222,7 +222,7 @@ function LandingPage() {
                 shareable URLs that look professional and track beautifully.
                 ChopURL makes link management effortless!
               </p>
-              <div className="what-is-features">
+              {/* <div className="what-is-features">
                 <div className="mini-feature">
                   <span className="mini-feature-icon">🔒</span>
                   <span>Secure & Reliable</span>
@@ -235,7 +235,7 @@ function LandingPage() {
                   <span className="mini-feature-icon">📊</span>
                   <span>Analytics Ready</span>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
@@ -244,73 +244,73 @@ function LandingPage() {
         <section className="why-choose-section fade-on-scroll">
           <div className="container">
             <h2 className="section-title">Why Choose ChopURL?</h2>
-
-            <div className="features-alternating">
-              {features.map((feature, index) => (
-                <div
-                  key={feature.title}
-                  className={`feature-row ${
-                    index % 2 === 0 ? "feature-row-left" : "feature-row-right"
-                  }`}
-                  style={{ animationDelay: `${0.2 * index}s` }}
-                >
-                  <div className="feature-content">
-                    <div className="feature-number pc-only">
-                      {String(index + 1).padStart(2, "0")}
+            <div className="sticky-scroll">
+              <div className="features-alternating">
+                {features.map((feature, index) => (
+                  <div
+                    key={feature.title}
+                    className="feature-row"
+                    style={{ animationDelay: `${0.2 * index}s` }}
+                  >
+                    <div className="feature-content">
+                      <div className="feature-number">{String(index + 1)}</div>
+                      <div className="feature-text">
+                        <h3 className="feature-title-alt">{feature.title}</h3>
+                        <p className="feature-description-alt">
+                          {feature.description}
+                        </p>
+                      </div>
                     </div>
-                    <div className="feature-text">
-                      <h3 className="feature-title-alt">{feature.title}</h3>
-                      <p className="feature-description-alt">
-                        {feature.description}
-                      </p>
-                    </div>
+                    {/* <div className="feature-visual">
+                      <div className="feature-icon-large">
+                        {index === 0 && (
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                          </svg>
+                        )}
+                        {index === 1 && (
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <rect
+                              x="3"
+                              y="11"
+                              width="18"
+                              height="11"
+                              rx="2"
+                              ry="2"
+                            />
+                            <circle cx="12" cy="16" r="1" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                          </svg>
+                        )}
+                        {index === 2 && (
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          >
+                            <path d="M3 3v18h18" />
+                            <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
+                          </svg>
+                        )}
+                      </div>
+                    </div> */}
                   </div>
-                  <div className="feature-visual">
-                    <div className="feature-icon-large">
-                      {index === 0 && (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                        </svg>
-                      )}
-                      {index === 1 && (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <rect
-                            x="3"
-                            y="11"
-                            width="18"
-                            height="11"
-                            rx="2"
-                            ry="2"
-                          />
-                          <circle cx="12" cy="16" r="1" />
-                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                        </svg>
-                      )}
-                      {index === 2 && (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M3 3v18h18" />
-                          <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" />
-                        </svg>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <div className="feature-img ">
+                <img src="/shield.svg" alt="" />
+              </div>
             </div>
           </div>
         </section>
@@ -329,7 +329,8 @@ function LandingPage() {
                     direction="up"
                     duration={2}
                     className="count-up-text-large"
-                  />+
+                  />
+                  +
                 </div>
                 <div className="stat-label-large">Links Shortened</div>
                 <div className="stat-description">
