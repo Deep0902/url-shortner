@@ -9,6 +9,7 @@ import Login from "./components/Login/Login";
 import Logout from "./components/Logout";
 import UrlShortner from "./components/UrlShortner/UrlShortner";
 import { ThemeContext, type ThemeType } from "./ThemeContext";
+import { Analytics } from "@vercel/analytics/next";
 
 function App() {
   // Detect system theme on first load
@@ -82,20 +83,23 @@ function App() {
   }, []);
 
   return (
-    <Suspense fallback={<Loader />}>
-      <ThemeContext.Provider value={themeContextValue}>
-        <Router>
-          <Routes>
-            <Route path="/url" element={<UrlShortner />} />
-            <Route path="/" index element={<LandingPage />} />
-            <Route path="/sign" element={<Login />} />
-            <Route path="/url-user" element={<UrlShortnerUser />} />
-            <Route path="/forgot" element={<ForgotPassword />} />
-            <Route path="/logout" element={<Logout />} />
-          </Routes>
-        </Router>
-      </ThemeContext.Provider>
-    </Suspense>
+    <>
+      <Suspense fallback={<Loader />}>
+        <ThemeContext.Provider value={themeContextValue}>
+          <Router>
+            <Routes>
+              <Route path="/url" element={<UrlShortner />} />
+              <Route path="/" index element={<LandingPage />} />
+              <Route path="/sign" element={<Login />} />
+              <Route path="/url-user" element={<UrlShortnerUser />} />
+              <Route path="/forgot" element={<ForgotPassword />} />
+              <Route path="/logout" element={<Logout />} />
+            </Routes>
+          </Router>
+        </ThemeContext.Provider>
+      </Suspense>
+      <Analytics />
+    </>
   );
 }
 
