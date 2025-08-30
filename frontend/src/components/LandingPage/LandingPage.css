@@ -704,6 +704,9 @@
       align-items: center;
     }
   }
+  .stat-card::after {
+    display: none;
+  }
   .count-up-text-large {
     font-size: 0.8em;
   }
