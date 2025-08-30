@@ -73,6 +73,12 @@ export default defineConfig({
             purpose: "any maskable",
           },
           {
+            src: "url-short.svg",
+            sizes: "any",
+            type: "image/svg+xml",
+            purpose: "any maskable",
+          },
+          {
             src: "cancel-blue.svg",
             sizes: "any",
             type: "image/svg+xml",
@@ -132,12 +138,6 @@ export default defineConfig({
             type: "image/svg+xml",
             purpose: "any maskable",
           },
-          {
-            src: "url-short.svg",
-            sizes: "any",
-            type: "image/svg+xml",
-            purpose: "any maskable",
-          },
         ],
       },
       // workbox: {
@@ -150,7 +150,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         // target: "http://localhost:3000/",
-         target: "https://sho-rty.vercel.app/",
+        target: "https://sho-rty.vercel.app/",
         changeOrigin: true,
         secure: true,
       },
