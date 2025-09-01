@@ -9,7 +9,6 @@ import Login from "./components/Login/Login";
 import Logout from "./components/Logout";
 import UrlShortner from "./components/UrlShortner/UrlShortner";
 import { ThemeContext, type ThemeType } from "./ThemeContext";
-import { Analytics } from "@vercel/analytics/next";
 
 function App() {
   // Detect system theme on first load
@@ -98,7 +97,6 @@ function App() {
           </Router>
         </ThemeContext.Provider>
       </Suspense>
-      <Analytics />
     </>
   );
 }
