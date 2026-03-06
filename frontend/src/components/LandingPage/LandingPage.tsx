@@ -4,6 +4,7 @@ import CountUp from "../../Reactbits/CountUp";
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 import "./LandingPage.css";
+import InstallPrompt from "../InstallPrompt";
 
 function LandingPage() {
   //region State
@@ -351,6 +352,7 @@ function LandingPage() {
         {/* Footer */}
         <Footer />
       </div>
+      <InstallPrompt/>
     </div>
   );
   //endregion
